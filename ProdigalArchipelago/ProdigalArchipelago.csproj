@@ -1,0 +1,55 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <AssemblyName>ProdigalArchipelago</AssemblyName>
+    <Description>Archipelago mod for Prodigal</Description>
+    <Version>0.1.0</Version>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>latest</LangVersion>
+    <ProdigalRefs>D:/SteamLibrary/steamapps/common/Prodigal/Prodigal_Data/Managed</ProdigalRefs>
+    <BepinPlugins>D:/SteamLibrary/steamapps/common/Prodigal/BepInEx/plugins</BepinPlugins>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ResDir Include="$(SolutionDir)/ProdigalArchipelago/res/**" />
+  </ItemGroup>
+
+  <Target Name="CopyMod" AfterTargets="PostBuildEvent">
+    <RemoveDir Directories="$(BepinPlugins)/Archipelago/" />
+    <MakeDir Directories="$(BepinPlugins)/Archipelago/" />
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(BepinPlugins)/Archipelago/" />
+    <Copy SourceFiles="lib/Archipelago.MultiClient.Net.dll" DestinationFolder="$(BepinPlugins)/Archipelago/" />
+    <MakeDir Directories="$(BepinPlugins)/Archipelago/res/" />
+    <Copy SourceFiles="@(ResDir)" DestinationFolder="$(BepinPlugins)/Archipelago/res/" />
+  </Target>
+
+  <ItemGroup>
+    <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
+    <PackageReference Include="BepInEx.Core" Version="5.*" />
+    <PackageReference Include="BepInEx.PluginInfoProps" Version="1.*" />
+    <PackageReference Include="UnityEngine.Modules" Version="2022.1.24" IncludeAssets="compile" />
+  </ItemGroup>
+  
+  <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>$(ProdigalRefs)/Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>$(ProdigalRefs)/UnityEngine.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.InputSystem">
+      <HintPath>$(ProdigalRefs)/Unity.InputSystem.dll</HintPath>
+    </Reference>
+    <Reference Include="NewtonSoft.Json">
+      <HintPath>$(ProdigalRefs)/Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Archipelago.MultiClient.Net">
+      <HintPath>lib/Archipelago.MultiClient.Net.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+</Project>

@@ -221,7 +221,7 @@ namespace ProdigalArchipelago
                     new TrackerLocation("Vulture", 142, () => Has(34) && HasPick() && HasHand()),
                 }),
                 TrackerDot.NewDot("Tidal Mines", 43, -52, true, () => Has(36), new() {
-                    new TrackerLocation("Barrel Puzzle Heart Ore", 152, () => HasLariat() && HasPick()),
+                    new TrackerLocation("Barrel Puzzle Heart Ore", 151, () => HasLariat() && HasPick()),
                     new TrackerLocation("Rocks Chest", 13, () => (HasHand() || HasLariat()) && (HasPick() || CanLongJump() || (HasFlare() && HasLariat()))),
                     new TrackerLocation("Lariat Chest", 15, () => (HasHand() || HasLariat()) && (HasPick() || CanLongJump() || (HasFlare() && HasLariat())) && (HasLariat() || HasKey(Key.TidalMines, 4)),
                         () => (HasHand() || HasLariat()) && (HasPick() || CanLongJump() || (HasFlare() && HasLariat())) && (HasLariat() || CanOpen(Key.TidalMines, 1))),

@@ -175,11 +175,16 @@ namespace ProdigalArchipelago
     {
         static void Prefix(Chest __instance)
         {
-            if (Archipelago.Enabled && __instance.TYPE == Chest.CHEST_TYPE.GRAB)
+            if (Archipelago.Enabled)
             {
-                int id = Archipelago.AP.GetLocationItem(__instance.ID);
-                SpriteRenderer renderer = __instance.gameObject.GetComponent<SpriteRenderer>();
-                renderer.sprite = GameMaster.GM.ItemData.Database[id].ItemSprite;
+                __instance.WARP_CHEST = false;
+                if (__instance.TYPE == Chest.CHEST_TYPE.GRAB || __instance.TYPE == Chest.CHEST_TYPE.SPRITE || __instance.TYPE == Chest.CHEST_TYPE.MINING_NODE)
+                {
+                    int id = Archipelago.AP.GetLocationItem(__instance.ID);
+                    if (id == 0) return;
+                    SpriteRenderer renderer = __instance.gameObject.GetComponent<SpriteRenderer>();
+                    renderer.sprite = GameMaster.GM.ItemData.Database[id].ItemSprite;
+                }
             }
         }
     }
@@ -253,7 +258,7 @@ namespace ProdigalArchipelago
     {
         static void Postfix(int I, SpriteRenderer ___SpriteRen)
         {
-            if (Archipelago.Enabled && I >= 96 && I <= 99)
+            if (Archipelago.Enabled && Archipelago.AP.Settings.ShuffleGrelinDrops && I >= 96 && I <= 99)
             {
                 int id = Archipelago.AP.GetLocationItem(I - 96 + 240);
                 ___SpriteRen.sprite = GameMaster.GM.ItemData.Database[id].ItemSprite;

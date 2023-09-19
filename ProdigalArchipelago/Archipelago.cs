@@ -307,7 +307,7 @@ namespace ProdigalArchipelago
             {
                 if (location.ID == locationID)
                 {
-                    return location.Item.LocalID();
+                    return location.Item?.LocalID() ?? 0;
                 }
             }
 

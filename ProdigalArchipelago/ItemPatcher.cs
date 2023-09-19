@@ -246,6 +246,21 @@ namespace ProdigalArchipelago
         }
     }
 
+    // Make grelin drop appearance match item
+    [HarmonyPatch(typeof(Pickup))]
+    [HarmonyPatch(nameof(Pickup.Initiate))]
+    class Pickup_Initiate_Patch
+    {
+        static void Postfix(int I, SpriteRenderer ___SpriteRen)
+        {
+            if (Archipelago.Enabled && I >= 96 && I <= 99)
+            {
+                int id = Archipelago.AP.GetLocationItem(I - 96 + 240);
+                ___SpriteRen.sprite = GameMaster.GM.ItemData.Database[id].ItemSprite;
+            }
+        }
+    }
+
     // Shuffle grelin drops and gator key
     [HarmonyPatch(typeof(Pickup))]
     [HarmonyPatch(nameof(Pickup.Collect))]

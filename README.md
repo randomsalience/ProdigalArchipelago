@@ -36,6 +36,8 @@ This section describes changes which have been made to the randomizer, as well a
 - You know the harmonica tune from the start, so there is no need to do the Reflective Crypt.
 - The Empowered Hand is required to make the Hooded Figure appear, to open the warp stone to the hero's grave, and to open paths in the Tidal Mines and Magma Heart.
 - The number of Crest Fragments required to pass Alexan and the number of Coins of Crowl needed to pass Kaelum can be changed. The Blessed Pick is no longer required for the underwater item.
+- Fireballs may be hit with either the pick or the flare knuckle (but not the rust knuckle).
+- If you accidentally make Grant leave town, you can bring him back by talking to Diana at the ring shop.
 - To get the item from Bolivar, give him all four materials (Shaedrite, Drowned Ore, Miasmic Extract, Broken Sword).
 - To get the item from Lynn, return the four stolen items (Holy Relic, Wedding Ring, Silver Mirror, Painting).
 - To get the item from Keaton, collect 999 points worth of fish (100 if fast fishing is turned on).

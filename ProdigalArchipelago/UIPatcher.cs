@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Reflection;
 using UnityEngine;
 using HarmonyLib;
 
@@ -21,7 +20,7 @@ namespace ProdigalArchipelago
             var button = WarpButton.GetComponent<UIButton>();
             button.SelectedSprite = SpriteManager.WarpSelectedSprite;
             button.HitSprite = SpriteManager.WarpHitSprite;
-            typeof(UIButton).GetField("NormalSprite", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(button, SpriteManager.WarpNormalSprite);
+            AccessTools.Field(typeof(UIButton), "NormalSprite").SetValue(button, SpriteManager.WarpNormalSprite);
 
             ErrorIndicator = new("ErrorIndicator");
             ErrorIndicator.transform.parent = GameMaster.GM.UI.transform.GetChild(3);
@@ -170,7 +169,7 @@ namespace ProdigalArchipelago
             if (Pause && Archipelago.Enabled && Archipelago.AP.Settings.SpecificKeys)
             {
                 int keyCount = 0;
-                int currentScene = (int)typeof(GameMaster).GetField("CurrentScene", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(GameMaster.GM);
+                int currentScene = (int)AccessTools.Field(typeof(GameMaster), "CurrentScene").GetValue(GameMaster.GM);
                 for (int i = 0; i < Archipelago.KEY_SCENES.Length; i++)
                 {
                     if (Archipelago.KEY_SCENES[i] == currentScene)

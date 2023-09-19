@@ -128,7 +128,7 @@ namespace ProdigalArchipelago
                     new TrackerLocation("Xavier Blessing", 208, () => Has(51) && Has(55)),
                 }),
                 TrackerDot.NewDot("Lynn", 3, -40, false, () => true, new() {
-                    new TrackerLocation("Gift", 211, () => Has(96) && Has(97) && Has(98) && Has(99)),
+                    new TrackerLocation("Gift", 211, () => Archipelago.AP.Settings.ShuffleGrelinDrops ? Has(96) && Has(97) && Has(98) && Has(99) : CanKillGrelins()),
                 }),
                 TrackerDot.NewDot("Bolivar", 19, -24, false, () => true, new() {
                     new TrackerLocation("Gift", 212, () => Has(45) && Has(46) && Has(47) && Has(49)),
@@ -391,8 +391,8 @@ namespace ProdigalArchipelago
                         () => HasKnuckle() && CanOpen(Key.Backrooms, 81) && HasLariat()),
                     new TrackerLocation("Near Cracked Wall Chest", 76, () => HasKnuckle() && HasKey(Key.Backrooms, 1) && HasLariat(),
                         () => HasKnuckle() && CanOpen(Key.Backrooms, 81) && HasLariat()),
-                    new TrackerLocation("Crystal Chest", 81, () => HasKnuckle() && HasKey(Key.Backrooms, 1) && HasLariat(),
-                        () => HasKnuckle() && CanOpen(Key.Backrooms, 81) && HasLariat()),
+                    new TrackerLocation("Crystal Chest", 81, () => HasKnuckle() && HasKey(Key.Backrooms, 1) && HasLariat() && (HasKey(Key.Backrooms, 2) || HasIceKey()),
+                        () => HasKnuckle() && CanOpen(Key.Backrooms, 81) && HasLariat() && (CanOpen(Key.Backrooms, 81, 82) || HasIceKey())),
                     new TrackerLocation("Mechanized Slot Machine", 73, () => HasKnuckle() && (HasKey(Key.Backrooms, 2) || HasIceKey()) && HasPick() && HasLariat(),
                         () => HasKnuckle() && (CanOpen(Key.Backrooms, 81, 82) || HasIceKey()) && HasPick() && HasLariat()),
                 }),

@@ -56,22 +56,7 @@ namespace ProdigalArchipelago
 
             if (ID >= Archipelago.ID_BASE && ID < Archipelago.ID_BASE + GameMaster.GM.ItemData.Database.Count)
             {
-                int id = (int)(ID - Archipelago.ID_BASE);
-
-                if (id == Archipelago.PROGRESSIVE_PICK_ID)
-                {
-                    return Archipelago.IRON_PICK_ID;
-                }
-                if (id == Archipelago.PROGRESSIVE_KNUCKLE_ID)
-                {
-                    return Archipelago.RUST_KNUCKLE_ID;
-                }
-                if (id == Archipelago.PROGRESSIVE_HAND_ID)
-                {
-                    return Archipelago.DREAD_HAND_ID;
-                }
-
-                return id;
+                return (int)(ID - Archipelago.ID_BASE);
             }
             else
             {

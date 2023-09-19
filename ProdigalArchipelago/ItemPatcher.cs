@@ -14,15 +14,26 @@ namespace ProdigalArchipelago
     {
         static void Postfix()
         {
-            var apItem = new ItemDatabase.ItemData
+            GameMaster.GM.ItemData.Database.Add(new ItemDatabase.ItemData
             {
                 Name = "ARCHIPELAGO ITEM",
-                ItemSprite = SpriteManager.ArchipelagoSprite
-            };
-            GameMaster.GM.ItemData.Database.Add(apItem);
-            GameMaster.GM.ItemData.Database.Add(new ItemDatabase.ItemData());
-            GameMaster.GM.ItemData.Database.Add(new ItemDatabase.ItemData());
-            GameMaster.GM.ItemData.Database.Add(new ItemDatabase.ItemData());
+                ItemSprite = SpriteManager.ArchipelagoSprite,
+            });
+            GameMaster.GM.ItemData.Database.Add(new ItemDatabase.ItemData
+            {
+                Name = "PROGRESSIVE KNUCKLE",
+                ItemSprite = GameMaster.GM.ItemData.ItemSprites[5],
+            });
+            GameMaster.GM.ItemData.Database.Add(new ItemDatabase.ItemData
+            {
+                Name = "PROGRESSIVE HAND",
+                ItemSprite = GameMaster.GM.ItemData.ItemSprites[6],
+            });
+            GameMaster.GM.ItemData.Database.Add(new ItemDatabase.ItemData
+            {
+                Name = "PROGRESSIVE PICK",
+                ItemSprite = GameMaster.GM.ItemData.ItemSprites[9],
+            });
             GameMaster.GM.ItemData.Database.Add(NewKey("BONEYARD", "THE BONEYARD"));
             GameMaster.GM.ItemData.Database.Add(NewKey("TIDAL MINES", "THE TIDAL MINES"));
             GameMaster.GM.ItemData.Database.Add(NewKey("CROCASINO", "THE CROCASINO"));
@@ -158,18 +169,33 @@ namespace ProdigalArchipelago
         }
     }
 
+    [HarmonyPatch(typeof(Chest))]
+    [HarmonyPatch("OnEnable")]
+    class Chest_OnEnable_Patch
+    {
+        static void Prefix(Chest __instance)
+        {
+            if (Archipelago.Enabled && __instance.TYPE == Chest.CHEST_TYPE.GRAB)
+            {
+                int id = Archipelago.AP.GetLocationItem(__instance.ID);
+                SpriteRenderer renderer = __instance.gameObject.GetComponent<SpriteRenderer>();
+                renderer.sprite = GameMaster.GM.ItemData.Database[id].ItemSprite;
+            }
+        }
+    }
+
     [HarmonyPatch(typeof(SaveSystem))]
     [HarmonyPatch(nameof(SaveSystem.AddToInventory))]
     class SaveSystem_AddToInventory_Patch
     {
-        private static bool Prefix(int ItemID)
+        static bool Prefix(int ItemID)
         {
             if (Archipelago.Enabled && ItemID == Archipelago.AP_ITEM_ID)
                 return false;
             return true;
         }
 
-        private static void Postfix()
+        static void Postfix()
         {
             if (Archipelago.Enabled)
                 GameMaster.GM.Save.Save();
@@ -180,7 +206,7 @@ namespace ProdigalArchipelago
     [HarmonyPatch(nameof(LootTable.GrelinDrop))]
     class LootTable_GrelinDrop_Patch
     {
-        private static bool Prefix(LootTable __instance)
+        static bool Prefix(LootTable __instance)
         {
             if (Archipelago.Enabled && Archipelago.AP.Settings.ShuffleGrelinDrops)
             {

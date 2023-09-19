@@ -301,6 +301,19 @@ namespace ProdigalArchipelago
             }
         }
 
+        public int GetLocationItem(int locationID)
+        {
+            foreach (Location location in LocationTable)
+            {
+                if (location.ID == locationID)
+                {
+                    return location.Item.LocalID();
+                }
+            }
+
+            return 0;
+        }
+
         private IEnumerator ReceiveItem(int id, List<GameMaster.Speech> apSpeech = null, int spriteID = -1)
         {
             if (id == PROGRESSIVE_KNUCKLE_ID)

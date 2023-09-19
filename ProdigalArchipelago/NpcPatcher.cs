@@ -685,4 +685,18 @@ namespace ProdigalArchipelago
             return true;
         }
     }
+
+    // Prevent the Kir Hasa quest from resetting the Crocodile quest
+    [HarmonyPatch(typeof(KirHasa))]
+    [HarmonyPatch(nameof(KirHasa.Lynn))]
+    class KirHasa_Lynn_Patch
+    {
+        static void Postfix()
+        {
+            if (Archipelago.Enabled)
+            {
+                GameMaster.GM.Save.Data.Quests[40] = SaveSystem.Quest.QUESTCOMPLETE;
+            }
+        }
+    }
 }

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Archipelago.MultiClient.Net.Enums;
+using Archipelago.MultiClient.Net.Models;
 
 namespace ProdigalArchipelago
 {
@@ -11,13 +12,13 @@ namespace ProdigalArchipelago
         public string SlotName;
         public ItemFlags Classification;
 
-        public ArchipelagoItem(long id, string name, int slotID, string slotName, ItemFlags classification)
+        public ArchipelagoItem(NetworkItem item, bool received)
         {
-            ID = id;
-            Name = name;
-            SlotID = slotID;
-            SlotName = slotName;
-            Classification = classification;
+            ID = item.Item;
+            Name = Archipelago.AP.Session.Items.GetItemName(ID);
+            SlotID = received ? Archipelago.AP.SlotID : item.Player;
+            SlotName = Archipelago.AP.Session.Players.GetPlayerName(SlotID);
+            Classification = item.Flags;
         }
 
         public int LocalID()
@@ -41,6 +42,7 @@ namespace ProdigalArchipelago
                 ItemFlags.Trap => "T",
                 _ => "F",
             };
+
             return new List<GameMaster.Speech>
             {
                 GameMaster.CreateSpeech(46, 0, $"FOUND @{kind}{Name.ToUpper()}@*FOR {SlotName.ToUpper()}!", "", 0)
@@ -49,11 +51,6 @@ namespace ProdigalArchipelago
 
         public int SpriteID()
         {
-            if (SlotID == Archipelago.AP.SlotID)
-            {
-                return -1;
-            }
-
             if (ID >= Archipelago.ID_BASE && ID < Archipelago.ID_BASE + GameMaster.GM.ItemData.Database.Count)
             {
                 return (int)(ID - Archipelago.ID_BASE);

@@ -73,7 +73,7 @@ namespace ProdigalArchipelago
         public string Error = "";
         public int SlotID;
         public ArchipelagoSettings Settings;
-        private ArchipelagoSession Session;
+        public ArchipelagoSession Session;
         private readonly List<Location> LocationTable = new();
         private int CheatItemsReceived;
 
@@ -145,13 +145,13 @@ namespace ProdigalArchipelago
                 }
                 
                 var locationInfo = locationInfoTask.Result;
-                foreach ((var location, var info) in
+                foreach ((var location, var item) in
                     from location in LocationTable
-                    join info in locationInfo.Locations
-                    on ID_BASE + location.ID equals info.Location
-                    select (location, info))
+                    join item in locationInfo.Locations
+                    on ID_BASE + location.ID equals item.Location
+                    select (location, item))
                 {
-                    location.Item = new ArchipelagoItem(info.Item, Session.Items.GetItemName(info.Item), info.Player, Session.Players.GetPlayerName(info.Player), info.Flags);
+                    location.Item = new ArchipelagoItem(item, false);
                 }
             }
 
@@ -204,7 +204,7 @@ namespace ProdigalArchipelago
                 if (!Data.ReceivedItemLocations.Contains((item.Player, item.Location)) && item.Location != -1)
                 {
                     Data.ReceivedItemLocations.Add((item.Player, item.Location));
-                    StartCoroutine(ReceiveItem((int)(item.Item - ID_BASE)));
+                    StartCoroutine(ReceiveItem(new ArchipelagoItem(item, true)));
                 }
                 else if (item.Location == -1)
                 {
@@ -212,7 +212,7 @@ namespace ProdigalArchipelago
                     if (CheatItemsReceived >= Data.CheatItemCount)
                     {
                         Data.CheatItemCount = CheatItemsReceived;
-                        StartCoroutine(ReceiveItem((int)(item.Item - ID_BASE)));
+                        StartCoroutine(ReceiveItem(new ArchipelagoItem(item, true)));
                     }
                 }
             }
@@ -280,7 +280,7 @@ namespace ProdigalArchipelago
                 {
                     if (location.Item.SlotID == SlotID)
                         Data.ReceivedItemLocations.Add((SlotID, locationID));
-                    StartCoroutine(ReceiveItem(location.Item.LocalID(), location.Item.Speech(), location.Item.SpriteID()));
+                    StartCoroutine(ReceiveItem(location.Item));
                     return true;
                 }
             }
@@ -301,21 +301,23 @@ namespace ProdigalArchipelago
             }
         }
 
-        public int GetLocationItem(int locationID)
+        public ArchipelagoItem GetLocationItem(int locationID)
         {
             foreach (Location location in LocationTable)
             {
                 if (location.ID == locationID)
                 {
-                    return location.Item?.LocalID() ?? 0;
+                    return location.Item;
                 }
             }
 
-            return 0;
+            return null;
         }
 
-        private IEnumerator ReceiveItem(int id, List<GameMaster.Speech> apSpeech = null, int spriteID = -1)
+        private IEnumerator ReceiveItem(ArchipelagoItem item)
         {
+            int id = item.LocalID();
+
             if (id == PROGRESSIVE_KNUCKLE_ID)
             {
                 if (!GameMaster.GM.Save.Data.Inventory[RUST_KNUCKLE_ID].Acquired)
@@ -361,20 +363,16 @@ namespace ProdigalArchipelago
                 Data.KeyTotals[id - KEY_ID_START]++;
             }
 
-            if (id != AP_ITEM_ID)
+            if (item.SlotID == SlotID)
             {
                 GameMaster.GM.Save.AddToInventory(id, true);
-            }
-
-            if (spriteID == -1)
-            {
-                spriteID = id;
             }
 
             ColorCheck();
 
             bool cutscene = GameMaster.GM.GS == GameMaster.GameState.CUTSCENE;
             GameMaster.GM.PC.CUTSCENE(true);
+            int spriteID = item.SlotID == SlotID ? id : item.SpriteID();
             GameMaster.GM.PC.EMOTE.ITEM_PICKUP(GameMaster.GM.ItemData.Database[spriteID].ItemSprite, true);
             GameMaster.GM.PC.Anim.SetBool("ITEM", true);
 
@@ -438,9 +436,9 @@ namespace ProdigalArchipelago
                         GameMaster.GM.Save.AddCurrency(100);
                         break;
                 }
-                if (id == AP_ITEM_ID)
+                if (item.SlotID != SlotID)
                 {
-                    GameMaster.GM.UI.InitiateChat(apSpeech ?? new List<GameMaster.Speech>(), false);
+                    GameMaster.GM.UI.InitiateChat(item.Speech(), false);
                 }
                 else
                 {

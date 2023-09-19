@@ -300,13 +300,15 @@ namespace ProdigalArchipelago
     [HarmonyPatch(nameof(SaveSystem.NewSave))]
     class SaveSystem_NewSave_Patch
     {
-        static bool Prefix(SaveSystem __instance)
+        static bool Prefix(SaveSystem __instance, string name)
         {
             if (Archipelago.Enabled)
             {
-                __instance.Data = new SaveSystem.PlayerSave();
-                // __instance.PopulateData()
-                typeof(SaveSystem).GetMethod("PopulateData", BindingFlags.NonPublic | BindingFlags.Instance).Invoke(__instance, new object[] {});
+                __instance.Data = new SaveSystem.PlayerSave
+                {
+                    Name = name
+                };
+                AccessTools.Method(typeof(SaveSystem), "PopulateData").Invoke(__instance, new object[] {});
                 Archipelago.AP.InitialPatches();
                 __instance.Save();
                 GameMaster.GM.LoadIntoGame();

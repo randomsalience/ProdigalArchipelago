@@ -645,4 +645,44 @@ namespace ProdigalArchipelago
             return GenericItemPatcher.Transpiler(instructions, il, 238);
         }
     }
+
+    // Prevent the casino meeting from resetting Caroline's relationship stage
+    [HarmonyPatch(typeof(Caroline))]
+    [HarmonyPatch(nameof(Caroline.Meet))]
+    class Caroline_Meet_Patch
+    {
+        static void Prefix(out SaveSystem.NPCData.Stages __state)
+        {
+            __state = GameMaster.GM.Save.Data.Relationships[5].Stage;
+        }
+
+        static void Postfix(SaveSystem.NPCData.Stages __state)
+        {
+            if (Archipelago.Enabled)
+            {
+                GameMaster.GM.Save.Data.Relationships[5].Stage = __state;
+            }
+        }
+    }
+
+    // Keep Caroline's original dialogue in the Crocasino regardless of relationship stage
+    [HarmonyPatch(typeof(Caroline))]
+    [HarmonyPatch(nameof(Caroline.Chat))]
+    class Caroline_Chat_Patch
+    {
+        static bool Prefix(List<GameMaster.Speech> ___Chatter)
+        {
+            int currentScene = (int)AccessTools.Field(typeof(GameMaster), "CurrentScene").GetValue(GameMaster.GM);
+
+            if (Archipelago.Enabled && currentScene == 6)
+            {
+                ___Chatter.Clear();
+                ___Chatter.Add(GameMaster.CreateSpeech(5, 0, "THIS DOOR'S REAL SWEET ON ME.*CONVINCED HIM TO LET US INTO THE VAULT.", "CAROLINE", 6));
+                GameMaster.GM.UI.InitiateChat(___Chatter, false);
+                return false;
+            }
+
+            return true;
+        }
+    }
 }

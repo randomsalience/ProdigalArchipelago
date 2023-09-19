@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Collections;
-using System.Linq;
 using UnityEngine;
 using HarmonyLib;
 
@@ -21,7 +20,7 @@ namespace ProdigalArchipelago
                 ___Chatter.Clear();
                 GameMaster.GM.UI.SLOT_INT(__instance);
 
-                int currentScene = (int)typeof(GameMaster).GetField("CurrentScene", BindingFlags.NonPublic | BindingFlags.Instance).GetValue(GameMaster.GM);
+                int currentScene = (int)AccessTools.Field(typeof(GameMaster), "CurrentScene").GetValue(GameMaster.GM);
                 bool hasKey = false;
                 for (int i = 0; i < Archipelago.KEY_SCENES.Length; i++)
                 {

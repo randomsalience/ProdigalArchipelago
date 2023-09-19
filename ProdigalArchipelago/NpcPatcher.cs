@@ -686,6 +686,28 @@ namespace ProdigalArchipelago
         }
     }
 
+    // Keep Caroline's original dialogue at Pirate's Pier
+    [HarmonyPatch(typeof(PirateCaroline))]
+    [HarmonyPatch(nameof(PirateCaroline.NormalLoop))]
+    class PirateCaroline_NormalLoop_Patch
+    {
+        static void Prefix()
+        {
+            if (Archipelago.Enabled)
+            {
+                GameMaster.GM.Save.Data.Quests[45] = SaveSystem.Quest.STAGE3;
+            }
+        }
+
+        static void Postfix()
+        {
+            if (Archipelago.Enabled)
+            {
+                GameMaster.GM.Save.Data.Quests[45] = SaveSystem.Quest.QUESTCOMPLETE;
+            }
+        }
+    }
+
     // Prevent the Kir Hasa quest from resetting the Crocodile quest
     [HarmonyPatch(typeof(KirHasa))]
     [HarmonyPatch(nameof(KirHasa.Lynn))]

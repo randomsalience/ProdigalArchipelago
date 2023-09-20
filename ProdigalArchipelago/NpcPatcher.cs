@@ -658,10 +658,51 @@ namespace ProdigalArchipelago
 
         static void Postfix(SaveSystem.NPCData.Stages __state)
         {
-            if (Archipelago.Enabled)
+            if (Archipelago.Enabled && __state != SaveSystem.NPCData.Stages.UNMET)
             {
                 GameMaster.GM.Save.Data.Relationships[5].Stage = __state;
             }
+        }
+    }
+
+    // Make Caroline spawn correctly in the Crocasino regardless of relationship stage
+    [HarmonyPatch(typeof(CarolineCasinoSpawn))]
+    [HarmonyPatch("OnEnable")]
+    class CarolineCasinoSpawn_OnEnable_Patch
+    {
+        static bool Prefix(CarolineCasinoSpawn __instance)
+        {
+            if (Archipelago.Enabled)
+            {
+                if (__instance.SpawnLoc == CarolineCasinoSpawn.Loc.Jail)
+                {
+                    if (GameMaster.GM.Save.Data.UnlockedDoors.Contains(4))
+                    {
+                        __instance.SpawnLoc = CarolineCasinoSpawn.Loc.NULL;
+                        MotherBrain.MB.Population[5].Despawn();
+                    }
+                    else
+                    {
+                        AccessTools.Method(typeof(CarolineCasinoSpawn), "SET").Invoke(__instance, new object[] {new Vector2(608, -48)});
+                    }
+                    return false;
+                }
+
+                if (__instance.SpawnLoc == CarolineCasinoSpawn.Loc.Boss)
+                {
+                    if (!GameMaster.GM.Save.Data.UnlockedDoors.Contains(4))
+                    {
+                        MotherBrain.MB.Population[5].Despawn();
+                    }
+                    else
+                    {
+                        AccessTools.Method(typeof(CarolineCasinoSpawn), "SET").Invoke(__instance, new object[] {new Vector2(976, -464)});
+                    }
+                    return false;
+                }
+            }
+
+            return true;
         }
     }
 

@@ -45,8 +45,7 @@ namespace ProdigalArchipelago
             canvas.sortingLayerName = "UI";
             canvas.sortingOrder = 11;
 
-            var tracker = Instance.AddComponent<MapTracker>();
-            tracker.SetupDots();
+            Instance.AddComponent<MapTracker>();
         }
 
         private void OnEnable()
@@ -58,6 +57,11 @@ namespace ProdigalArchipelago
                 if (Archipelago.Enabled)
                     dot.SetColor();
             }
+        }
+
+        public static void Setup()
+        {
+            Instance.GetComponent<MapTracker>().SetupDots();
         }
 
         private void SetupDots()
@@ -180,7 +184,7 @@ namespace ProdigalArchipelago
                     new TrackerLocation("Burg Trade", 220, () => Has(30)),
                     new TrackerLocation("Crelon Trade", 221, () => Has(31) && HasLariat()),
                     new TrackerLocation("Tedra Trade", 222, () => Has(32)),
-                    new TrackerLocation("Ulni Trade", 223, () => Archipelago.AP.Settings.TradingQuest == ArchipelagoSettings.TradingQuestOption.Shuffle ? Has(33) : (Has(48) && HasLariat())),
+                    new TrackerLocation(UlniCheckName(), 223, () => CanTradeWithUlni()),
                 }),
                 TrackerDot.NewDot("Abandoned Mine", -72, -35, false, () => true, new() {
                     new TrackerLocation("Iron Pick Chest", 2, () => true),
@@ -590,6 +594,16 @@ namespace ProdigalArchipelago
         {
             int keysRequired = locks.Count(id => !GameMaster.GM.Save.Data.UnlockedDoors.Contains(id));
             return GameMaster.GM.Save.Data.Inventory[62].Count >= keysRequired;
+        }
+
+        private bool CanTradeWithUlni()
+        {
+            return Archipelago.AP.Settings.TradingQuest == ArchipelagoSettings.TradingQuestOption.Shuffle ? Has(33) : (Has(48) && HasLariat());
+        }
+
+        private string UlniCheckName()
+        {
+            return Archipelago.AP.Settings.TradingQuest == ArchipelagoSettings.TradingQuestOption.Shuffle ? "Ulni Trade" : "Complete Trading Quest";
         }
     }
 }

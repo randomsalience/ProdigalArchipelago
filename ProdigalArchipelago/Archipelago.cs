@@ -81,6 +81,7 @@ namespace ProdigalArchipelago
         public class SaveData
         {
             public ConnectionData Connection;
+            public int Seed;
             public List<(int, long)> ReceivedItemLocations = new();
             public int CheatItemCount = 0;
             public List<int> KeyTotals = new();
@@ -133,6 +134,7 @@ namespace ProdigalArchipelago
             {
                 Settings = new ArchipelagoSettings(login.SlotData);
                 BuildLocationTable();
+                MapTracker.Setup();
 
                 // Scout unchecked locations
                 var uncheckedLocationIDs = from location in LocationTable where !location.Checked() select ID_BASE + location.ID;

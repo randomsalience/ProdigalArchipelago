@@ -464,15 +464,4 @@ namespace ProdigalArchipelago
                 GameMaster.GM.Save.Save();
         }
     }
-
-    // For Debug Purposes Only
-    [HarmonyPatch(typeof(LockBlock))]
-    [HarmonyPatch(nameof(LockBlock.Unlock))]
-    class LockBlock_Unlock_Patch
-    {
-        static void Prefix(LockBlock __instance)
-        {
-            Plugin.Logger.LogInfo($"Unlocking door {__instance.ID}");
-        }
-    }
 }

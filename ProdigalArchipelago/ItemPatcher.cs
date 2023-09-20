@@ -178,12 +178,13 @@ namespace ProdigalArchipelago
             if (Archipelago.Enabled)
             {
                 __instance.WARP_CHEST = false;
-                if (__instance.TYPE == Chest.CHEST_TYPE.GRAB || __instance.TYPE == Chest.CHEST_TYPE.SPRITE || __instance.TYPE == Chest.CHEST_TYPE.MINING_NODE)
+                if (__instance.TYPE == Chest.CHEST_TYPE.GRAB || __instance.TYPE == Chest.CHEST_TYPE.SPRITE)
                 {
                     int id = Archipelago.AP.GetLocationItem(__instance.ID)?.SpriteID() ?? 0;
                     if (id == 0) return;
                     SpriteRenderer renderer = __instance.gameObject.GetComponent<SpriteRenderer>();
                     renderer.sprite = GameMaster.GM.ItemData.Database[id].ItemSprite;
+                    __instance.gameObject.GetComponent<Animator>().enabled = false;
                 }
             }
         }

@@ -83,6 +83,7 @@ namespace ProdigalArchipelago
                     break;
                 case GameType.Archipelago:
                     Archipelago.Enabled = true;
+                    Archipelago.AP.Data = new();
                     Menu.ArchipelagoConnect(true);
                     break;
             }

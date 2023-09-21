@@ -129,12 +129,12 @@ namespace ProdigalArchipelago
 
             if (InputManager.IM.UI_DIR.y > 0)
             {
-                ChangeSelection(-1);
+                ChangeSelection(Selected - 1);
                 StartCoroutine(StartDelay());
             }
             if (InputManager.IM.UI_DIR.y < 0)
             {
-                ChangeSelection(1);
+                ChangeSelection(Selected + 1);
                 StartCoroutine(StartDelay());
             }
         }
@@ -167,10 +167,10 @@ namespace ProdigalArchipelago
             return entry;
         }
 
-        private void ChangeSelection(int dir)
+        private void ChangeSelection(int selected)
         {
             SetSelectedColor(Color.black);
-            Selected = Math.Clamp(Selected + dir, 0, 4);
+            Selected = Math.Clamp(selected, 0, 4);
             var entry = Selected switch
             {
                 0 => ServerEntry,

@@ -32,6 +32,7 @@ namespace ProdigalArchipelago
         public bool ShuffleHiddenItems;
         public bool ShuffleDaemonsDive;
         public bool ShuffleEnlightenment;
+        public bool ShuffleSecretShop;
         public bool LongJumpsInLogic;
         public bool StartWithSpicedHam;
         public bool SkipOneSmallFavor;
@@ -51,6 +52,7 @@ namespace ProdigalArchipelago
             ShuffleHiddenItems = GetOrDefault(slotData, "shuffle_hidden_items", 0) != 0;
             ShuffleDaemonsDive = GetOrDefault(slotData, "shuffle_daemons_dive", 0) != 0;
             ShuffleEnlightenment = GetOrDefault(slotData, "shuffle_enlightenment", 0) != 0;
+            ShuffleSecretShop = GetOrDefault(slotData, "shuffle_secret_shop", 0) != 0;
             LongJumpsInLogic = GetOrDefault(slotData, "long_jumps_in_logic", 0) != 0;
             StartWithSpicedHam = GetOrDefault(slotData, "start_with_spiced_ham", 0) != 0;
             SkipOneSmallFavor = GetOrDefault(slotData, "skip_one_small_favor", 0) != 0;
@@ -78,7 +80,7 @@ namespace ProdigalArchipelago
             return Goal == GoalOption.Torran || Goal == GoalOption.Any;
         }
 
-        private int GetOrDefault(Dictionary<string, object> slotData, string key, int dflt)
+        public static int GetOrDefault(Dictionary<string, object> slotData, string key, int dflt)
         {
             if (!slotData.TryGetValue(key, out object value))
             {

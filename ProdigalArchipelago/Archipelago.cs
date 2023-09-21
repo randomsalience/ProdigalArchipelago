@@ -54,6 +54,7 @@ namespace ProdigalArchipelago
         private static readonly int[] LOCS_HIDDEN = {0, 137, 138, 139, 140, 141, 162, 175, 176, 184};
         private static readonly int[] LOCS_DIVE = {98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 124, 244};
         private static readonly int[] LOCS_ENLIGHTENMENT = {64, 74, 75, 77, 78, 79, 80, 90};
+        public static readonly int[] LOCS_SECRET_SHOP = {245, 246, 247};
 
         public static bool Enabled;
         public static Archipelago AP;
@@ -74,6 +75,7 @@ namespace ProdigalArchipelago
         public int SlotID;
         public ArchipelagoSettings Settings;
         public ArchipelagoSession Session;
+        private System.Random Random;
         private readonly List<Location> LocationTable = new();
         private int CheatItemsReceived;
 
@@ -81,10 +83,11 @@ namespace ProdigalArchipelago
         public class SaveData
         {
             public ConnectionData Connection;
-            public int Seed;
+            public int Seed = 0;
             public List<(int, long)> ReceivedItemLocations = new();
             public int CheatItemCount = 0;
             public List<int> KeyTotals = new();
+            public int[] SecretShopPrices = new int[3];
         }
 
         public SaveData Data = new();
@@ -128,13 +131,22 @@ namespace ProdigalArchipelago
 
             LoginSuccessful login = (LoginSuccessful)result;
             SlotID = login.Slot;
-            Session.Socket.SocketClosed += OnSocketClosed;
+            int seed = ArchipelagoSettings.GetOrDefault(login.SlotData, "seed", 0);
+
+            if (Data.Seed != 0 && Data.Seed != seed)
+            {
+                Error = "The server's seed does not match the save file's seed\nMake sure you're connecting with the right save file";
+                Disconnect();
+                yield break;
+            }
+
+            Data.Seed = seed;
 
             if (!reconnect)
             {
                 Settings = new ArchipelagoSettings(login.SlotData);
                 BuildLocationTable();
-                MapTracker.Setup();
+                MapTracker.SetupTracker();
 
                 // Scout unchecked locations
                 var uncheckedLocationIDs = from location in LocationTable where !location.Checked() select ID_BASE + location.ID;
@@ -167,6 +179,8 @@ namespace ProdigalArchipelago
                 yield break;
             }
 
+            // Connection successful
+            Session.Socket.SocketClosed += OnSocketClosed;
             Connected = true;
             Error = "";
             Data.Connection = cdata;
@@ -211,7 +225,7 @@ namespace ProdigalArchipelago
                 else if (item.Location == -1)
                 {
                     CheatItemsReceived++;
-                    if (CheatItemsReceived >= Data.CheatItemCount)
+                    if (CheatItemsReceived > Data.CheatItemCount)
                     {
                         Data.CheatItemCount = CheatItemsReceived;
                         StartCoroutine(ReceiveItem(new ArchipelagoItem(item, true)));
@@ -258,6 +272,8 @@ namespace ProdigalArchipelago
             Data.KeyTotals.Clear();
             for (int i = 0; i < KEY_DUNGEONS.Count(); i++)
                 Data.KeyTotals.Add(0);
+            
+            Randomize();
         }
 
         public bool CollectItem(int locationID)
@@ -498,6 +514,8 @@ namespace ProdigalArchipelago
                 locations.AddRange(LOCS_DIVE);
             if (Settings.ShuffleEnlightenment)
                 locations.AddRange(LOCS_ENLIGHTENMENT);
+            if (Settings.ShuffleSecretShop)
+                locations.AddRange(LOCS_SECRET_SHOP);
 
             foreach (int locationID in locations)
             {
@@ -545,6 +563,20 @@ namespace ProdigalArchipelago
             }
         }
 
+        public void AddToChat(List<GameMaster.Speech> chat, bool question)
+        {
+            StartCoroutine(ChatWhenReady(chat, question));
+        }
+
+        private IEnumerator ChatWhenReady(List<GameMaster.Speech> chat, bool question)
+        {
+            while (GameMaster.GM.UI.SPEAKING())
+            {
+                yield return null;
+            }
+            GameMaster.GM.UI.InitiateChat(chat, question);
+        }
+
         public void StartWarp()
         {
             StartCoroutine(Warp());
@@ -581,6 +613,37 @@ namespace ProdigalArchipelago
             GameMaster.GM.UI.US = UI.UIState.NULL;
             GameMaster.GM.GS = GameMaster.GameState.IN_GAME;
             GameMaster.GM.PC.CUTSCENE(false);
+        }
+
+        private void Randomize()
+        {
+            Random = new(Data.Seed);
+            if (Settings.ShuffleSecretShop)
+            {
+                RandomizeSecretShopPrices();
+            }
+        }
+
+        private void RandomizeSecretShopPrices()
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                ArchipelagoItem item = GetLocationItem(LOCS_SECRET_SHOP[i]);
+                if (item is null)
+                {
+                    Data.SecretShopPrices[i] = 0;
+                }
+                else
+                {
+                    Data.SecretShopPrices[i] = item.Classification switch
+                    {
+                        ItemFlags.Advancement => Random.Next(150, 300),
+                        ItemFlags.NeverExclude => Random.Next(50, 200),
+                        ItemFlags.Trap => Random.Next(0, 20),
+                        _ => Random.Next(0, 100),
+                    };
+                }
+            }
         }
     }
 }

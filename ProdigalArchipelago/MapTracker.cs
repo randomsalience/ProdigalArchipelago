@@ -45,7 +45,27 @@ namespace ProdigalArchipelago
             canvas.sortingLayerName = "UI";
             canvas.sortingOrder = 11;
 
-            Instance.AddComponent<MapTracker>();
+            var tracker = Instance.AddComponent<MapTracker>();
+            tracker.SetupDots();
+        }
+
+        public static void SetupTracker()
+        {
+            Instance.GetComponent<MapTracker>().Setup();
+        }
+
+        private void Setup()
+        {
+            foreach (TrackerDot dot in Dots)
+            {
+                foreach (TrackerLocation location in dot.Locations)
+                {
+                    if (location.ID == 223)
+                    {
+                        location.Name = Archipelago.AP.Settings.TradingQuest == ArchipelagoSettings.TradingQuestOption.Shuffle ? "Ulni Trade" : "Complete Trading Quest";
+                    }
+                }
+            }
         }
 
         private void OnEnable()
@@ -57,11 +77,6 @@ namespace ProdigalArchipelago
                 if (Archipelago.Enabled)
                     dot.SetColor();
             }
-        }
-
-        public static void Setup()
-        {
-            Instance.GetComponent<MapTracker>().SetupDots();
         }
 
         private void SetupDots()
@@ -184,7 +199,7 @@ namespace ProdigalArchipelago
                     new TrackerLocation("Burg Trade", 220, () => Has(30)),
                     new TrackerLocation("Crelon Trade", 221, () => Has(31) && HasLariat()),
                     new TrackerLocation("Tedra Trade", 222, () => Has(32)),
-                    new TrackerLocation(UlniCheckName(), 223, () => CanTradeWithUlni()),
+                    new TrackerLocation("Ulni Trade", 223, () => CanTradeWithUlni()),
                 }),
                 TrackerDot.NewDot("Abandoned Mine", -72, -35, false, () => true, new() {
                     new TrackerLocation("Iron Pick Chest", 2, () => true),
@@ -225,6 +240,9 @@ namespace ProdigalArchipelago
                     new TrackerLocation("Vulture", 142, () => Has(34) && HasPick() && HasHand()),
                 }),
                 TrackerDot.NewDot("Tidal Mines", 43, -52, true, () => Has(36), new() {
+                    new TrackerLocation("Secret Shop Item 1", 245, () => CanReachZaegul()),
+                    new TrackerLocation("Secret Shop Item 2", 246, () => CanReachZaegul()),
+                    new TrackerLocation("Secret Shop Item 3", 247, () => CanReachZaegul()),
                     new TrackerLocation("Barrel Puzzle Heart Ore", 151, () => HasLariat() && HasPick()),
                     new TrackerLocation("Rocks Chest", 13, () => (HasHand() || HasLariat()) && (HasPick() || CanLongJump() || (HasFlare() && HasLariat()))),
                     new TrackerLocation("Lariat Chest", 15, () => (HasHand() || HasLariat()) && (HasPick() || CanLongJump() || (HasFlare() && HasLariat())) && (HasLariat() || HasKey(Key.TidalMines, 4)),
@@ -599,11 +617,6 @@ namespace ProdigalArchipelago
         private bool CanTradeWithUlni()
         {
             return Archipelago.AP.Settings.TradingQuest == ArchipelagoSettings.TradingQuestOption.Shuffle ? Has(33) : (Has(48) && HasLariat());
-        }
-
-        private string UlniCheckName()
-        {
-            return Archipelago.AP.Settings.TradingQuest == ArchipelagoSettings.TradingQuestOption.Shuffle ? "Ulni Trade" : "Complete Trading Quest";
         }
     }
 }

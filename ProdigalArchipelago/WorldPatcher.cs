@@ -4,6 +4,7 @@ using System.Reflection.Emit;
 using System.Collections;
 using UnityEngine;
 using HarmonyLib;
+using Archipelago.MultiClient.Net.Enums;
 
 namespace ProdigalArchipelago
 {
@@ -141,29 +142,26 @@ namespace ProdigalArchipelago
         }
     }
 
-    // Remove major items from Zaegul's shop, also disable rocket boots
+    // Remove or shuffle major items from Zaegul's shop, also disable rocket boots
     [HarmonyPatch(typeof(ShopItem))]
     [HarmonyPatch("OnEnable")]
     class ShopItem_OnEnable_Patch
     {
-        static void Prefix(ShopItem __instance)
+        static bool Prefix(ShopItem __instance, ref int ___Price)
         {
             if (Archipelago.Enabled && __instance.IT == ShopItem.ItemType.SecretShop)
             {
                 switch (__instance.IDNum)
                 {
                     case ShopItem.ID.One:
-                        __instance.IDNum = ShopItem.ID.Six;
-                        break;
+                        return InitializeSecretShopItem(__instance, ref ___Price, 0, ShopItem.ID.Six);
                     case ShopItem.ID.Three:
-                        __instance.IDNum = ShopItem.ID.Seven;
-                        break;
+                        return InitializeSecretShopItem(__instance, ref ___Price, 1, ShopItem.ID.Seven);
                     case ShopItem.ID.Four:
-                        __instance.IDNum = ShopItem.ID.Eight;
-                        break;
+                        return InitializeSecretShopItem(__instance, ref ___Price, 2, ShopItem.ID.Eight);
                     case ShopItem.ID.Five:
                         __instance.IDNum = ShopItem.ID.Nine;
-                        break;
+                        return true;
                 }
             }
 
@@ -171,25 +169,139 @@ namespace ProdigalArchipelago
             {
                 __instance.IT = ShopItem.ItemType.RUSTED;
             }
+
+            return true;
+        }
+
+        static bool InitializeSecretShopItem(ShopItem item, ref int price, int num, ShopItem.ID alternate)
+        {
+            int locationID = Archipelago.LOCS_SECRET_SHOP[num];
+            if (Archipelago.AP.Settings.ShuffleSecretShop && !GameMaster.GM.Save.Data.Chests.Contains(locationID))
+            {
+                int spriteID = Archipelago.AP.GetLocationItem(locationID).SpriteID();
+                item.Sprite.GetComponent<SpriteRenderer>().sprite = GameMaster.GM.ItemData.Database[spriteID].ItemSprite;
+                price = Archipelago.AP.Data.SecretShopPrices[num];
+                return false;
+            }
+            else
+            {
+                item.IDNum = alternate;
+                return true;
+            }
         }
     }
 
-    // Prevent buying keys if specific keys setting is on
+    // Set the correct dialogue for Zaegul's shop, and prevent buying keys if specific keys setting is on
     [HarmonyPatch(typeof(ShopItem))]
     [HarmonyPatch(nameof(ShopItem.AskAbout))]
     class ShopItem_AskAbout_Patch
     {
-        static bool Prefix(ShopItem __instance, List<GameMaster.Speech> ___FullChat)
+        static bool Prefix(ShopItem __instance, List<GameMaster.Speech> ___FullChat, Interactable ___Int)
         {
-            if (Archipelago.Enabled && Archipelago.AP.Settings.SpecificKeys && __instance.IT == ShopItem.ItemType.SecretShop && __instance.IDNum == ShopItem.ID.Two)
+            if (Archipelago.Enabled && __instance.IT == ShopItem.ItemType.SecretShop)
             {
                 ___FullChat.Clear();
-                ___FullChat.Add(GameMaster.CreateSpeech(23, 0, "KEY ALWAYS USEFUL. . . EXCEPT THIS ONE. NOT WORK ON ANY DOOR.", "ZAEGUL", 10));
-                ___FullChat.Add(GameMaster.CreateSpeech(23, 0, "AS ZAEGUL IS HONEST MERCHANT, CANNOT SELL YOU THIS.", "ZAEGUL", 10));
-                GameMaster.GM.UI.InitiateChat(___FullChat, false);
-                return false;
+                switch (__instance.IDNum)
+                {
+                    case ShopItem.ID.One:
+                        SetSecretShopDialogue(___FullChat, ___Int, 0);
+                        return false;
+                    case ShopItem.ID.Three:
+                        SetSecretShopDialogue(___FullChat, ___Int, 1);
+                        return false;
+                    case ShopItem.ID.Four:
+                        SetSecretShopDialogue(___FullChat, ___Int, 2);
+                        return false;
+                    case ShopItem.ID.Two:
+                        if (Archipelago.AP.Settings.SpecificKeys)
+                        {
+                            ___FullChat.Add(GameMaster.CreateSpeech(23, 0, "KEY ALWAYS USEFUL. . . EXCEPT THIS ONE. NOT WORK ON ANY DOOR.", "ZAEGUL", 10));
+                            ___FullChat.Add(GameMaster.CreateSpeech(23, 0, "AS ZAEGUL IS HONEST MERCHANT, CANNOT SELL YOU THIS.", "ZAEGUL", 10));
+                            GameMaster.GM.UI.InitiateChat(___FullChat, false);
+                            return false;
+                        }
+                        break;
+                }
             }
             return true;
+        }
+
+        static void SetSecretShopDialogue(List<GameMaster.Speech> chat, Interactable interactable, int num)
+        {
+            int price = Archipelago.AP.Data.SecretShopPrices[num];
+            ArchipelagoItem item = Archipelago.AP.GetLocationItem(Archipelago.LOCS_SECRET_SHOP[num]);
+            chat.Add(GameMaster.CreateSpeech(23, 0, $"{item.Name} FOR {item.SlotName}.", "ZAEGUL", 10));
+            string description = item.Classification switch
+            {
+                ItemFlags.Advancement => $"IS VERY GOOD ITEM SO MUST SELL FOR {price}G. WILL YOU BUY?",
+                ItemFlags.NeverExclude => $"IS NICE TO HAVE. PRICE IS {price}G WILL YOU BUY?",
+                ItemFlags.Trap => $"IS ONLY {price}G BUT DO YOU REALLY WANT TO BUY?",
+                _ => $"ONLY {price}G, WILL YOU BUY?",
+            };
+            chat.Add(GameMaster.CreateSpeech(23, 0, description, "ZAEGUL", 10));
+            GameMaster.GM.UI.SLOT_INT(interactable);
+            GameMaster.GM.UI.InitiateChat(chat, true);
+        }
+    }
+
+    // Change items received from Secret Shop
+    [HarmonyPatch(typeof(ShopItem))]
+    [HarmonyPatch(nameof(ShopItem.Purchase))]
+    class ShopItem_Purchase_Patch
+    {
+        static bool Prefix(ShopItem __instance, bool Yes, int ___Price, List<GameMaster.Speech> ___FullChat)
+        {
+            if (Archipelago.Enabled && Yes && __instance.IT == ShopItem.ItemType.SecretShop && GameMaster.GM.Save.Data.Currency >= ___Price)
+            {
+                ___FullChat.Clear();
+                switch (__instance.IDNum)
+                {
+                    case ShopItem.ID.One:
+                        BuyItem(__instance, 0, ___Price, ___FullChat);
+                        return false;
+                    case ShopItem.ID.Three:
+                        BuyItem(__instance, 1, ___Price, ___FullChat);
+                        return false;
+                    case ShopItem.ID.Four:
+                        BuyItem(__instance, 2, ___Price, ___FullChat);
+                        return false;
+                    default:
+                        return true;
+                }
+            }
+
+            if (Archipelago.Enabled && !Yes && __instance.IT == ShopItem.ItemType.SecretShop)
+            {
+                int num = __instance.IDNum switch
+                {
+                    ShopItem.ID.One => 0,
+                    ShopItem.ID.Three => 1,
+                    ShopItem.ID.Four => 2,
+                    _ => -1,
+                };
+                if (num == -1) return true;
+                ArchipelagoItem item = Archipelago.AP.GetLocationItem(Archipelago.LOCS_SECRET_SHOP[num]);
+                if (item.Classification == ItemFlags.Trap)
+                {
+                    ___FullChat.Clear();
+                    ___FullChat.Add(GameMaster.CreateSpeech(23, 0, "YOU MAKE GOOD DECISION.", "ZAEGUL", 10));
+                    GameMaster.GM.UI.InitiateChat(___FullChat, false);
+                    return false;
+                }
+                return true;
+            }
+
+            return true;
+        }
+
+        static void BuyItem(ShopItem item, int num, int price, List<GameMaster.Speech> chat)
+        {
+            GameMaster.GM.Save.AddCurrency(-price);
+            item.Sprite.SetActive(false);
+            item.GetComponent<Collider2D>().enabled = false;
+            Archipelago.AP.CollectItem(Archipelago.LOCS_SECRET_SHOP[num]);
+            chat.Add(GameMaster.CreateSpeech(23, 0, "YES YES THANK YOU. WAS GREAT DEAL.", "ZAEGUL", 10));
+            Archipelago.AP.AddToChat(chat, false);
         }
     }
 

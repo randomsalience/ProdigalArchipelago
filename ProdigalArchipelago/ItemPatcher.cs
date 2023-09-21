@@ -907,10 +907,15 @@ namespace ProdigalArchipelago
     [HarmonyPatch(MethodType.Enumerator)]
     class GameMaster_CastleVannOver_Enumerator_Patch
     {
+        #pragma warning disable CS0649
+        public static GameObject Item;
+        #pragma warning restore CS0649
+
         static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator il)
         {
             bool skip = false;
-            int count = 0;
+            bool twistedSoulFound = false;
+            FieldInfo twistedSoulField = null;
             Label label_not_archipelago = il.DefineLabel();
 
             foreach (var code in instructions)
@@ -919,6 +924,9 @@ namespace ProdigalArchipelago
                 {
                     yield return new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(Archipelago), nameof(Archipelago.Enabled)));
                     yield return new CodeInstruction(OpCodes.Brfalse, label_not_archipelago);
+                    yield return new CodeInstruction(OpCodes.Ldarg_0);
+                    yield return new CodeInstruction(OpCodes.Ldfld, twistedSoulField);
+                    yield return new CodeInstruction(OpCodes.Stsfld, AccessTools.Field(typeof(GameMaster_CastleVannOver_Enumerator_Patch), nameof(Item)));
                     yield return new CodeInstruction(OpCodes.Ldc_I4_0);
                     yield return new CodeInstruction(OpCodes.Ret);
                     code.labels.Add(label_not_archipelago);
@@ -927,10 +935,16 @@ namespace ProdigalArchipelago
                 
                 yield return code;
 
-                if (code.opcode == OpCodes.Call && (MethodInfo)code.operand == AccessTools.Method(typeof(UnityEngine.Object), nameof(UnityEngine.Object.Destroy), new Type[] {typeof(UnityEngine.Object)}))
+                if (code.opcode == OpCodes.Ldstr && (string)code.operand == "Prefabs/Cutscene/TwistedSoul")
                 {
-                    count++;
-                    skip = count == 2;
+                    twistedSoulFound = true;
+                }
+
+                if (twistedSoulFound && code.opcode == OpCodes.Stfld)
+                {
+                    twistedSoulFound = false;
+                    skip = true;
+                    twistedSoulField = (FieldInfo)code.operand;
                 }
             }
         }
@@ -949,6 +963,16 @@ namespace ProdigalArchipelago
 
             if (Archipelago.Enabled)
             {
+                GameObject itemObj = GameMaster_CastleVannOver_Enumerator_Patch.Item;
+                int spriteID = Archipelago.AP.GetLocationItem(234).SpriteID();
+                itemObj.GetComponent<SpriteRenderer>().sprite = GameMaster.GM.ItemData.Database[spriteID].ItemSprite;
+                yield return new WaitForSeconds(2);
+                GameMaster.GM.PC.WalkTo(new Vector3(872, -848, 0), 1, 0);
+                while (!GameMaster.GM.PC.MovementDone)
+                {
+                    yield return null;
+                }
+                UnityEngine.Object.Destroy(itemObj);
                 Archipelago.AP.CollectItem(234);
                 while (GameMaster.GM.UI.SPEAKING())
                 {

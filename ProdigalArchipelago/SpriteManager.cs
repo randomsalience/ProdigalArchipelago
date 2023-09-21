@@ -28,6 +28,11 @@ namespace ProdigalArchipelago
             WarpSelectedSprite = LoadSprite("WarpSelected.png");
             WarpNormalSprite = LoadSprite("WarpNormal.png");
             WarpHitSprite = LoadSprite("WarpHit.png");
+
+            GameMaster.GM.UI.THIN_FONT[8] = LoadSprite("ParenLThin.png");
+            GameMaster.GM.UI.THIN_FONT[9] = LoadSprite("ParenRThin.png");
+            GameMaster.GM.UI.THICK_FONT[8] = LoadSprite("ParenLThick.png");
+            GameMaster.GM.UI.THICK_FONT[9] = LoadSprite("ParenRThick.png");
         }
 
         static Sprite LoadSprite(string filename)

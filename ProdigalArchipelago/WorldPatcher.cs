@@ -450,6 +450,47 @@ namespace ProdigalArchipelago
         }
     }
 
+    // Nora tells you the goal of the game
+    [HarmonyPatch(typeof(Nora))]
+    [HarmonyPatch("FireQuest")]
+    class Nora_FireQuest_Patch
+    {
+        static bool Prefix(Nora __instance, List<GameMaster.Speech> ___Chatter)
+        {
+            if (Archipelago.Enabled)
+            {
+                ___Chatter.Clear();
+
+                switch (GameMaster.GM.Save.Data.Quests[2])
+                {
+                    case SaveSystem.Quest.STAGE1:
+                        __instance.StartCoroutine((IEnumerator)AccessTools.Method(typeof(Nora), "SFNoraStart").Invoke(__instance, new object[] {}));
+                        return false;
+                    case SaveSystem.Quest.STAGE15:
+                        __instance.StartCoroutine((IEnumerator)AccessTools.Method(typeof(Nora), "SFNoraEnd").Invoke(__instance, new object[] {}));
+                        return false;
+                }
+
+                string winCondition = Archipelago.AP.Settings.Goal switch
+                {
+                    ArchipelagoSettings.GoalOption.Var => "YOU MUST DEFEAT THE LIFELESS NIGHT.",
+                    ArchipelagoSettings.GoalOption.Rest => "YOU MUST REVIVE THE HERO.",
+                    ArchipelagoSettings.GoalOption.Shadow => "YOU MUST OVERCOME YOURSELF.",
+                    ArchipelagoSettings.GoalOption.Torran => "YOU MUST ACHIEVE ENLIGHTENMENT.",
+                    ArchipelagoSettings.GoalOption.Any => "THERE ARE MANY PATHS TO VICTORY.",
+                    _ => "I DON'T KNOW WHAT YOU NEED TO DO.",
+                };
+
+                ___Chatter.Add(GameMaster.CreateSpeech(34, 0, winCondition, "NORA", 6));
+                GameMaster.GM.UI.InitiateChat(___Chatter, false);
+
+                return false;
+            }
+
+            return true;
+        }
+    }
+
     // Allow using warp statues without dread hand
     [HarmonyPatch(typeof(LevelStatue))]
     [HarmonyPatch(nameof(LevelStatue.TeleCheck))]

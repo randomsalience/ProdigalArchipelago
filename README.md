@@ -27,6 +27,7 @@ This section describes changes which have been made to the randomizer, as well a
 - Buying ice keys from Zaegul is in logic if you have the Harmonica, access to the secret shop in the Tidal Mines, and a means of making money. If "Specific Keys" is turned off, buying normal keys from Zaegul is also in logic.
 - A warp to town button has been added to the menu. Besides being convenient, this allows you to obtain checks that would otherwise softlock you.
 - The map in the menu now includes a tracker. Locations are green if all items can be obtained, yellow if some can be obtained, or red if none can be obtained. Orange means that items can be obtained out of logic by spending keys. Hover over a location with the mouse to see a list of all checks at that location.
+- Nora tells you the goal of the game.
 - Extra checks are added on Yhorte, Siska, and Inkwell, as well as Color Correction (beating Me?).
 - To enter the lighthouse, you must collect a certain number of Colors (Shattered Soul, Fury Heart, Frozen Heart, Red Crystal, Sunset Painting).
 - To obtain the Hero's Soul, you must collect a certain number of Blessings.
@@ -38,6 +39,7 @@ This section describes changes which have been made to the randomizer, as well a
 - The number of Crest Fragments required to pass Alexan and the number of Coins of Crowl needed to pass Kaelum can be changed. The Blessed Pick is no longer required for the underwater item.
 - Fireballs may be hit with either the pick or the flare knuckle (but not the rust knuckle).
 - If you accidentally make Grant leave town, you can bring him back by talking to Diana at the ring shop.
+- The Cursed Pick cannot be turned in until the Cursed Grave is opened. Grant will give you his quest after you turn in the Cursed Pick.
 - To get the item from Bolivar, give him all four materials (Shaedrite, Drowned Ore, Miasmic Extract, Broken Sword).
 - To get the item from Lynn, return the four stolen items (Holy Relic, Wedding Ring, Silver Mirror, Painting).
 - To get the item from Keaton, collect 999 points worth of fish (100 if fast fishing is turned on).

@@ -256,7 +256,7 @@ namespace ProdigalArchipelago
                     new TrackerLocation("Islands Heart Ore", 152, () => HasLariat() && HasPick() && HasKey(Key.TidalMines, 4),
                         () => HasLariat() && HasPick() && CanOpen(Key.TidalMines, 2)),
                     new TrackerLocation("Tidal Frog", 170, () => HasLariat() && HasPick()),
-                    new TrackerLocation("Deep Barrel Chest", 96, () => HasHand2() && (CanLongJump() || (HasLariat() && CanHit()))),
+                    new TrackerLocation("Deep Barrel Chest", 96, () => HasHand2() && (CanLongJump() || (HasLariat() && HasKnuckle()))),
                     new TrackerLocation("Deep Turtles Chest", 97, () => HasHand2() && HasLariat() && HasPick() && HasFlare() && HasKey(Key.TidalMines, 3),
                         () => HasHand2() && HasLariat() && HasPick() && HasFlare() && CanOpen(Key.TidalMines, 40)),
                     new TrackerLocation("Water Blessing", 230, () => HasHand2() && HasLariat() && HasPick() && HasFlare() && HasKey(Key.TidalMines, 4),

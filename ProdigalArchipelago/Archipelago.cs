@@ -29,6 +29,7 @@ namespace ProdigalArchipelago
         public const int HEART_ORE_ID = 70;
         public const int EMPOWERED_HAND_ID = 76;
         public const int FLARE_KNUCKLE_ID = 77;
+        public const int WEAPON_CHAIN_ID = 78;
         public const int AP_ITEM_ID = 101;
         public const int PROGRESSIVE_KNUCKLE_ID = 102;
         public const int PROGRESSIVE_HAND_ID = 103;
@@ -376,17 +377,22 @@ namespace ProdigalArchipelago
                 }
             }
 
-            if (id >= KEY_ID_START && id < KEY_ID_START + KEY_DUNGEONS.Count())
-            {
-                Data.KeyTotals[id - KEY_ID_START]++;
-            }
-
             if (item.SlotID == SlotID)
             {
                 GameMaster.GM.Save.AddToInventory(id, true);
             }
 
+            if (id >= KEY_ID_START && id < KEY_ID_START + KEY_DUNGEONS.Count())
+            {
+                Data.KeyTotals[id - KEY_ID_START]++;
+            }
+
             ColorCheck();
+
+            if (id == WEAPON_CHAIN_ID)
+            {
+                GameMaster.GM.PC.Anim.SetBool("WEPCHAIN", true);
+            }
 
             bool cutscene = GameMaster.GM.GS == GameMaster.GameState.CUTSCENE;
             GameMaster.GM.PC.CUTSCENE(true);

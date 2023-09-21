@@ -457,6 +457,11 @@ namespace ProdigalArchipelago
         {
             return GenericItemPatcher.Transpiler(instructions, il, 228);
         }
+
+        static void Postfix()
+        {
+            GameMaster.GM.PC.Anim.SetBool("WEPCHAIN", GameMaster.GM.Save.Data.Inventory[78].Acquired);
+        }
     }
 
     [HarmonyPatch(typeof(SpecialInteract))]

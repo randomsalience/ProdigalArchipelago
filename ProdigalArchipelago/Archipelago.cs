@@ -26,6 +26,7 @@ namespace ProdigalArchipelago
         public const int IRON_PICK_ID = 9;
         public const int BLESSED_PICK_ID = 10;
         public const int BOLT_ANCHOR_ID = 11;
+        public const int SCARF_ID = 68;
         public const int HEART_ORE_ID = 70;
         public const int EMPOWERED_HAND_ID = 76;
         public const int FLARE_KNUCKLE_ID = 77;
@@ -387,12 +388,17 @@ namespace ProdigalArchipelago
                 Data.KeyTotals[id - KEY_ID_START]++;
             }
 
-            ColorCheck();
-
             if (id == WEAPON_CHAIN_ID)
             {
                 GameMaster.GM.PC.Anim.SetBool("WEPCHAIN", true);
             }
+
+            if (id == SCARF_ID)
+            {
+                GameMaster.GM.PC.EquipScarf();
+            }
+
+            ColorCheck();
 
             bool cutscene = GameMaster.GM.GS == GameMaster.GameState.CUTSCENE;
             GameMaster.GM.PC.CUTSCENE(true);

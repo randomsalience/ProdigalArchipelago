@@ -139,7 +139,36 @@ namespace ProdigalArchipelago
     {
         static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator il)
         {
-            return GenericItemPatcher.Transpiler(instructions, il, 109);
+            Queue<CodeInstruction> queue = new();
+
+            foreach (var code in GenericItemPatcher.Transpiler(instructions, il, 109))
+            {
+                queue.Enqueue(code);
+
+                if (code.opcode == OpCodes.Stfld && (FieldInfo)code.operand == AccessTools.Field(typeof(SaveSystem.PlayerSave), nameof(SaveSystem.PlayerSave.BSlot)))
+                {
+                    queue.Clear();
+                    yield return new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(Chest_TrappedChest_Patch), nameof(SetBSlot)));
+                }
+
+                if (queue.Count >= 5)
+                {
+                    yield return queue.Dequeue();
+                }
+            }
+
+            foreach (var code in queue)
+            {
+                yield return code;
+            }
+        }
+
+        static void SetBSlot()
+        {
+            if (!Archipelago.Enabled)
+            {
+                GameMaster.GM.Save.Data.BSlot = PlayerCharacter.Item.RustKnuckle2;
+            }
         }
     }
 
@@ -471,7 +500,36 @@ namespace ProdigalArchipelago
     {
         static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator il)
         {
-            return GenericItemPatcher.Transpiler(instructions, il, 109);
+            Queue<CodeInstruction> queue = new();
+
+            foreach (var code in GenericItemPatcher.Transpiler(instructions, il, 109))
+            {
+                queue.Enqueue(code);
+
+                if (code.opcode == OpCodes.Stfld && (FieldInfo)code.operand == AccessTools.Field(typeof(SaveSystem.PlayerSave), nameof(SaveSystem.PlayerSave.BSlot)))
+                {
+                    queue.Clear();
+                    yield return new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(Chest_TrappedChest_Patch), nameof(SetBSlot)));
+                }
+
+                if (queue.Count >= 5)
+                {
+                    yield return queue.Dequeue();
+                }
+            }
+
+            foreach (var code in queue)
+            {
+                yield return code;
+            }
+        }
+
+        static void SetBSlot()
+        {
+            if (!Archipelago.Enabled)
+            {
+                GameMaster.GM.Save.Data.BSlot = PlayerCharacter.Item.RustKnuckle2;
+            }
         }
     }
 

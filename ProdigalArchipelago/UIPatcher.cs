@@ -182,6 +182,7 @@ namespace ProdigalArchipelago
         }
     }
 
+    // Add text color options
     [HarmonyPatch(typeof(CHAT_BOX))]
     [HarmonyPatch("APPLY_LETTER")]
     class CHAT_BOX_APPLY_LETTER_Patch
@@ -227,6 +228,35 @@ namespace ProdigalArchipelago
                 __result = UIPatch.TextColorOverride;
                 return false;
             }
+            return true;
+        }
+    }
+
+    // Break lines at underscores and hyphens
+    [HarmonyPatch(typeof(CHAT_BOX))]
+    [HarmonyPatch(nameof(CHAT_BOX.WORD_COUNT))]
+    class CHAT_BOX_WORD_COUNT_Patch
+    {
+        static bool Prefix(int KID, List<char> KEYS, ref int __result)
+        {
+            if (Archipelago.Enabled)
+            {
+                for (int i = 0; KID + i < KEYS.Count; i++)
+                {
+                    switch (KEYS[KID + i])
+                    {
+                        case ' ':
+                        case '_':
+                        case '-':
+                        case '*':
+                            __result = i;
+                            return false;
+                    }
+                }
+                __result = KEYS.Count - KID;
+                return false;
+            }
+
             return true;
         }
     }

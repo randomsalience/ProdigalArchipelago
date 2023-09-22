@@ -617,4 +617,23 @@ namespace ProdigalArchipelago
                 GameMaster.GM.Save.Save();
         }
     }
+
+    // Prevent a dialog box from interfering with the arena victory scene
+    [HarmonyPatch(typeof(CombatChallenge))]
+    [HarmonyPatch("ArenaWin")]
+    class CombatChallenge_ArenaWin_Patch
+    {
+        static IEnumerator Postfix(IEnumerator __result)
+        {
+            while (GameMaster.GM.UI.SPEAKING())
+            {
+                yield return null;
+            }
+            
+            while (__result.MoveNext())
+            {
+                yield return null;
+            }
+        }
+    }
 }

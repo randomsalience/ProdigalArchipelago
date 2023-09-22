@@ -798,7 +798,7 @@ namespace ProdigalArchipelago
     [HarmonyPatch(typeof(CombatChallenge))]
     [HarmonyPatch("ArenaWin")]
     [HarmonyPatch(MethodType.Enumerator)]
-    class CombatChallenge_ArenaWin_Patch
+    class CombatChallenge_ArenaWin_Enumerator_Patch
     {
         static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator il)
         {

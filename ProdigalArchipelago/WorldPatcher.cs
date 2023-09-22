@@ -618,6 +618,18 @@ namespace ProdigalArchipelago
         }
     }
 
+    // Save on combat completion
+    [HarmonyPatch(typeof(CombatChallenge))]
+    [HarmonyPatch("Complete")]
+    class CombatChallenge_Complete_Patch
+    {
+        static void Postfix()
+        {
+            if (Archipelago.Enabled)
+                GameMaster.GM.Save.Save();
+        }
+    }
+
     // Prevent a dialog box from interfering with the arena victory scene
     [HarmonyPatch(typeof(CombatChallenge))]
     [HarmonyPatch("ArenaWin")]
@@ -625,15 +637,43 @@ namespace ProdigalArchipelago
     {
         static IEnumerator Postfix(IEnumerator __result)
         {
-            while (GameMaster.GM.UI.SPEAKING())
+            if (Archipelago.Enabled)
             {
-                yield return null;
+                while (GameMaster.GM.UI.SPEAKING())
+                {
+                    yield return null;
+                }
             }
-            
+
             while (__result.MoveNext())
             {
                 yield return null;
             }
+        }
+    }
+
+    // Prevent a revival kill from softlocking a kill room
+    [HarmonyPatch(typeof(CombatChallenge))]
+    [HarmonyPatch(nameof(CombatChallenge.PopulationLoss))]
+    class CombatChallenge_PopulationLoss_Patch
+    {
+        static bool Prefix(CombatChallenge __instance, ENEMY Dead)
+        {
+            if (Archipelago.Enabled)
+            {
+                __instance.Population.Remove(Dead);
+                if (__instance.Population.Count <= 0)
+                {
+                    if (GameMaster.GM.PC.HP > 0 || GameMaster.GM.PC.BUFF_CHECK(PlayerCharacter.BUFFS.REZ) ||
+                        GameMaster.GM.PC.BUFF_CHECK(PlayerCharacter.BUFFS.BOON) || GameMaster.GM.PC.BUFF_CHECK(PlayerCharacter.BUFFS.KEATON))
+                    {
+                        __instance.StartCoroutine((IEnumerator)AccessTools.Method(typeof(CombatChallenge), "VictoryDelay").Invoke(__instance, new object[] {}));
+                    }
+                }
+                return false;
+            }
+
+            return true;
         }
     }
 }

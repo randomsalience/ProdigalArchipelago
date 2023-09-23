@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using UnityEngine;
 using BepInEx;
 using HarmonyLib;
@@ -9,14 +10,21 @@ namespace ProdigalArchipelago
     [BepInProcess("Prodigal.exe")]
     public class Plugin : BaseUnityPlugin
     {
+        private static Plugin Instance;
         public static new BepInEx.Logging.ManualLogSource Logger;
 
         private void Awake()
         {
+            Instance = this;
             Logger = base.Logger;
             Archipelago.Enabled = false;
             Harmony.CreateAndPatchAll(Assembly.GetExecutingAssembly());
             Application.wantsToQuit += CloseButtonPressed;
+        }
+
+        public static Version GetVersion()
+        {
+            return Instance.Info.Metadata.Version;
         }
 
         private static bool CloseButtonPressed()

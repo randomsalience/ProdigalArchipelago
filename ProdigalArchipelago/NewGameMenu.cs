@@ -39,8 +39,8 @@ namespace ProdigalArchipelago
             Bg.transform.parent = transform;
             Bg.transform.localPosition = new Vector3(0, 0, 0);
 
-            NormalText = Menu.CreateTextObjects("Normal", 6, transform, -36, 6, Color.white);
-            ArchipelagoText = Menu.CreateTextObjects("Archipelago", 11, transform, -36, -6, Color.white);
+            NormalText = Menu.CreateTextObjects("Normal", 6, transform, -36, 6, new Color32(235, 223, 193, 255));
+            ArchipelagoText = Menu.CreateTextObjects("Archipelago", 11, transform, -36, -6, new Color32(235, 223, 193, 255));
 
             Selector = new GameObject("GameTypeSelector");
             var selectorSprite = Selector.AddComponent<SpriteRenderer>();

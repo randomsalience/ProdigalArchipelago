@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using HarmonyLib;
@@ -13,7 +14,14 @@ namespace ProdigalArchipelago
 
         public static void Setup()
         {
-            WarpButton = Object.Instantiate(GameMaster.GM.UI.transform.GetChild(2).GetChild(0).GetChild(2).gameObject);
+            CreateWarpButton();
+            CreateErrorIndicator();
+            CreateVersionText();
+        }
+
+        private static void CreateWarpButton()
+        {
+            WarpButton = UnityEngine.Object.Instantiate(GameMaster.GM.UI.transform.GetChild(2).GetChild(0).GetChild(2).gameObject);
             WarpButton.name = "WarpButton";
             WarpButton.transform.parent = GameMaster.GM.UI.transform.GetChild(2).GetChild(0);
             WarpButton.SetActive(false);
@@ -21,7 +29,10 @@ namespace ProdigalArchipelago
             button.SelectedSprite = SpriteManager.WarpSelectedSprite;
             button.HitSprite = SpriteManager.WarpHitSprite;
             AccessTools.Field(typeof(UIButton), "NormalSprite").SetValue(button, SpriteManager.WarpNormalSprite);
+        }
 
+        private static void CreateErrorIndicator()
+        {
             ErrorIndicator = new("ErrorIndicator");
             ErrorIndicator.transform.parent = GameMaster.GM.UI.transform.GetChild(3);
             ErrorIndicator.transform.localPosition = new Vector3(98, -20, 0);
@@ -30,6 +41,13 @@ namespace ProdigalArchipelago
             sprite.sprite = SpriteManager.ErrorSprite;
             sprite.sortingLayerName = "UI";
             sprite.sortingOrder = 10;
+        }
+
+        private static void CreateVersionText()
+        {
+            string versionString = $"AP {Plugin.GetVersion()}";
+            List<GameObject> versionText = Menu.CreateTextObjects("VersionText", versionString.Length, GameMaster.GM.UI.transform.GetChild(1), -120, -56, new Color32(235, 223, 193, 255));
+            Menu.RenderText(versionText, versionString);
         }
 
         public static void StartArchipelago()

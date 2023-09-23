@@ -69,7 +69,7 @@ namespace ProdigalArchipelago
             {
                 var letter = new GameObject($"{name}Letter{i}");
                 var letterSprite = letter.AddComponent<SpriteRenderer>();
-                letterSprite.sortingOrder = 8;
+                letterSprite.sortingOrder = 9;
                 letterSprite.sortingLayerName = "UI";
                 letterSprite.color = color;
                 letter.transform.parent = parent;
@@ -86,7 +86,7 @@ namespace ProdigalArchipelago
                 var letterSprite = textObjects[i].GetComponent<SpriteRenderer>();
                 if (i < text.Length)
                 {
-                    letterSprite.sprite = GameMaster.GM.UI.PullSprite($"{text[i]}");
+                    letterSprite.sprite = GameMaster.GM.UI.PULL_SPRITE(text[i], CHAT_BOX.TEXT_LANGUAGE.NORMAL);
                 }
             }
         }

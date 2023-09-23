@@ -29,6 +29,8 @@ namespace ProdigalArchipelago
         private bool Delay = false;
         private bool Frozen = false;
 
+        private static readonly Color TextColor = new Color32(130, 109, 95, 255);
+
         public static void Create()
         {
             Instance = new GameObject("ConnectionMenu");
@@ -62,11 +64,11 @@ namespace ProdigalArchipelago
             BG.transform.parent = transform;
             BG.transform.localPosition = new Vector3(0, 0, 0);
 
-            ServerText = Menu.CreateTextObjects("Server", 6, transform, -13, 42, Color.black);
-            PortText = Menu.CreateTextObjects("Port", 4, transform, -7, 22, Color.black);
-            SlotText = Menu.CreateTextObjects("Slot", 4, transform, -7, 2, Color.black);
-            PasswordText = Menu.CreateTextObjects("Password", 8, transform, -19, -18, Color.black);
-            StartText = Menu.CreateTextObjects("Start", 5, transform, -10, -38, Color.black);
+            ServerText = Menu.CreateTextObjects("Server", 6, transform, -14, 42, TextColor);
+            PortText = Menu.CreateTextObjects("Port", 4, transform, -8, 22, TextColor);
+            SlotText = Menu.CreateTextObjects("Slot", 4, transform, -8, 2, TextColor);
+            PasswordText = Menu.CreateTextObjects("Password", 8, transform, -20, -18, TextColor);
+            StartText = Menu.CreateTextObjects("Start", 5, transform, -11, -38, TextColor);
 
             ServerEntry = CreateInputField("ServerEntry", 124, 0);
             PortEntry = CreateInputField("PortEntry", 24, 5);
@@ -87,17 +89,14 @@ namespace ProdigalArchipelago
             ErrorText.transform.localPosition = new Vector3(0, -300, 0);
         }
 
-        private void Start()
+        private void OnEnable()
         {
             Menu.RenderText(ServerText, "SERVER");
             Menu.RenderText(PortText, "PORT");
             Menu.RenderText(SlotText, "SLOT");
             Menu.RenderText(PasswordText, "PASSWORD");
             Menu.RenderText(StartText, "START");
-        }
 
-        private void OnEnable()
-        {
             if (NewGame)
             {
                 ServerEntry.GetComponent<InputField>().text = "archipelago.gg";
@@ -169,7 +168,7 @@ namespace ProdigalArchipelago
 
         private void ChangeSelection(int selected)
         {
-            SetSelectedColor(Color.black);
+            SetSelectedColor(TextColor);
             Selected = Math.Clamp(selected, 0, 4);
             var entry = Selected switch
             {

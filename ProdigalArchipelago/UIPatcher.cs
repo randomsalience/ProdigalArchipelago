@@ -73,14 +73,14 @@ namespace ProdigalArchipelago
 
         public static void Create()
         {
-            Page1 = new GameObject("KeyPage");
+            Page1 = new GameObject("KeyPage1");
             Page1.SetActive(false);
             var keyPage1 = Page1.AddComponent<KeyPage>();
             Page1.transform.parent = GameMaster.GM.UI.transform.GetChild(2).GetChild(0).GetChild(1);
             Page1.transform.localPosition = new Vector3(0, 0, 0);
             keyPage1.Setup(0, 7);
 
-            Page2 = new GameObject("KeyPage");
+            Page2 = new GameObject("KeyPage2");
             Page2.SetActive(false);
             var keyPage2 = Page2.AddComponent<KeyPage>();
             Page2.transform.parent = GameMaster.GM.UI.transform.GetChild(2).GetChild(0).GetChild(1);
@@ -93,8 +93,16 @@ namespace ProdigalArchipelago
             StartIndex = start;
             for (int i = 0; i < num; i++)
             {
-                KeyText.Add(Menu.CreateTextObjects($"KeyText{start + i}", Archipelago.KEY_DUNGEONS[start + i].Length + 2, transform, -70, 45 - 10 * i, Color.black));
+                KeyText.Add(Menu.CreateTextObjects($"KeyText{start + i}", Archipelago.KEY_DUNGEONS[start + i].Length + 2, transform, -70, 44 - 12 * i, new Color32(130, 109, 95, 255)));
             }
+
+            GameObject bg = new("KeyPageBG");
+            var renderer = bg.AddComponent<SpriteRenderer>();
+            renderer.sprite = SpriteManager.KeyScreenBGSprite;
+            renderer.sortingLayerName = "UI";
+            renderer.sortingOrder = 8;
+            bg.transform.parent = transform;
+            bg.transform.localPosition = new Vector3(-20, 4, 0);
         }
 
         private void Update()

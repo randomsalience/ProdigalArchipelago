@@ -10,6 +10,7 @@ namespace ProdigalArchipelago
         public static Sprite ConnectionSetupBGSprite;
         public static Sprite ErrorSprite;
         public static Sprite GameChoiceBGSprite;
+        public static Sprite KeyScreenBGSprite;
         public static Sprite TrackerDotSprite;
         public static Sprite TrackerDotLargeSprite;
         public static Sprite WarpSelectedSprite;
@@ -23,6 +24,7 @@ namespace ProdigalArchipelago
             ConnectionSetupBGSprite = LoadSprite("ConnectionSetupBG.png");
             ErrorSprite = LoadSprite("Error.png");
             GameChoiceBGSprite = LoadSprite("GameChoiceBG.png");
+            KeyScreenBGSprite = LoadSprite("KeyScreenBG.png");
             TrackerDotSprite = LoadSprite("TrackerDot.png");
             TrackerDotLargeSprite = LoadSprite("TrackerDotLarge.png");
             WarpSelectedSprite = LoadSprite("WarpSelected.png");

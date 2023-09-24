@@ -203,7 +203,7 @@ namespace ProdigalArchipelago
                 }),
                 TrackerDot.NewDot("Abandoned Mine", -72, -35, false, () => true, new() {
                     new TrackerLocation("Iron Pick Chest", 2, () => true),
-                    new TrackerLocation("Lower Chest", 44, () => HasLariat() && HasKnuckle() && (HasHand() || HasFlare())),
+                    new TrackerLocation("Lower Chest", 44, () => HasLariat() && HasKnuckle()),
                 }),
                 TrackerDot.NewDot("Waterfall Cave", 55, 15, false, () => CanClimb(), new() {
                     new TrackerLocation("Skeleton", 135, () => HasPick() && HasLariat()),
@@ -356,12 +356,12 @@ namespace ProdigalArchipelago
                     new TrackerLocation("Junk Room Chest", 42, () => HasPick() && HasKnuckle() && HasLariat()),
                 }),
                 TrackerDot.NewDot("Crystal Caves", 7, 31, true, () => HasKnuckle(), new() {
-                    new TrackerLocation("Three Barrels Chest", 110, () => (HasFlare() || (HasHand() && HasLariat())) && (CanLongJump() || (HasPick() && (HasLariat() || HasCleats())))),
-                    new TrackerLocation("Right Side Across Ice Chest", 136, () => (HasFlare() || (HasHand() && HasLariat())) && (CanLongJump() || HasLariat() || HasCleats()) && HasPick()),
-                    new TrackerLocation("Center Room Chest", 111, () => ((HasFlare() && HasPick() && HasCleats()) || (HasHand() && HasLariat())) && (CanLongJump() || (HasPick() && (HasLariat() || HasCleats()))) && HasKnuckle() && HasKey(Key.CrystalCaves, 2),
-                        () => ((HasFlare() && HasPick() && HasCleats()) || (HasHand() && HasLariat())) && (CanLongJump() || (HasPick() && (HasLariat() || HasCleats()))) && HasKnuckle() && CanOpen(Key.CrystalCaves, 68)),
-                    new TrackerLocation("Trapped Chest", 109, () => (HasFlare() || (HasHand() && HasLariat())) && (CanLongJump() || (HasPick() && (HasLariat() || HasCleats()))) && HasKnuckle() && HasKey(Key.CrystalCaves, 2),
-                        () => (HasFlare() || (HasHand() && HasLariat())) && (CanLongJump() || (HasPick() && (HasLariat() || HasCleats()))) && HasKnuckle() && CanOpen(Key.CrystalCaves, 68)),
+                    new TrackerLocation("Three Barrels Chest", 110, () => (HasFlare() || HasLariat()) && (CanLongJump() || (HasPick() && (HasLariat() || HasCleats())))),
+                    new TrackerLocation("Right Side Across Ice Chest", 136, () => (HasFlare() || HasLariat()) && (CanLongJump() || HasLariat() || HasCleats()) && HasPick()),
+                    new TrackerLocation("Center Room Chest", 111, () => (HasFlare() || HasLariat()) && (CanLongJump() || (HasPick() && (HasLariat() || HasCleats()))) && (HasCleats() || (HasPick() && HasHand() && HasLariat())) && HasKnuckle() && HasKey(Key.CrystalCaves, 2),
+                        () => (HasFlare() || HasLariat()) && (CanLongJump() || (HasPick() && (HasLariat() || HasCleats()))) && (HasCleats() || (HasPick() && HasHand() && HasLariat())) && HasKnuckle() && CanOpen(Key.CrystalCaves, 68)),
+                    new TrackerLocation("Trapped Chest", 109, () => (HasFlare() || HasLariat()) && (CanLongJump() || (HasPick() && (HasLariat() || HasCleats()))) && HasKnuckle() && HasKey(Key.CrystalCaves, 2),
+                        () => (HasFlare() || HasLariat()) && (CanLongJump() || (HasPick() && (HasLariat() || HasCleats()))) && HasKnuckle() && CanOpen(Key.CrystalCaves, 68)),
                     new TrackerLocation("Yhortes Chest", 113, () => HasFlare() && (CanLongJump() || (HasPick() && (HasLariat() || HasCleats()))) && HasKey(Key.CrystalCaves, 2),
                         () => HasFlare() && (CanLongJump() || (HasPick() && (HasLariat() || HasCleats()))) && CanOpen(Key.CrystalCaves, 68)),
                     new TrackerLocation("Rock Cross Chest", 115, () => HasFlare() && (CanLongJump() || HasPick()) && HasLariat() && HasKey(Key.CrystalCaves, 2),
@@ -382,7 +382,7 @@ namespace ProdigalArchipelago
                 }),
                 TrackerDot.NewDot("Haunted Hall", -30, 15, true, () => Has(52) && CanHit(), new() {
                     new TrackerLocation("Right Entry Chest", 66, () => true),
-                    new TrackerLocation("Left Entry Chest", 65, () => (CanHit() && HasHand()) || HasFlare()),
+                    new TrackerLocation("Left Entry Chest", 65, () => CanHit()),
                     new TrackerLocation("Invisible Maze Chest", 67, () => CanHit() && HasHand() && HasKey(Key.HauntedHall, 1),
                         () => CanHit() && HasHand() && CanOpen(Key.HauntedHall, 21)),
                     new TrackerLocation("Crystal Chest", 72, () => HasFlare() && HasHand() && HasKey(Key.HauntedHall, 2) && (HasLariat() || CanLongJump() || HasIceKey()),

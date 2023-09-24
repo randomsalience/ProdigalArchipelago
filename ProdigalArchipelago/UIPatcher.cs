@@ -46,7 +46,7 @@ namespace ProdigalArchipelago
         private static void CreateVersionText()
         {
             string versionString = $"AP {Plugin.GetVersion()}";
-            List<GameObject> versionText = Menu.CreateTextObjects("VersionText", versionString.Length, GameMaster.GM.UI.transform.GetChild(1), -120, -56, new Color32(235, 223, 193, 255));
+            List<GameObject> versionText = Menu.CreateTextObjects("VersionText", versionString.Length, GameMaster.GM.UI.transform.GetChild(1).GetChild(0), -120, -56, new Color32(235, 223, 193, 255));
             Menu.RenderText(versionText, versionString);
         }
 

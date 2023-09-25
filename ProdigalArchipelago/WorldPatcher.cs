@@ -467,6 +467,7 @@ namespace ProdigalArchipelago
                         __instance.StartCoroutine((IEnumerator)AccessTools.Method(typeof(Nora), "SFNoraStart").Invoke(__instance, new object[] {}));
                         return false;
                     case SaveSystem.Quest.STAGE15:
+                        GameMaster.GM.Save.Data.Quests[2] = SaveSystem.Quest.STAGE16;
                         __instance.StartCoroutine((IEnumerator)AccessTools.Method(typeof(Nora), "SFNoraEnd").Invoke(__instance, new object[] {}));
                         return false;
                 }

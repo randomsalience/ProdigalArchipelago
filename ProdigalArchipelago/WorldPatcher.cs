@@ -492,6 +492,64 @@ namespace ProdigalArchipelago
         }
     }
 
+    // Bolivar hints a pick
+    [HarmonyPatch(typeof(Bolivar))]
+    [HarmonyPatch("QuestStart")]
+    [HarmonyPatch(MethodType.Enumerator)]
+    class Bolivar_QuestStart_Patch
+    {
+        static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
+        {
+            foreach (var code in instructions)
+            {
+                if (code.opcode == OpCodes.Ldstr && (string)code.operand == "I'M SURE YOU CAN FIND WHAT IS NEEDED IN THE OLD MINE.")
+                {
+                    yield return new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(Bolivar_QuestStart_Patch), nameof(PickHint1)));
+                }
+                else if (code.opcode == OpCodes.Ldstr && (string)code.operand == "I AM TERRIBLE WITH @Cdirections@.*THE LIBRARIAN NEXT DOOR CAN TELL YOU WHERE IT IS.*@Cyou can always see her for help when you feel lost@.")
+                {
+                    yield return new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(Bolivar_QuestStart_Patch), nameof(PickHint2)));
+                }
+                else
+                {
+                    yield return code;
+                }
+            }
+        }
+
+        static string PickHint1()
+        {
+            string pickHint = Archipelago.AP.PickHint();
+            pickHint = pickHint == "" ? "SOMEWHERE" : $"AT @C{pickHint}@";
+            return Archipelago.Enabled ? $"I'M SURE YOU CAN FIND WHAT IS NEEDED {pickHint}." : "I'M SURE YOU CAN FIND WHAT IS NEEDED IN THE OLD MINE.";
+        }
+
+        static string PickHint2()
+        {
+            return Archipelago.Enabled ? "" : "I AM TERRIBLE WITH @Cdirections@.*THE LIBRARIAN NEXT DOOR CAN TELL YOU WHERE IT IS.*@Cyou can always see her for help when you feel lost@.";
+        }
+    }
+
+    [HarmonyPatch(typeof(Bolivar))]
+    [HarmonyPatch("PickReminder")]
+    class Bolivar_PickReminder_Patch
+    {
+        static bool Prefix(List<GameMaster.Speech> ___Chatter)
+        {
+            if (Archipelago.Enabled)
+            {
+                string pickHint = Archipelago.AP.PickHint();
+                pickHint = pickHint == "" ? "SOMEWHERE" : $"AT {pickHint}";
+                ___Chatter.Add(GameMaster.CreateSpeech(11, 1, "DID YOU FIND A PICK YET?", "BOLIVAR", 3));
+                ___Chatter.Add(GameMaster.CreateSpeech(11, 0, $"THERE IS ONE, I AM SURE, {pickHint}.", "BOLIVAR", 3));
+                GameMaster.GM.UI.InitiateChat(___Chatter, QuestionEnd: false);
+                return false;
+            }
+
+            return true;
+        }
+    }
+
     // Allow using warp statues without dread hand
     [HarmonyPatch(typeof(LevelStatue))]
     [HarmonyPatch(nameof(LevelStatue.TeleCheck))]

@@ -75,8 +75,10 @@ namespace ProdigalArchipelago
 
         public string Error = "";
         public int SlotID;
+        public string SlotName;
         public ArchipelagoSettings Settings;
         public ArchipelagoSession Session;
+        public Dictionary<string, object> SlotData;
         private System.Random Random;
         private readonly List<Location> LocationTable = new();
         private int CheatItemsReceived;
@@ -133,7 +135,9 @@ namespace ProdigalArchipelago
 
             LoginSuccessful login = (LoginSuccessful)result;
             SlotID = login.Slot;
-            int seed = ArchipelagoSettings.GetOrDefault(login.SlotData, "seed", 0);
+            SlotData = login.SlotData;
+            SlotName = cdata.SlotName;
+            int seed = ArchipelagoSettings.GetOrDefault(SlotData, "seed", 0);
 
             if (Data.Seed != 0 && Data.Seed != seed)
             {
@@ -146,7 +150,7 @@ namespace ProdigalArchipelago
 
             if (!reconnect)
             {
-                Settings = new ArchipelagoSettings(login.SlotData);
+                Settings = new ArchipelagoSettings(SlotData);
                 BuildLocationTable();
                 MapTracker.SetupTracker();
 
@@ -572,6 +576,22 @@ namespace ProdigalArchipelago
             if (ColorCount() >= Settings.ColorsRequired)
             {
                 GameMaster.GM.Save.Data.Recolored = true;
+            }
+        }
+
+        public string PickHint()
+        {
+            try
+            {
+                var player = (string)SlotData["pick_hint_player"];
+                var location = (string)SlotData["pick_hint_location"];
+                if (player == SlotName)
+                    return location.ToUpper();
+                return $"{location.ToUpper()} IN {player.ToUpper()}'s WORLD";
+            }
+            catch (Exception)
+            {
+                return "";
             }
         }
 

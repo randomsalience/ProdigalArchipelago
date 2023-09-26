@@ -113,6 +113,8 @@ namespace ProdigalArchipelago
                 PasswordEntry.GetComponent<InputField>().text = cdata.Password;
             }
 
+            ErrorText.GetComponent<Text>().text = "";
+
             StartCoroutine(ActivateInput());
         }
 

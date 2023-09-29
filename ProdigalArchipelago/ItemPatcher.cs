@@ -600,7 +600,12 @@ namespace ProdigalArchipelago
             if (Archipelago.Enabled && __instance.INTERACTABLE == SpecialInteract.INT.PIERPRISON)
             {
                 ___Chatter.Clear();
-                if (!GameMaster.GM.Save.Data.Chests.Contains(225))
+                if (GameMaster.GM.PC.transform.position.y < __instance.transform.position.y)
+                {
+                    ___Chatter.Add(GameMaster.CreateSpeech(46, 0, "IT'S EMPTY.*MAYBE HUGH BROKE OUT.*...*OR HE'S LOCKED UP SOMEWHERE ELSE.", "", 0));
+                    GameMaster.GM.UI.InitiateChat(___Chatter, false);
+                }
+                else if (!GameMaster.GM.Save.Data.Chests.Contains(225))
                 {
                     __instance.StartCoroutine((IEnumerator)AccessTools.Method(typeof(SpecialInteract), "CarolineRescue").Invoke(__instance, new object[] {}));
                 }
@@ -610,11 +615,6 @@ namespace ProdigalArchipelago
                     GameMaster.GM.PC.Unlock();
                     __instance.gameObject.SetActive(false);
                     MotherBrain.MB.Population[72].Despawn();
-                }
-                else if (GameMaster.GM.PC.transform.position.y < __instance.transform.position.y)
-                {
-                    ___Chatter.Add(GameMaster.CreateSpeech(46, 0, "IT'S EMPTY.*MAYBE HUGH BROKE OUT.*...*OR HE'S LOCKED UP SOMEWHERE ELSE.", "", 0));
-                    GameMaster.GM.UI.InitiateChat(___Chatter, false);
                 }
                 else
                 {

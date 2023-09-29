@@ -111,7 +111,7 @@ namespace ProdigalArchipelago
             StartIndex = start;
             for (int i = 0; i < num; i++)
             {
-                KeyText.Add(Menu.CreateTextObjects($"KeyText{start + i}", Archipelago.KEY_DUNGEONS[start + i].Length + 2, transform, -70, 44 - 12 * i, new Color32(130, 109, 95, 255)));
+                KeyText.Add(Menu.CreateTextObjects($"KeyText{start + i}", Key.Keys[start + i].Name.Length + 6, transform, -74, 44 - 12 * i, new Color32(130, 109, 95, 255)));
             }
 
             GameObject bg = new("KeyPageBG");
@@ -128,12 +128,15 @@ namespace ProdigalArchipelago
             for (int i = 0; i < KeyText.Count; i++)
             {
                 int keyCount = 0;
+                int keyTotal = 0;
                 if (Archipelago.KEY_ID_START + StartIndex + i < GameMaster.GM.Save.Data.Inventory.Count) // for backwards compatibility
                 {
                     keyCount = GameMaster.GM.Save.Data.Inventory[Archipelago.KEY_ID_START + StartIndex + i].Count;
+                    keyTotal = Archipelago.AP.Data.KeyTotals[StartIndex + i];
                 }
-                string dungeonName = Archipelago.KEY_DUNGEONS[StartIndex + i];
-                Menu.RenderText(KeyText[i], $"{keyCount} {dungeonName}");
+                int keyMax = Key.Keys[StartIndex + i].Max;
+                string dungeonName = Key.Keys[StartIndex + i].Name;
+                Menu.RenderText(KeyText[i], $"{keyCount} {keyTotal} {keyMax} {dungeonName}");
             }
         }
     }

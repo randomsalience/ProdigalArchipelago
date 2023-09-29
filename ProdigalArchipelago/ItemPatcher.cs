@@ -34,20 +34,17 @@ namespace ProdigalArchipelago
                 Name = "PROGRESSIVE PICK",
                 ItemSprite = GameMaster.GM.ItemData.ItemSprites[9],
             });
-            GameMaster.GM.ItemData.Database.Add(NewKey("BONEYARD", "THE BONEYARD"));
-            GameMaster.GM.ItemData.Database.Add(NewKey("TIDAL MINES", "THE TIDAL MINES"));
-            GameMaster.GM.ItemData.Database.Add(NewKey("CROCASINO", "THE CROCASINO"));
-            GameMaster.GM.ItemData.Database.Add(NewKey("HOWLING BJERG", "THE HOWLING BJERG"));
-            GameMaster.GM.ItemData.Database.Add(NewKey("CASTLE VANN", "CASTLE VANN"));
-            GameMaster.GM.ItemData.Database.Add(NewKey("MAGMA HEART", "THE MAGMA HEART"));
-            GameMaster.GM.ItemData.Database.Add(NewKey("TIME OUT", "TIME OUT"));
-            GameMaster.GM.ItemData.Database.Add(NewKey("LIGHTHOUSE", "THE LIGHTHOUSE"));
-            GameMaster.GM.ItemData.Database.Add(NewKey("CRYSTAL CAVES", "THE CRYSTAL CAVES"));
-            GameMaster.GM.ItemData.Database.Add(NewKey("HAUNTED HALL", "THE HAUNTED HALL"));
-            GameMaster.GM.ItemData.Database.Add(NewKey("SISKA'S WORKSHOP", "SISKA'S WORKSHOP"));
-            GameMaster.GM.ItemData.Database.Add(NewKey("BACKROOMS", "THE BACKROOMS"));
-            GameMaster.GM.ItemData.Database.Add(NewKey("PIRATE'S PIER", "PIRATE'S PIER"));
-            GameMaster.GM.ItemData.Database.Add(NewKey("BJERG CASTLE", "BJERG CASTLE"));
+            
+            foreach (Key key in Key.Keys)
+            {
+                GameMaster.GM.ItemData.Database.Add(new ItemDatabase.ItemData
+                {
+                    Name = $"{key.Name} KEY",
+                    TooltipText = $"A KEY FOR {key.AltName}.",
+                    AboutText = new List<GameMaster.Speech> { GameMaster.CreateSpeech(46, 0, $"A KEY FOR {key.AltName}!", "", 0) },
+                    ItemSprite = GameMaster.GM.ItemData.ItemSprites[39],
+                });
+            }
 
             ChangeItemAboutText(10, "BLESSED PICKAXE!*I BET THIS WILL DO SOME SERIOUS DAMAGE!");
             ChangeItemAboutText(13, "CLEATED BOOTS!*I SHOULD TALK TO TESS ABOUT THESE.");
@@ -89,17 +86,6 @@ namespace ProdigalArchipelago
             ChangeItemAboutText(91, "STORM BLESSING!*I WONDER IF SHE WANTS THAT RING BACK...");
             ChangeItemAboutText(92, "A BLESSING OF EARTH!*THIS FEELS PRIMORDIAL...*I WONDER WHAT IT IS FOR.");
             ChangeItemAboutText(93, "A BLESSING OF WATER!*THIS FEELS PRIMORDIAL...*I WONDER WHAT IT IS FOR.");
-        }
-
-        private static ItemDatabase.ItemData NewKey(string name, string alt_name)
-        {
-            return new ItemDatabase.ItemData
-            {
-                Name = $"{name} KEY",
-                TooltipText = $"A KEY FOR {alt_name}.",
-                AboutText = new List<GameMaster.Speech> { GameMaster.CreateSpeech(46, 0, $"A KEY FOR {alt_name}!", "", 0) },
-                ItemSprite = GameMaster.GM.ItemData.ItemSprites[39]
-            };
         }
 
         private static void ChangeItemAboutText(int id, string text)

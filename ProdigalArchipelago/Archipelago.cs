@@ -39,10 +39,6 @@ namespace ProdigalArchipelago
         public const int KEY_ID_START = 105;
         public static readonly int[] BOOTS_IDS = {12, 13, 14, 15, 16};
 
-        public static readonly int[] KEY_SCENES = {5, 12, 6, 8, 10, 9, 13, 11, 24, 16, 19, 17, 27, 8};
-        public static readonly string[] KEY_DUNGEONS = {"BONEYARD", "TIDAL MINES", "CROCASINO", "HOWLING BJERG", "CASTLE VANN",
-            "MAGMA HEART", "TIME OUT", "LIGHTHOUSE", "CRYSTAL CAVES", "HAUNTED HALL", "SISKA'S WORKSHOP", "BACKROOMS", "PIRATE'S PIER", "BJERG CASTLE"};
-
         private static readonly int[] LOCS_BASE = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
             21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48,
             49, 50, 51, 52, 53, 62, 63, 65, 66, 67, 68, 69, 70, 71, 72, 73, 76, 81, 82, 83, 84, 85, 86, 87, 88, 89, 91, 92,
@@ -281,7 +277,7 @@ namespace ProdigalArchipelago
             Data.ReceivedItemLocations.Clear();
 
             Data.KeyTotals.Clear();
-            for (int i = 0; i < KEY_DUNGEONS.Count(); i++)
+            for (int i = 0; i < Key.Keys.Count(); i++)
                 Data.KeyTotals.Add(0);
             
             Randomize();
@@ -392,7 +388,7 @@ namespace ProdigalArchipelago
                 GameMaster.GM.Save.AddToInventory(id, true);
             }
 
-            if (id >= KEY_ID_START && id < KEY_ID_START + KEY_DUNGEONS.Count())
+            if (id >= KEY_ID_START && id < KEY_ID_START + Key.Keys.Count())
             {
                 Data.KeyTotals[id - KEY_ID_START]++;
             }
@@ -621,10 +617,10 @@ namespace ProdigalArchipelago
             int currentScene = (int)AccessTools.Field(typeof(GameMaster), "CurrentScene").GetValue(GameMaster.GM);
             if (currentScene == 8 && IsBjergCastle)
                 return 13;
-            for (int i = 0; i < KEY_SCENES.Length; i++)
+            foreach (Key key in Key.Keys)
             {
-                if (KEY_SCENES[i] == currentScene)
-                    return i;
+                if (key.Scene == currentScene)
+                    return key.ID;
             }
             return -1;
         }

@@ -8,24 +8,6 @@ namespace ProdigalArchipelago
 {
     class MapTracker : MonoBehaviour
     {
-        private enum Key
-        {
-            Boneyard,
-            TidalMines,
-            Crocasino,
-            HowlingBjerg,
-            CastleVann,
-            MagmaHeart,
-            TimeOut,
-            Lighthouse,
-            CrystalCaves,
-            HauntedHall,
-            SiskasWorkshop,
-            Backrooms,
-            PiratesPier,
-            BjergCastle,
-        }
-
         public static GameObject Instance;
         public static GameObject Canvas;
         public List<TrackerDot> Dots;
@@ -556,7 +538,7 @@ namespace ProdigalArchipelago
 
         private bool HasKey(Key key, int count)
         {
-            return Archipelago.AP.Settings.SpecificKeys ? Archipelago.AP.Data.KeyTotals[(int)key] >= count : CanReachZaegul();
+            return Archipelago.AP.Settings.SpecificKeys ? Archipelago.AP.Data.KeyTotals[key.ID] >= count : CanReachZaegul();
         }
 
         private bool HasIceKey()
@@ -617,7 +599,7 @@ namespace ProdigalArchipelago
             {
                 return CanReachZaegul() || GameMaster.GM.Save.Data.Inventory[39].Count >= keysRequired;
             }
-            return GameMaster.GM.Save.Data.Inventory[Archipelago.KEY_ID_START + (int)key].Count >= keysRequired;
+            return GameMaster.GM.Save.Data.Inventory[Archipelago.KEY_ID_START + key.ID].Count >= keysRequired;
         }
 
         private bool CanOpenDivine(params int[] locks)

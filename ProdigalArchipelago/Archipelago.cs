@@ -3,9 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Reflection;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using HarmonyLib;
 using Archipelago.MultiClient.Net;
 using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Packets;
@@ -18,6 +18,7 @@ namespace ProdigalArchipelago
         public const string VERSION = "0.4.2";
         public const long ID_BASE = 77634425000;
 
+        public const int CAROLINE_ID = 5;
         public const int TESS_ID = 48;
         public const int ARMADEL_ID = 57;
 
@@ -38,9 +39,9 @@ namespace ProdigalArchipelago
         public const int KEY_ID_START = 105;
         public static readonly int[] BOOTS_IDS = {12, 13, 14, 15, 16};
 
-        public static readonly int[] KEY_SCENES = {5, 12, 6, 8, 10, 9, 13, 11, 24, 16, 19, 17, 27};
+        public static readonly int[] KEY_SCENES = {5, 12, 6, 8, 10, 9, 13, 11, 24, 16, 19, 17, 27, 8};
         public static readonly string[] KEY_DUNGEONS = {"BONEYARD", "TIDAL MINES", "CROCASINO", "HOWLING BJERG", "CASTLE VANN",
-            "MAGMA HEART", "TIME OUT", "LIGHTHOUSE", "CRYSTAL CAVES", "HAUNTED HALL", "SISKA'S WORKSHOP", "BACKROOMS", "PIRATE'S PIER"};
+            "MAGMA HEART", "TIME OUT", "LIGHTHOUSE", "CRYSTAL CAVES", "HAUNTED HALL", "SISKA'S WORKSHOP", "BACKROOMS", "PIRATE'S PIER", "BJERG CASTLE"};
 
         private static readonly int[] LOCS_BASE = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
             21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48,
@@ -54,6 +55,7 @@ namespace ProdigalArchipelago
         private static readonly int[] LOCS_TRADE = {206, 207, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223};
         private const int LOC_ULNI = 223;
         private static readonly int[] LOCS_HIDDEN = {0, 137, 138, 139, 140, 141, 162, 175, 176, 184};
+        private static readonly int[] LOCS_CASTLE = {54, 55, 56, 57, 58, 59, 60, 61, 248};
         private static readonly int[] LOCS_DIVE = {98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 124, 244};
         private static readonly int[] LOCS_ENLIGHTENMENT = {64, 74, 75, 77, 78, 79, 80, 90};
         public static readonly int[] LOCS_SECRET_SHOP = {245, 246, 247};
@@ -82,6 +84,7 @@ namespace ProdigalArchipelago
         private System.Random Random;
         private readonly List<Location> LocationTable = new();
         private int CheatItemsReceived;
+        public bool IsBjergCastle;
 
         [Serializable]
         public class SaveData
@@ -153,6 +156,7 @@ namespace ProdigalArchipelago
                 Settings = new ArchipelagoSettings(SlotData);
                 BuildLocationTable();
                 MapTracker.SetupTracker();
+                IsBjergCastle = false;
 
                 // Scout unchecked locations
                 var uncheckedLocationIDs = from location in LocationTable where !location.Checked() select ID_BASE + location.ID;
@@ -247,7 +251,7 @@ namespace ProdigalArchipelago
 
         public void InitialPatches()
         {
-            for (int i = 0; i < 18; i++)
+            for (int i = 0; i < 19; i++)
             {
                 GameMaster.GM.Save.Data.Inventory.Add(new SaveSystem.Item());
             }
@@ -260,6 +264,7 @@ namespace ProdigalArchipelago
             GameMaster.GM.Save.Data.Quests[54] = SaveSystem.Quest.QUESTCOMPLETE; // Harmonica tune remembered
             GameMaster.GM.Save.Data.Quests[45] = SaveSystem.Quest.QUESTCOMPLETE; // Back of Crystal Caves open
             GameMaster.GM.Save.Data.OverworldState.Add(9); // Skip Revulan dock scene
+            GameMaster.GM.Save.Data.Relationships[CAROLINE_ID].Stage = SaveSystem.NPCData.Stages.STAGE0;
 
             if (Settings.SkipOneSmallFavor)
             {
@@ -516,7 +521,6 @@ namespace ProdigalArchipelago
 
         private void BuildLocationTable()
         {
-            LocationTable.Clear();
             List<int> locations = new(LOCS_BASE);
             if (Settings.TradingQuest == ArchipelagoSettings.TradingQuestOption.Shuffle)
                 locations.AddRange(LOCS_TRADE);
@@ -526,6 +530,8 @@ namespace ProdigalArchipelago
                 locations.AddRange(LOCS_GRELIN);
             if (Settings.ShuffleHiddenItems)
                 locations.AddRange(LOCS_HIDDEN);
+            if (Settings.ShuffleBjergCastle)
+                locations.AddRange(LOCS_CASTLE);
             if (Settings.ShuffleDaemonsDive)
                 locations.AddRange(LOCS_DIVE);
             if (Settings.ShuffleEnlightenment)
@@ -533,6 +539,7 @@ namespace ProdigalArchipelago
             if (Settings.ShuffleSecretShop)
                 locations.AddRange(LOCS_SECRET_SHOP);
 
+            LocationTable.Clear();
             foreach (int locationID in locations)
             {
                 LocationTable.Add(new Location(locationID));
@@ -609,12 +616,25 @@ namespace ProdigalArchipelago
             GameMaster.GM.UI.InitiateChat(chat, question);
         }
 
+        public int DungeonKeyID()
+        {
+            int currentScene = (int)AccessTools.Field(typeof(GameMaster), "CurrentScene").GetValue(GameMaster.GM);
+            if (currentScene == 8 && IsBjergCastle)
+                return 13;
+            for (int i = 0; i < KEY_SCENES.Length; i++)
+            {
+                if (KEY_SCENES[i] == currentScene)
+                    return i;
+            }
+            return -1;
+        }
+
         public void StartWarp()
         {
             StartCoroutine(Warp());
         }
 
-        private static IEnumerator Warp()
+        private IEnumerator Warp()
         {
             GameMaster.GM.UnPauseGame();
             GameMaster.GM.GS = GameMaster.GameState.LOAD;
@@ -627,9 +647,9 @@ namespace ProdigalArchipelago
             {
                 GameMaster.GM.PC.CrystalKey.GetComponent<Pickup>().KeyBreak(false);
             }
-            typeof(GameMaster).GetField("CurrentScene", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(GameMaster.GM, 2);
+            AccessTools.Field(typeof(GameMaster), "CurrentScene").SetValue(GameMaster.GM, 2);
             var aload = SceneManager.LoadSceneAsync(2);
-            typeof(GameMaster).GetField("ALoad", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(GameMaster.GM, aload);
+            AccessTools.Field(typeof(GameMaster), "ALoad").SetValue(GameMaster.GM, aload);
             while (!aload.isDone)
             {
                 yield return null;

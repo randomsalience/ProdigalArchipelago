@@ -23,6 +23,7 @@ namespace ProdigalArchipelago
             SiskasWorkshop,
             Backrooms,
             PiratesPier,
+            BjergCastle,
         }
 
         public static GameObject Instance;
@@ -439,6 +440,17 @@ namespace ProdigalArchipelago
                     new TrackerLocation("Kings Ring Chest", 125, () => HasPick() && HasLariat() && HasFlare() && HasKey(Key.PiratesPier, 5),
                         () => HasPick() && HasLariat() && HasFlare() && CanOpen(Key.PiratesPier, 78)),
                     new TrackerLocation("Revulan", 226, () => HasKnuckle() && Has(86) && Archipelago.AP.BlessingCount() >= 2),
+                }),
+                TrackerDot.NewDot("Bjerg Castle", -21, -44, true, () => true, new() {
+                    new TrackerLocation("Hype Chest 1", 56, () => true),
+                    new TrackerLocation("Hype Chest 2", 60, () => true),
+                    new TrackerLocation("Hype Chest 3", 59, () => true),
+                    new TrackerLocation("Hype Chest 4", 57, () => true),
+                    new TrackerLocation("Hype Chest 5", 61, () => true),
+                    new TrackerLocation("Hype Chest 6", 58, () => true),
+                    new TrackerLocation("Cannonball Chest", 54, () => HasLariat() && HasKnuckle()),
+                    new TrackerLocation("Near Boss Chest", 55, () => HasLariat() && HasKnuckle() && HasKey(Key.BjergCastle, 1)),
+                    new TrackerLocation("Captain Crossbones", 248, () => HasLariat() && HasKnuckle() && HasKey(Key.BjergCastle, 1)),
                 }),
                 TrackerDot.NewDot("Daemon's Dive", -30, 37, true, () => HasHand2() && Has(35) && Has(56), new() {
                     new TrackerLocation("1 Barrel Puzzle Chest", 98, () => (HasLariat() || CanLongJump()) && CanHit()),

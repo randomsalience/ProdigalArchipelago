@@ -47,6 +47,7 @@ namespace ProdigalArchipelago
             GameMaster.GM.ItemData.Database.Add(NewKey("SISKA'S WORKSHOP", "SISKA'S WORKSHOP"));
             GameMaster.GM.ItemData.Database.Add(NewKey("BACKROOMS", "THE BACKROOMS"));
             GameMaster.GM.ItemData.Database.Add(NewKey("PIRATE'S PIER", "PIRATE'S PIER"));
+            GameMaster.GM.ItemData.Database.Add(NewKey("BJERG CASTLE", "BJERG CASTLE"));
 
             ChangeItemAboutText(10, "BLESSED PICKAXE!*I BET THIS WILL DO SOME SERIOUS DAMAGE!");
             ChangeItemAboutText(13, "CLEATED BOOTS!*I SHOULD TALK TO TESS ABOUT THESE.");
@@ -112,10 +113,16 @@ namespace ProdigalArchipelago
     [HarmonyPatch(nameof(Chest.PLUNDER))]
     class Chest_PLUNDER_Patch
     {
-        private static bool Prefix(Chest __instance)
+        private static bool Prefix(Chest __instance, Loot ___L)
         {
             if (Archipelago.Enabled)
             {
+                // Replace normal key in Bjerg Castle with specific key
+                if (__instance.ID == 54 && Archipelago.AP.Settings.SpecificKeys && !Archipelago.AP.Settings.ShuffleBjergCastle)
+                {
+                    ___L.ID = 118;
+                }
+
                 __instance.Puzz?.PuzzleCompletion();
                 if (__instance.WARP_CHEST)
                 {
@@ -126,8 +133,10 @@ namespace ProdigalArchipelago
                     __instance.GetComponent<SpriteRenderer>().enabled = false;
                 }
                 __instance.ChestState = Chest.Status.COLLECT_LOCK;
+
                 return !Archipelago.AP.CollectItem(__instance.ID);
             }
+
             return true;
         }
     }
@@ -206,7 +215,16 @@ namespace ProdigalArchipelago
         {
             if (Archipelago.Enabled)
             {
+                // Fix existence of two chests with ID 60
+                if (__instance.ID == 60 && __instance.transform.position.x == 816)
+                {
+                    __instance.ID = 58;
+                }
+
+                // Don't warp after opening chests
                 __instance.WARP_CHEST = false;
+
+                // Replace freestanding item sprites
                 if (__instance.TYPE == Chest.CHEST_TYPE.GRAB || __instance.TYPE == Chest.CHEST_TYPE.SPRITE)
                 {
                     int id = Archipelago.AP.GetLocationItem(__instance.ID)?.SpriteID() ?? 0;

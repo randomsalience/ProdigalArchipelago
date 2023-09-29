@@ -51,6 +51,7 @@ namespace ProdigalArchipelago
             ConnectionMenu.Create();
             KeyPage.Create();
             MapTracker.Create();
+            CastleSailor.Create();
         }
     }
 }

@@ -21,21 +21,18 @@ namespace ProdigalArchipelago
                 ___Chatter.Clear();
                 GameMaster.GM.UI.SLOT_INT(__instance);
 
-                int currentScene = (int)AccessTools.Field(typeof(GameMaster), "CurrentScene").GetValue(GameMaster.GM);
-                bool hasKey = false;
-                for (int i = 0; i < Archipelago.KEY_SCENES.Length; i++)
-                {
-                    if (Archipelago.KEY_SCENES[i] == currentScene && GameMaster.GM.Save.Data.Inventory[Archipelago.KEY_ID_START + i].Count > 0 && !___Locked)
-                    {
-                        hasKey = true;
-                        ___Locked = true;
-                        GameMaster.GM.LoadSFX(76);
-                        GameMaster.GM.Save.Data.Inventory[Archipelago.KEY_ID_START + i].Count--;
-                        __instance.GetComponent<LockBlock>().Unlock();
-                    }
-                }
+                int keyID = Archipelago.AP.DungeonKeyID();
+                if (keyID == -1)
+                    return false;
 
-                if (!hasKey)
+                if (GameMaster.GM.Save.Data.Inventory[Archipelago.KEY_ID_START + keyID].Count > 0 && !___Locked)
+                {
+                    ___Locked = true;
+                    GameMaster.GM.LoadSFX(76);
+                    GameMaster.GM.Save.Data.Inventory[Archipelago.KEY_ID_START + keyID].Count--;
+                    __instance.GetComponent<LockBlock>().Unlock();
+                }
+                else
                 {
                     ___Chatter.Clear();
                     ___Chatter.Add(GameMaster.CreateSpeech(46, 0, "I NEED A KEY FOR THIS.", "", 0));
@@ -706,7 +703,7 @@ namespace ProdigalArchipelago
 
             while (__result.MoveNext())
             {
-                yield return null;
+                yield return __result.Current;
             }
         }
     }
@@ -733,6 +730,21 @@ namespace ProdigalArchipelago
             }
 
             return true;
+        }
+    }
+
+    // Keep track of which part of the Bjerg you're in
+    [HarmonyPatch(typeof(Dockmaster))]
+    [HarmonyPatch("Skip")]
+    [HarmonyPatch(MethodType.Enumerator)]
+    class Dockmaster_Skip_Patch
+    {
+        static void Prefix()
+        {
+            if (Archipelago.Enabled)
+            {
+                Archipelago.AP.IsBjergCastle = false;
+            }
         }
     }
 }

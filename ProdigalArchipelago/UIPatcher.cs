@@ -103,7 +103,7 @@ namespace ProdigalArchipelago
             var keyPage2 = Page2.AddComponent<KeyPage>();
             Page2.transform.parent = GameMaster.GM.UI.transform.GetChild(2).GetChild(0).GetChild(1);
             Page2.transform.localPosition = new Vector3(0, 0, 0);
-            keyPage2.Setup(7, 6);
+            keyPage2.Setup(7, 7);
         }
 
         private void Setup(int start, int num)
@@ -127,7 +127,11 @@ namespace ProdigalArchipelago
         {
             for (int i = 0; i < KeyText.Count; i++)
             {
-                int keyCount = GameMaster.GM.Save.Data.Inventory[Archipelago.KEY_ID_START + StartIndex + i].Count;
+                int keyCount = 0;
+                if (Archipelago.KEY_ID_START + StartIndex + i < GameMaster.GM.Save.Data.Inventory.Count) // for backwards compatibility
+                {
+                    keyCount = GameMaster.GM.Save.Data.Inventory[Archipelago.KEY_ID_START + StartIndex + i].Count;
+                }
                 string dungeonName = Archipelago.KEY_DUNGEONS[StartIndex + i];
                 Menu.RenderText(KeyText[i], $"{keyCount} {dungeonName}");
             }
@@ -194,15 +198,8 @@ namespace ProdigalArchipelago
         {
             if (Pause && Archipelago.Enabled && Archipelago.AP.Settings.SpecificKeys)
             {
-                int keyCount = 0;
-                int currentScene = (int)AccessTools.Field(typeof(GameMaster), "CurrentScene").GetValue(GameMaster.GM);
-                for (int i = 0; i < Archipelago.KEY_SCENES.Length; i++)
-                {
-                    if (Archipelago.KEY_SCENES[i] == currentScene)
-                    {
-                        keyCount = GameMaster.GM.Save.Data.Inventory[Archipelago.KEY_ID_START + i].Count;
-                    }
-                }
+                int keyID = Archipelago.AP.DungeonKeyID();
+                int keyCount = keyID == -1 ? 0 : GameMaster.GM.Save.Data.Inventory[Archipelago.KEY_ID_START + keyID].Count;
                 __instance.KEYS.UPDATE_COUNT(keyCount);
             }
         }

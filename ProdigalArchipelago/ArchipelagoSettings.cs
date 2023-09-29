@@ -30,6 +30,7 @@ namespace ProdigalArchipelago
         public TradingQuestOption TradingQuest;
         public bool ShuffleGrelinDrops;
         public bool ShuffleHiddenItems;
+        public bool ShuffleBjergCastle;
         public bool ShuffleDaemonsDive;
         public bool ShuffleEnlightenment;
         public bool ShuffleSecretShop;
@@ -50,6 +51,7 @@ namespace ProdigalArchipelago
             TradingQuest = (TradingQuestOption)GetOrDefault(slotData, "trading_quest", 0);
             ShuffleGrelinDrops = GetOrDefault(slotData, "shuffle_grelin_drops", 0) != 0;
             ShuffleHiddenItems = GetOrDefault(slotData, "shuffle_hidden_items", 0) != 0;
+            ShuffleBjergCastle = GetOrDefault(slotData, "shuffle_bjerg_castle", 0) != 0;
             ShuffleDaemonsDive = GetOrDefault(slotData, "shuffle_daemons_dive", 0) != 0;
             ShuffleEnlightenment = GetOrDefault(slotData, "shuffle_enlightenment", 0) != 0;
             ShuffleSecretShop = GetOrDefault(slotData, "shuffle_secret_shop", 0) != 0;

@@ -624,6 +624,12 @@ namespace ProdigalArchipelago
                 return false;
             }
 
+            if (Archipelago.Enabled && __instance.INTERACTABLE == SpecialInteract.INT.TEMPCRYSTAL)
+            {
+                if (!GameMaster.GM.Save.Data.Inventory[Archipelago.IRON_PICK_ID].Acquired)
+                    return false;
+            }
+
             return true;
         }
 

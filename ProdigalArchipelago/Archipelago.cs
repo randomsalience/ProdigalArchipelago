@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
 using UnityEngine;
@@ -185,12 +186,22 @@ namespace ProdigalArchipelago
                 yield break;
             }
 
+            // Sync collected locations
+            foreach (long locationID in Session.Locations.AllLocationsChecked)
+            {
+                int chestID = (int)(locationID - ID_BASE);
+                if (!GameMaster.GM.Save.Data.Chests.Contains(chestID))
+                    GameMaster.GM.Save.Data.Chests.Add(chestID);
+            }
+
             // Connection successful
             Session.Socket.SocketClosed += OnSocketClosed;
+            Session.Locations.CheckedLocationsUpdated += OnCheckedLocationsUpdated;
             Connected = true;
             Error = "";
             Data.Connection = cdata;
             CheatItemsReceived = 0;
+            GameMaster.GM.Save.Save();
         }
 
         public void Disconnect()
@@ -513,6 +524,17 @@ namespace ProdigalArchipelago
                     yield return Connect(Data.Connection, true);
                 }
             }
+        }
+
+        public void OnCheckedLocationsUpdated(ReadOnlyCollection<long> newCheckedLocations)
+        {
+            foreach (long locationID in newCheckedLocations)
+            {
+                int chestID = (int)(locationID - ID_BASE);
+                if (!GameMaster.GM.Save.Data.Chests.Contains(chestID))
+                    GameMaster.GM.Save.Data.Chests.Add(chestID);
+            }
+            GameMaster.GM.Save.Save();
         }
 
         private void BuildLocationTable()

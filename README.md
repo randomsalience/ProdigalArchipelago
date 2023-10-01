@@ -23,12 +23,14 @@ This is a mod for the game [Prodigal](https://store.steampowered.com/app/1393820
 This section describes changes which have been made to the randomizer, as well as information about the requirements for some of the less obvious checks.
 
 - The game starts in Act 2. So the portal to the Colorless Void is open, Hackett appears, the sailor will take you to the Bjerg, etc. The Backrooms and Siska's Workshop are open from the start. Bolivar remains in town so you can obtain his check.
-- If "Specific Keys" is turned on, keys are specific to each dungeon. If this option is on, two new pages are added to the inventory menu showing the number of keys for each dungeon.
+- If "Specific Keys" is turned on, keys are specific to each dungeon. If this option is on, two new pages are added to the inventory menu. For each dungeon, these pages have three columns showing the number of keys you currently have, the number of keys you have obtained, and the total number of keys for the dungeon.
 - Buying ice keys from Zaegul is in logic if you have the Harmonica, access to the secret shop in the Tidal Mines, and a means of making money. If "Specific Keys" is turned off, buying normal keys from Zaegul is also in logic.
 - A warp to town button has been added to the menu. Besides being convenient, this allows you to obtain checks that would otherwise softlock you.
 - The map in the menu now includes a tracker. Locations are green if all items can be obtained, yellow if some can be obtained, or red if none can be obtained. Orange means that items can be obtained out of logic by spending keys. Hover over a location with the mouse to see a list of all checks at that location.
 - Nora tells you the goal of the game.
-- Extra checks are added on Yhorte, Siska, and Inkwell, as well as Color Correction (beating Me?).
+- Bolivar hints the location of a pick.
+- Bjerg Castle (Mariana's marriage dungeon) may be shuffled into the pool. If it is, there will be a sailor outside the arena who will take you there at any time.
+- Extra checks are added on Yhorte, Siska, and Inkwell, as well as Color Correction (beating Me?). If Bjerg Castle is shuffled, a check is added on Captain Crossbones.
 - To enter the lighthouse, you must collect a certain number of Colors (Shattered Soul, Fury Heart, Frozen Heart, Red Crystal, Sunset Painting).
 - To obtain the Hero's Soul, you must collect a certain number of Blessings.
 - To enter Enlightenment, you must obtain the Hero's Soul and the Empowered Hand and absorb the tar in the hidden room in the Crocasino.

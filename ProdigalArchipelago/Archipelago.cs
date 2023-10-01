@@ -534,7 +534,6 @@ namespace ProdigalArchipelago
                 if (!GameMaster.GM.Save.Data.Chests.Contains(chestID))
                     GameMaster.GM.Save.Data.Chests.Add(chestID);
             }
-            GameMaster.GM.Save.Save();
         }
 
         private void BuildLocationTable()

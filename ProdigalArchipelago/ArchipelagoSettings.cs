@@ -34,7 +34,8 @@ namespace ProdigalArchipelago
         public bool ShuffleDaemonsDive;
         public bool ShuffleEnlightenment;
         public bool ShuffleSecretShop;
-        public bool LongJumpsInLogic;
+        public bool LongJumpsInLogic; // for backward compatibility
+        public bool SkipsInLogic;
         public bool StartWithSpicedHam;
         public bool SkipOneSmallFavor;
         public bool FakeDreadHand;
@@ -56,6 +57,7 @@ namespace ProdigalArchipelago
             ShuffleEnlightenment = GetOrDefault(slotData, "shuffle_enlightenment", 0) != 0;
             ShuffleSecretShop = GetOrDefault(slotData, "shuffle_secret_shop", 0) != 0;
             LongJumpsInLogic = GetOrDefault(slotData, "long_jumps_in_logic", 0) != 0;
+            SkipsInLogic = GetOrDefault(slotData, "skips_in_logic", 0) != 0;
             StartWithSpicedHam = GetOrDefault(slotData, "start_with_spiced_ham", 0) != 0;
             SkipOneSmallFavor = GetOrDefault(slotData, "skip_one_small_favor", 0) != 0;
             FakeDreadHand = GetOrDefault(slotData, "fake_dread_hand", 0) != 0;

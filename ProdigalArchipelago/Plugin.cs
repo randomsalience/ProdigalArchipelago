@@ -6,7 +6,7 @@ using HarmonyLib;
 
 namespace ProdigalArchipelago
 {
-    [BepInPlugin("com.randomsalience.prodigal.archipelago", "Archipelago", "0.1.2")]
+    [BepInPlugin("com.randomsalience.prodigal.archipelago", "Archipelago", "0.1.3")]
     [BepInProcess("Prodigal.exe")]
     public class Plugin : BaseUnityPlugin
     {

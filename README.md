@@ -27,6 +27,9 @@ This section describes changes which have been made to the randomizer, as well a
 - Buying ice keys from Zaegul is in logic if you have the Harmonica, access to the secret shop in the Tidal Mines, and a means of making money. If "Specific Keys" is turned off, buying normal keys from Zaegul is also in logic.
 - A warp to town button has been added to the menu. Besides being convenient, this allows you to obtain checks that would otherwise softlock you.
 - The map in the menu now includes a tracker. Locations are green if all items can be obtained, yellow if some can be obtained, or red if none can be obtained. Orange means that items can be obtained out of logic by spending keys. Hover over a location with the mouse to see a list of all checks at that location.
+- Altars and curses may be activated through Archipelago options. These mostly act like vanilla, with some exceptions: Defiling Zolei's altar makes drops rarer, but still existent; defiling Hate's altar does not enable permadeath; and accepting the Curse of Horns does not disable all gold, it only removes gold and other junk from the item pool (and replaces them with traps).
+- Accepting curses does not start you with the Winged Boots, but an option to start with the boots is available.
+- Traps may be enabled, either through their own option, which replaces a few added junk items, or through the Curse of Horns, which replaces all junk items. Beware, traps look like normal items until you pick them up! See the settings page or template YAML for a description of the trap types.
 - Nora tells you the goal of the game.
 - Bolivar hints the location of a pick.
 - Bjerg Castle (Mariana's marriage dungeon) may be shuffled into the pool. If it is, there will be a sailor outside the arena who will take you there at any time.

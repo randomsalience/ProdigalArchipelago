@@ -654,6 +654,9 @@ namespace ProdigalArchipelago
             {
                 GameMaster.GM.PC.CrystalKey.GetComponent<Pickup>().KeyBreak(false);
             }
+            GameMaster.GM.UI.Fishing(false);
+            GameMaster.GM.PC.RecoverTemp();
+            GameMaster.GM.UI.StartMines(false);
             AccessTools.Field(typeof(GameMaster), "CurrentScene").SetValue(GameMaster.GM, 2);
             var aload = SceneManager.LoadSceneAsync(2);
             AccessTools.Field(typeof(GameMaster), "ALoad").SetValue(GameMaster.GM, aload);

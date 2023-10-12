@@ -90,7 +90,7 @@ namespace ProdigalArchipelago
                     new TrackerLocation("Drowned Gift", 88, () => HasCoins() && CanHit() && (Item.AnchorGreaves.Acquired() || Item.BootsOfGraile.Acquired())),
                 }),
                 TrackerDot.NewDot("Near Mine", -74, -30, false, () => true, new() {
-                    new TrackerLocation("Heart Ore", 146, () => HasPick() && HasKnuckle()),
+                    new TrackerLocation("Heart Ore", 146, () => HasPick() && (HasKnuckle() || (Skips() && Item.WeaponChain.Acquired()))),
                 }),
                 TrackerDot.NewDot("Near Siska", -37, 40, false, () => true, new() {
                     new TrackerLocation("Heart Ore", 147, () => HasPick() && (HasLariat() || (Skips() && HasFlare()))),
@@ -251,9 +251,9 @@ namespace ProdigalArchipelago
                     new TrackerLocation("Central Room Chest", 21, () => (HasLariat() && HasKnuckle()) || CanLongJump()),
                     new TrackerLocation("Barrel Bridge Chest", 19, () => HasLariat() && HasPick() && HasKnuckle() && HasHand()),
                     new TrackerLocation("Right Side Heart Ore", 159, () => HasLariat() && HasPick() && HasKnuckle() && HasHand()),
-                    new TrackerLocation("Left Hidden Chest", 17, () => HasPick() && HasLariat() && HasKnuckle()),
-                    new TrackerLocation("Center Hidden Chest", 69, () => HasPick() && HasLariat() && HasKnuckle()),
-                    new TrackerLocation("Right Hidden Chest", 18, () => HasPick() && HasLariat() && HasKnuckle()),
+                    new TrackerLocation("Left Hidden Chest", 17, () => (HasPick() || Skips()) && HasLariat() && HasKnuckle()),
+                    new TrackerLocation("Center Hidden Chest", 69, () => (HasPick() || Skips()) && HasLariat() && HasKnuckle()),
+                    new TrackerLocation("Right Hidden Chest", 18, () => (HasPick() || Skips()) && HasLariat() && HasKnuckle()),
                     new TrackerLocation("Rat Potion", 63, () => HasLariat() && HasPick() && HasKnuckle() && HasHand()),
                 }),
                 TrackerDot.NewDot("Crocasino", 36, 10, true, () => HasKnuckle(), new() {
@@ -287,7 +287,7 @@ namespace ProdigalArchipelago
                     new TrackerLocation("Main - Lower Right Chest", 32, () => HasFlare() || HasLariat() || Skips()),
                     new TrackerLocation("West - Ball Puzzle Chest", 51, () => (HasLariat() || CanLongJump()) && (Skips() || HasKnuckle())),
                     new TrackerLocation("West - After Ball Puzzle Chest", 34, () => HasKnuckle() && (HasLariat() || CanLongJump())),
-                    new TrackerLocation("West - Turtle Chest", 29, () => CanLongJump() || (HasPick() && HasKey(Key.CastleVann, 4)),
+                    new TrackerLocation("West - Turtle Chest", 29, () => CanLongJump() || (CanHit() && HasKey(Key.CastleVann, 4)),
                         () => CanLongJump() || (HasPick() && CanOpen(Key.CastleVann, 8))),
                     new TrackerLocation("West - Black Hole Chest", 35, () => CanLongJump() || (HasKnuckle() && HasLariat() && HasKey(Key.CastleVann, 4)),
                         () => CanLongJump() || (HasKnuckle() && HasLariat() && CanOpen(Key.CastleVann, 8))),

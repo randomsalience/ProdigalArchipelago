@@ -511,7 +511,7 @@ namespace ProdigalArchipelago
         private IEnumerator SendFinish()
         {
             while (true)
-                {
+            {
                 var packet = new StatusUpdatePacket() {
                     Status = ArchipelagoClientState.ClientGoal
                 };

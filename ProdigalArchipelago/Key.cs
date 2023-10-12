@@ -17,6 +17,19 @@ namespace ProdigalArchipelago
             AltName = altName;
         }
 
+        public int Count
+        {
+            get
+            {
+                return GameMaster.GM.Save.Data.Inventory[ID + 105].Count;
+            }
+
+            set
+            {
+                GameMaster.GM.Save.Data.Inventory[ID + 105].Count = value;
+            }
+        }
+
         public static readonly Key Boneyard = new(0, 5, 1, "BONEYARD", "THE BONEYARD");
         public static readonly Key TidalMines = new(1, 12, 4, "TIDAL MINES", "THE TIDAL MINES");
         public static readonly Key Crocasino = new(2, 6, 2, "CROCASINO", "THE CROCASINO");

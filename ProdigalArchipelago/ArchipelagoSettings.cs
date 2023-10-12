@@ -40,6 +40,18 @@ namespace ProdigalArchipelago
         public bool SkipOneSmallFavor;
         public bool FakeDreadHand;
         public bool FastFishing;
+        public bool AltarToVar;
+        public bool AltarToZolei;
+        public bool AltarToRaem;
+        public bool AltarToHate;
+        public bool CurseOfFrailty;
+        public bool CurseOfFamine;
+        public bool CurseOfRust;
+        public bool CurseOfWind;
+        public bool CurseOfBlooms;
+        public bool CurseOfCrowns;
+        public bool CurseOfHorns;
+        public bool CurseOfFlames;
 
         public ArchipelagoSettings(Dictionary<string, object> slotData)
         {
@@ -62,6 +74,18 @@ namespace ProdigalArchipelago
             SkipOneSmallFavor = GetOrDefault(slotData, "skip_one_small_favor", 0) != 0;
             FakeDreadHand = GetOrDefault(slotData, "fake_dread_hand", 0) != 0;
             FastFishing = GetOrDefault(slotData, "fast_fishing", 0) != 0;
+            AltarToVar = GetOrDefault(slotData, "altar_to_var", 0) != 0;
+            AltarToZolei = GetOrDefault(slotData, "altar_to_zolei", 0) != 0;
+            AltarToRaem = GetOrDefault(slotData, "altar_to_raem", 0) != 0;
+            AltarToHate = GetOrDefault(slotData, "altar_to_hate", 0) != 0;
+            CurseOfFrailty = GetOrDefault(slotData, "curse_of_frailty", 0) != 0;
+            CurseOfFamine = GetOrDefault(slotData, "curse_of_famine", 0) != 0;
+            CurseOfRust = GetOrDefault(slotData, "curse_of_rust", 0) != 0;
+            CurseOfWind = GetOrDefault(slotData, "curse_of_wind", 0) != 0;
+            CurseOfBlooms = GetOrDefault(slotData, "curse_of_blooms", 0) != 0;
+            CurseOfCrowns = GetOrDefault(slotData, "curse_of_crowns", 0) != 0;
+            CurseOfHorns = GetOrDefault(slotData, "curse_of_horns", 0) != 0;
+            CurseOfFlames = GetOrDefault(slotData, "curse_of_flames", 0) != 0;
         }
 
         public bool GoalVar()

@@ -84,10 +84,10 @@ namespace ProdigalArchipelago
                         () => TimeOut2() && HasKnuckle() && HasLariat() && (CanOpen(Key.TimeOut, 36, 37) || (HasFlare() && CanOpen(Key.TimeOut, 36)))),
                 }),
                 TrackerDot.NewDot("Old House", 11, 49, false, () => true, new() {
-                    new TrackerLocation("Music Box", 228, () => CanClimb() && Has(65)),
+                    new TrackerLocation("Music Box", 228, () => CanClimb() && Item.Harmonica.Acquired()),
                 }),
                 TrackerDot.NewDot("Flooded Shack", 71, -54, false, () => true, new() {
-                    new TrackerLocation("Drowned Gift", 88, () => HasCoins() && CanHit() && (Has(14) || Has(15))),
+                    new TrackerLocation("Drowned Gift", 88, () => HasCoins() && CanHit() && (Item.AnchorGreaves.Acquired() || Item.BootsOfGraile.Acquired())),
                 }),
                 TrackerDot.NewDot("Near Mine", -74, -30, false, () => true, new() {
                     new TrackerLocation("Heart Ore", 146, () => HasPick() && HasKnuckle()),
@@ -111,14 +111,14 @@ namespace ProdigalArchipelago
                 }),
                 TrackerDot.NewDot("Boot Shop", 12, -12, false, () => true, new() {
                     new TrackerLocation("Tess", 201, () => true),
-                    new TrackerLocation("Tess Boots", 210, () => Has4Boots() && Has(71)),
-                    new TrackerLocation("Tess Trade", 206, () => Has(48)),
+                    new TrackerLocation("Tess Boots", 210, () => Has4Boots() && Item.OldHairpin.Acquired()),
+                    new TrackerLocation("Tess Trade", 206, () => Item.LostShipment.Acquired()),
                 }),
                 TrackerDot.NewDot("Hackett", -53, -7, false, () => true, new() {
                     new TrackerLocation("Purchase Item", 202, () => CanHit()),
                 }),
                 TrackerDot.NewDot("Grant", -49, -13, false, () => true, new() {
-                    new TrackerLocation("Stealth Mission", 203, () => Has(51) && Has(55)),
+                    new TrackerLocation("Stealth Mission", 203, () => Item.CursedBones.Acquired() && Item.CursedPick.Acquired()),
                 }),
                 TrackerDot.NewDot("Arena", -26, -41, false, () => true, new() {
                     new TrackerLocation("Mariana", 204, () => CanHit()),
@@ -127,19 +127,19 @@ namespace ProdigalArchipelago
                     new TrackerLocation("Keaton Fishing Gift", 205, () => HasLariat()),
                 }),
                 TrackerDot.NewDot("Church", -8, -14, false, () => true, new() {
-                    new TrackerLocation("Xavier Blessing", 208, () => Has(51) && Has(55)),
+                    new TrackerLocation("Xavier Blessing", 208, () => Item.CursedBones.Acquired() && Item.CursedPick.Acquired()),
                 }),
                 TrackerDot.NewDot("Lynn", 3, -40, false, () => true, new() {
-                    new TrackerLocation("Gift", 211, () => Archipelago.AP.Settings.ShuffleGrelinDrops ? Has(96) && Has(97) && Has(98) && Has(99) : CanKillGrelins()),
+                    new TrackerLocation("Gift", 211, () => CanReturnStolenItems()),
                 }),
                 TrackerDot.NewDot("Bolivar", 19, -24, false, () => true, new() {
-                    new TrackerLocation("Gift", 212, () => Has(45) && Has(46) && Has(47) && Has(49)),
+                    new TrackerLocation("Gift", 212, () => Item.Shaedrite.Acquired() && Item.DrownedOre.Acquired() && Item.MiasmicExtract.Acquired() && Item.BrokenSword.Acquired()),
                 }),
                 TrackerDot.NewDot("Hooded Figure", 15, 45, false, () => true, new() {
-                    new TrackerLocation("Reward", 213, () => Has(73) && HasHand2() && CanClimb() && CanHit()),
+                    new TrackerLocation("Reward", 213, () => Item.EerieMask.Acquired() && HasHand2() && CanClimb() && CanHit()),
                 }),
                 TrackerDot.NewDot("Farmhouse", 11, -40, false, () => true, new() {
-                    new TrackerLocation("Quinlan Trade", 207, () => Has(28)),
+                    new TrackerLocation("Quinlan Trade", 207, () => Item.TheCarrotCake.Acquired()),
                 }),
                 TrackerDot.NewDot("On Farm", 0, -40, false, () => true, new() {
                     new TrackerLocation("Bush Hidden Item", 141, () => true),
@@ -173,15 +173,15 @@ namespace ProdigalArchipelago
                     new TrackerLocation("Near Burg Heart Ore", 166, () => HasPick()),
                     new TrackerLocation("Near Tavern Heart Ore", 167, () => HasPick() && HasLariat()),
                     new TrackerLocation("Near Waterfall Heart Ore", 168, () => HasPick()),
-                    new TrackerLocation("Vulhara Trade", 214, () => Has(23) && HasLariat()),
-                    new TrackerLocation("Reskel Trade", 215, () => Has(24) && HasLariat()),
-                    new TrackerLocation("Mynir Trade", 216, () => Has(25) && HasLariat()),
-                    new TrackerLocation("Orima Trade", 217, () => Has(26)),
-                    new TrackerLocation("Wren Trade", 218, () => Has(27)),
-                    new TrackerLocation("Leer Trade", 219, () => Has(29)),
-                    new TrackerLocation("Burg Trade", 220, () => Has(30)),
-                    new TrackerLocation("Crelon Trade", 221, () => Has(31) && HasLariat()),
-                    new TrackerLocation("Tedra Trade", 222, () => Has(32)),
+                    new TrackerLocation("Vulhara Trade", 214, () => Item.Coffee.Acquired() && HasLariat()),
+                    new TrackerLocation("Reskel Trade", 215, () => Item.TatteredCape.Acquired() && HasLariat()),
+                    new TrackerLocation("Mynir Trade", 216, () => Item.BallOfYarn.Acquired() && HasLariat()),
+                    new TrackerLocation("Orima Trade", 217, () => Item.SlimeSoap.Acquired()),
+                    new TrackerLocation("Wren Trade", 218, () => Item.SerpentBracelet.Acquired()),
+                    new TrackerLocation("Leer Trade", 219, () => Item.HuntingBow.Acquired()),
+                    new TrackerLocation("Burg Trade", 220, () => Item.DownPillow.Acquired()),
+                    new TrackerLocation("Crelon Trade", 221, () => Item.GiantsMonocle.Acquired() && HasLariat()),
+                    new TrackerLocation("Tedra Trade", 222, () => Item.ForbiddenBook.Acquired()),
                     new TrackerLocation("Ulni Trade", 223, () => CanTradeWithUlni()),
                 }),
                 TrackerDot.NewDot("Abandoned Mine", -72, -35, false, () => true, new() {
@@ -191,10 +191,10 @@ namespace ProdigalArchipelago
                 TrackerDot.NewDot("Waterfall Cave", 55, 15, false, () => CanClimb(), new() {
                     new TrackerLocation("Skeleton", 135, () => (HasPick() || (Skips() && HasKnuckle())) && HasLariat()),
                 }),
-                TrackerDot.NewDot("Celina's Mine", 45, 34, false, () => Has(95) && ((CanClimb() && CanHit()) || (HasKnuckle() && HasLariat())), new() {
-                    new TrackerLocation("Mine Treasure", 179, () => CanHit()),
+                TrackerDot.NewDot("Celina's Mine", 45, 34, false, () => Item.Bandana.Acquired() && ((CanClimb() && CanHit()) || (HasKnuckle() && HasLariat())), new() {
+                    new TrackerLocation("Mine Treasure", 179, () => HasPick()),
                 }),
-                TrackerDot.NewDot("Cursed Grave", -39, 11, false, () => Has(51), new() {
+                TrackerDot.NewDot("Cursed Grave", -39, 11, false, () => Item.CursedBones.Acquired(), new() {
                     new TrackerLocation("Top Chest", 49, () => CanHit()),
                     new TrackerLocation("Center Chest", 48, () => CanHit()),
                     new TrackerLocation("Bottom Chest", 47, () => CanHit()),
@@ -220,9 +220,9 @@ namespace ProdigalArchipelago
                     new TrackerLocation("Roller Chest", 4, () => HasHand() && (HasPick() || (HasLariat() && HasKnuckle()))),
                     new TrackerLocation("Lariat Target Chest", 53, () => HasHand() && (HasLariat() || (HasPick() && CanLongJump()))),
                     new TrackerLocation("Boss Key Chest", 9, () => HasHand() && (HasPick() || (HasLariat() && HasKnuckle()))),
-                    new TrackerLocation("Vulture", 142, () => Has(34) && HasPick() && HasHand()),
+                    new TrackerLocation("Vulture", 142, () => Item.BossKey.Acquired() && HasPick() && HasHand()),
                 }),
-                TrackerDot.NewDot("Tidal Mines", 43, -52, true, () => Has(36), new() {
+                TrackerDot.NewDot("Tidal Mines", 43, -52, true, () => Item.RustyKey.Acquired(), new() {
                     new TrackerLocation("Secret Shop - Item 1", 245, () => CanReachZaegul()),
                     new TrackerLocation("Secret Shop - Item 2", 246, () => CanReachZaegul()),
                     new TrackerLocation("Secret Shop - Item 3", 247, () => CanReachZaegul()),
@@ -258,15 +258,15 @@ namespace ProdigalArchipelago
                 }),
                 TrackerDot.NewDot("Crocasino", 36, 10, true, () => HasKnuckle(), new() {
                     new TrackerLocation("Gator Key", 232, () => HasLariat() || CanLongJump()),
-                    new TrackerLocation("Jail Chest", 50, () => Has(38) && (HasLariat() || HasFlare()) && (Has(37) || (HasKnuckle() && (HasLariat() || CanLongJump())))),
-                    new TrackerLocation("Hidden Chest", 68, () => (HasLariat() || HasFlare()) && ((Has(37) && HasPick()) || (HasKnuckle() && (HasLariat() || CanLongJump())))),
+                    new TrackerLocation("Jail Chest", 50, () => Item.BunnyKey.Acquired() && (HasLariat() || HasFlare()) && (Item.GatorKey.Acquired() || (HasKnuckle() && (HasLariat() || CanLongJump())))),
+                    new TrackerLocation("Hidden Chest", 68, () => (HasLariat() || HasFlare()) && ((Item.GatorKey.Acquired() && HasPick()) || (HasKnuckle() && (HasLariat() || CanLongJump())))),
                     new TrackerLocation("Turtle Chest", 22, () => HasLariat() && HasKnuckle()),
                     new TrackerLocation("Block Push Chest", 23, () => HasLariat() && HasKnuckle() && HasKey(Key.Crocasino, 1),
                         () => HasLariat() && HasKnuckle() && CanOpen(Key.Crocasino, 3)),
                     new TrackerLocation("Heart Ore", 161, () => HasLariat() && HasKnuckle() && HasKey(Key.Crocasino, 2) && HasPick(),
                         () => HasLariat() && HasKnuckle() && CanOpen(Key.Crocasino, 3, 5) && HasPick()),
-                    new TrackerLocation("Wren", 62, () => HasLariat() && HasKnuckle() && HasKey(Key.Crocasino, 2) && Has(38),
-                        () => HasLariat() && HasKnuckle() && CanOpen(Key.Crocasino, 3, 5) && Has(38)),
+                    new TrackerLocation("Wren", 62, () => HasLariat() && HasKnuckle() && HasKey(Key.Crocasino, 2) && Item.BunnyKey.Acquired(),
+                        () => HasLariat() && HasKnuckle() && CanOpen(Key.Crocasino, 3, 5) && Item.BunnyKey.Acquired()),
                 }),
                 TrackerDot.NewDot("Howling Bjerg", -11, -58, true, () => true, new() {
                     new TrackerLocation("Outside Heart Ore", 157, () => HasPick() && HasKnuckle() && HasLariat()),
@@ -277,15 +277,15 @@ namespace ProdigalArchipelago
                     new TrackerLocation("Yhote", 233, () => HasLariat() && HasKnuckle() && HasKey(Key.HowlingBjerg, 1),
                         () => HasLariat() && HasKnuckle() && CanOpen(Key.HowlingBjerg, 6)),
                 }),
-                TrackerDot.NewDot("Castle Vann", -12, 32, true, () => Has(35), new() {
+                TrackerDot.NewDot("Castle Vann", -12, 32, true, () => Item.HallowedKey.Acquired(), new() {
                     new TrackerLocation("Entry Heart Ore", 154, () => HasPick()),
                     new TrackerLocation("Main - Upper Chest", 52, () => true),
-                    new TrackerLocation("Main - Upper Right Chest", 30, () => HasLariat() && (Skips() || (CanHit() && HasKey(Key.CastleVann, 4))),
-                        () => HasLariat() && (Skips() || (CanHit() && CanOpen(Key.CastleVann, 7)))),
-                    new TrackerLocation("Main - Left Chest", 31, () => HasLariat() && CanHit() && HasKey(Key.CastleVann, 4),
-                        () => HasLariat() && CanHit() && CanOpen(Key.CastleVann, 8)),
+                    new TrackerLocation("Main - Upper Right Chest", 30, () => HasLariat() && CanHit() && HasKey(Key.CastleVann, 4),
+                        () => HasLariat() && CanHit() && CanOpen(Key.CastleVann, 7)),
+                    new TrackerLocation("Main - Left Chest", 31, () => HasLariat() && (Skips() || (CanHit() && HasKey(Key.CastleVann, 4))),
+                        () => HasLariat() && (Skips() || (CanHit() && CanOpen(Key.CastleVann, 8)))),
                     new TrackerLocation("Main - Lower Right Chest", 32, () => HasFlare() || HasLariat() || Skips()),
-                    new TrackerLocation("West - Ball Puzzle Chest", 51, () => HasLariat() || CanLongJump()),
+                    new TrackerLocation("West - Ball Puzzle Chest", 51, () => (HasLariat() || CanLongJump()) && (Skips() || HasKnuckle())),
                     new TrackerLocation("West - After Ball Puzzle Chest", 34, () => HasKnuckle() && (HasLariat() || CanLongJump())),
                     new TrackerLocation("West - Turtle Chest", 29, () => CanLongJump() || (HasPick() && HasKey(Key.CastleVann, 4)),
                         () => CanLongJump() || (HasPick() && CanOpen(Key.CastleVann, 8))),
@@ -297,11 +297,11 @@ namespace ProdigalArchipelago
                         () => HasLariat() && HasPick() && CanOpen(Key.CastleVann, 7)),
                     new TrackerLocation("Hidden Chest", 87, () => HasCrest() && CanHit()),
                     new TrackerLocation("Spirit of Vann", 234, () => HasCrest() && (HasLariat() || CanLongJump()) && CanHit()),
-                    new TrackerLocation("Basement - Crumbling Floor Chest", 94, () => HasCrest() && Has(87) && (HasLariat() || HasFlare())),
-                    new TrackerLocation("Basement - Puzzle Chest", 95, () => HasCrest() && Has(87) && HasLariat() && HasPick() && HasKey(Key.CastleVann, 3),
-                        () => HasCrest() && Has(87) && HasLariat() && HasPick() && CanOpen(Key.CastleVann, 39)),
-                    new TrackerLocation("Basement - Ram Wraith", 171, () => HasCrest() && Has(87) && HasPick() && HasKey(Key.CastleVann, 4),
-                        () => HasCrest() && Has(87) && HasPick() && CanOpen(Key.CastleVann, 38, 39)),
+                    new TrackerLocation("Basement - Crumbling Floor Chest", 94, () => HasCrest() && Item.DustyKey.Acquired() && (HasLariat() || HasFlare())),
+                    new TrackerLocation("Basement - Puzzle Chest", 95, () => HasCrest() && Item.DustyKey.Acquired() && HasLariat() && HasPick() && HasKey(Key.CastleVann, 3),
+                        () => HasCrest() && Item.DustyKey.Acquired() && HasLariat() && HasPick() && CanOpen(Key.CastleVann, 39)),
+                    new TrackerLocation("Basement - Ram Wraith", 171, () => HasCrest() && Item.DustyKey.Acquired() && HasPick() && HasKey(Key.CastleVann, 4),
+                        () => HasCrest() && Item.DustyKey.Acquired() && HasPick() && CanOpen(Key.CastleVann, 38, 39)),
                 }),
                 TrackerDot.NewDot("Magma Heart", 56, 44, true, () => (HasKnuckle() && HasLariat()) || CanClimb(), new() {
                     new TrackerLocation("Hidden Chest", 71, () => CanHitFire()),
@@ -310,7 +310,7 @@ namespace ProdigalArchipelago
                     new TrackerLocation("Main Room Heart Ore", 155, () => HasPick() && HasKnuckle()),
                     new TrackerLocation("Near Boss Chest", 28, () => CanHitFire() && HasKnuckle() && (HasLariat() || CanLongJump())),
                     new TrackerLocation("Near Boss Heart Ore", 156, () => HasPick() && HasKnuckle() && (HasLariat() || CanLongJump())),
-                    new TrackerLocation("Loomagnos", 169, () => CanHitFire() && HasKnuckle() && (HasLariat() || CanLongJump())),
+                    new TrackerLocation("Loomagnos", 169, () => HasPick() && HasKnuckle() && (HasLariat() || CanLongJump())),
                     new TrackerLocation("Deep - Spike Balls Chest", 91, () => HasHand2() && ((HasKnuckle() && HasLariat()) || HasFlare()) && CanHitFire()),
                     new TrackerLocation("Deep - Barrel Puzzle Chest", 92, () => HasHand2() && CanHitFire() && HasLariat() && HasKey(Key.MagmaHeart, 1),
                         () => HasHand2() && CanHitFire() && HasLariat() && CanOpen(Key.MagmaHeart, 34)),
@@ -363,7 +363,7 @@ namespace ProdigalArchipelago
                     new TrackerLocation("West - Frozen Heart", 177, () => HasFlare() && (HasLariat() || HasCleats() || Skips()) && HasPick() && HasKey(Key.CrystalCaves, 3),
                         () => HasFlare() && (HasLariat() || HasCleats() || Skips()) && HasPick() && CanOpen(Key.CrystalCaves, 70)),
                 }),
-                TrackerDot.NewDot("Haunted Hall", -30, 15, true, () => Has(52) && CanHit(), new() {
+                TrackerDot.NewDot("Haunted Hall", -30, 15, true, () => Item.BoneKey.Acquired() && CanHit(), new() {
                     new TrackerLocation("Right Entry Chest", 66, () => true),
                     new TrackerLocation("Left Entry Chest", 65, () => CanHit()),
                     new TrackerLocation("Invisible Maze Chest", 67, () => CanHit() && HasHand() && HasKey(Key.HauntedHall, 1),
@@ -373,7 +373,7 @@ namespace ProdigalArchipelago
                     new TrackerLocation("Killer", 229, () => CanHit() && HasHand() && HasKey(Key.HauntedHall, 2) && HasLariat(),
                         () => CanHit() && HasHand() && CanOpen(Key.HauntedHall, 21, 22) && HasLariat()),
                 }),
-                TrackerDot.NewDot("Siska's Workshop", -56, 42, true, () => HasLariat() && (HasPick() || Has(35)), new() {
+                TrackerDot.NewDot("Siska's Workshop", -56, 42, true, () => HasLariat() && (HasPick() || Item.HallowedKey.Acquired()), new() {
                     new TrackerLocation("First Chest", 82, () => HasLariat() && CanHit()),
                     new TrackerLocation("Energy Orb Chest", 83, () => HasLariat() && CanHit() && HasKey(Key.SiskasWorkshop, 1),
                         () => HasLariat() && CanHit() && CanOpen(Key.SiskasWorkshop, 28)),
@@ -401,7 +401,7 @@ namespace ProdigalArchipelago
                     new TrackerLocation("Mechanized Slot Machine", 73, () => HasKnuckle() && (HasKey(Key.Backrooms, 2) || HasIceKey()) && HasPick() && HasLariat(),
                         () => HasKnuckle() && (CanOpen(Key.Backrooms, 81, 82) || HasIceKey()) && HasPick() && HasLariat()),
                 }),
-                TrackerDot.NewDot("Pirate's Pier", 61, -55, true, () => Has(64) && CanHit(), new() {
+                TrackerDot.NewDot("Pirate's Pier", 61, -55, true, () => Item.StindlesMap.Acquired() && CanHit(), new() {
                     new TrackerLocation("Caroline", 225, () => true),
                     new TrackerLocation("Outside - First Chest", 134, () => true),
                     new TrackerLocation("Outside - Lariat Target Chest", 133, () => HasLariat()),
@@ -421,7 +421,7 @@ namespace ProdigalArchipelago
                     new TrackerLocation("Upstairs - Drop Chest", 128, () => HasPick() && HasLariat()),
                     new TrackerLocation("Upstairs - Kings Ring Chest", 125, () => HasPick() && HasLariat() && HasFlare() && HasKey(Key.PiratesPier, 5),
                         () => HasPick() && HasLariat() && HasFlare() && CanOpen(Key.PiratesPier, 78)),
-                    new TrackerLocation("Revulan", 226, () => HasKnuckle() && Has(86) && Archipelago.AP.BlessingCount() >= 2),
+                    new TrackerLocation("Revulan", 226, () => HasKnuckle() && Item.KingsRing.Acquired() && Archipelago.AP.BlessingCount() >= 2),
                 }),
                 TrackerDot.NewDot("Bjerg Castle", -21, -44, true, () => true, new() {
                     new TrackerLocation("Hype Chest 1", 56, () => true),
@@ -434,7 +434,7 @@ namespace ProdigalArchipelago
                     new TrackerLocation("Near Boss Chest", 55, () => HasLariat() && HasKnuckle() && HasKey(Key.BjergCastle, 1)),
                     new TrackerLocation("Captain Crossbones", 248, () => HasLariat() && HasKnuckle() && HasKey(Key.BjergCastle, 1)),
                 }),
-                TrackerDot.NewDot("Daemon's Dive", -30, 37, true, () => HasHand2() && Has(35) && Has(56), new() {
+                TrackerDot.NewDot("Daemon's Dive", -30, 37, true, () => HasHand2() && Item.HallowedKey.Acquired() && Item.DaemonsKey.Acquired(), new() {
                     new TrackerLocation("1 - Barrel Puzzle Chest", 98, () => (HasLariat() || CanLongJump()) && CanHit()),
                     new TrackerLocation("1 - Lariat Puzzle Chest", 108, () => HasDivineKey(1) && HasHand2() && HasLariat()),
                     new TrackerLocation("2 - Skull Chest", 99, () => HasDivineKey(2) && (HasIceKey() || HasHand2()) && HasFlare() && HasHand() && HasLariat()),
@@ -458,7 +458,7 @@ namespace ProdigalArchipelago
                     new TrackerLocation("Shadow Oran", 244, () => HasDivineKey(12) && (HasIceKey() || HasHand2()) && HasFlare() && HasHand() && HasLariat() && HasPick(),
                         () => CanOpenDivine(46, 47, 52, 53, 55, 59, 65, 67) && (HasIceKey() || (HasHand2() && CanOpenDivine(46, 47, 51, 52, 53, 55, 59, 61, 65, 67))) && HasFlare() && HasHand() && HasLariat() && HasPick()),
                 }),
-                TrackerDot.NewDot("Enlightenment", 11, 45, true, () => CanClimb() && HasHand2() && (HasLariat() || HasFlare()) && ((Has(37) && HasPick()) || HasKnuckle() && (HasLariat() || CanLongJump())) && HasEnoughBlessings(), new() {
+                TrackerDot.NewDot("Enlightenment", 11, 45, true, () => CanClimb() && HasHand2() && (HasLariat() || HasFlare()) && ((Item.GatorKey.Acquired() && HasPick()) || HasKnuckle() && (HasLariat() || CanLongJump())) && HasEnoughBlessings(), new() {
                     new TrackerLocation("1 - Right Side Chest", 64, () => HasFlare() && HasLariat() && HasPick()),
                     new TrackerLocation("1 - Left Side Chest", 77, () => HasFlare() && HasLariat() && HasPick() && HasHand2()),
                     new TrackerLocation("1 - Center Room Chest", 80, () => HasFlare() && HasLariat() && HasPick() && HasHand2()),
@@ -471,44 +471,39 @@ namespace ProdigalArchipelago
             };
         }
 
-        private bool Has(int id)
-        {
-            return GameMaster.GM.Save.Data.Inventory[id].Acquired;
-        }
-
         private bool HasHand()
         {
-            return Has(6);
+            return Item.DreadHand.Acquired();
         }
 
         private bool HasHand2()
         {
-            return Has(76);
+            return Item.EmpoweredHand.Acquired();
         }
 
         private bool HasPick()
         {
-            return Has(9);
+            return Item.IronPick.Acquired();
         }
 
         private bool HasLariat()
         {
-            return Has(7);
+            return Item.Lariat.Acquired();
         }
 
         private bool HasKnuckle()
         {
-            return Has(5);
+            return Item.RustKnuckle.Acquired();
         }
 
         private bool HasFlare()
         {
-            return Has(77);
+            return Item.FlareKnuckle.Acquired();
         }
         
         private bool HasCleats()
         {
-            return Has(13) || Has(15);
+            return Item.CleatedBoots.Acquired() || Item.BootsOfGraile.Acquired();
         }
 
         private bool CanHit()
@@ -523,12 +518,12 @@ namespace ProdigalArchipelago
 
         private bool CanClimb()
         {
-            return Has(79);
+            return Item.ClimbingGear.Acquired();
         }
 
         private bool CanReachZaegul()
         {
-            return Has(36) && Has(65) && (HasPick() || CanLongJump() || (HasLariat() && (Skips() || HasFlare())));
+            return Item.RustyKey.Acquired() && Item.Harmonica.Acquired() && (HasPick() || CanLongJump() || (HasLariat() && (Skips() || HasFlare())));
         }
 
         private bool Skips()
@@ -558,17 +553,17 @@ namespace ProdigalArchipelago
 
         private bool HasDivineKey(int count)
         {
-            return GameMaster.GM.Save.Data.Inventory[62].Count >= count;
+            return Item.DivineKey.Count() >= count;
         }
 
         private bool HasCrest()
         {
-            return GameMaster.GM.Save.Data.Inventory[50].Count >= Archipelago.AP.Settings.CrestFragmentsRequired;
+            return Item.CrestFragment.Count() >= Archipelago.AP.Settings.CrestFragmentsRequired;
         }
 
         private bool HasCoins()
         {
-            return GameMaster.GM.Save.Data.Inventory[20].Count >= Archipelago.AP.Settings.CoinsOfCrowlRequired;
+            return Item.CoinOfCrowl.Count() >= Archipelago.AP.Settings.CoinsOfCrowlRequired;
         }
 
         private bool TimeOut1()
@@ -583,13 +578,7 @@ namespace ProdigalArchipelago
 
         private bool Has4Boots()
         {
-            int count = 0;
-            foreach (int id in Archipelago.BOOTS_IDS)
-            {
-                if (Has(id))
-                    count++;
-            }
-            return count >= 4;
+            return ItemExtension.AllBoots().Count(boots => boots.Acquired()) >= 4;
         }
 
         private bool CanKillGrelins()
@@ -607,20 +596,29 @@ namespace ProdigalArchipelago
             int keysRequired = locks.Count(id => !GameMaster.GM.Save.Data.UnlockedDoors.Contains(id));
             if (!Archipelago.AP.Settings.SpecificKeys)
             {
-                return CanReachZaegul() || GameMaster.GM.Save.Data.Inventory[39].Count >= keysRequired;
+                return CanReachZaegul() || Item.NormalKey.Count() >= keysRequired;
             }
-            return GameMaster.GM.Save.Data.Inventory[Archipelago.KEY_ID_START + key.ID].Count >= keysRequired;
+            return key.Count >= keysRequired;
         }
 
         private bool CanOpenDivine(params int[] locks)
         {
             int keysRequired = locks.Count(id => !GameMaster.GM.Save.Data.UnlockedDoors.Contains(id));
-            return GameMaster.GM.Save.Data.Inventory[62].Count >= keysRequired;
+            return Item.DivineKey.Count() >= keysRequired;
         }
 
         private bool CanTradeWithUlni()
         {
-            return Archipelago.AP.Settings.TradingQuest == ArchipelagoSettings.TradingQuestOption.Shuffle ? Has(33) : (Has(48) && HasLariat());
+            return Archipelago.AP.Settings.TradingQuest == ArchipelagoSettings.TradingQuestOption.Shuffle ?
+                Item.KelpRolls.Acquired() :
+                Item.LostShipment.Acquired() && HasLariat();
+        }
+
+        private bool CanReturnStolenItems()
+        {
+            return Archipelago.AP.Settings.ShuffleGrelinDrops ?
+                Item.HolyRelic.Acquired() && Item.WeddingRing.Acquired() && Item.SilverMirror.Acquired() && Item.Painting.Acquired() :
+                CanKillGrelins();
         }
 
         private bool CanEnterTidalMines()

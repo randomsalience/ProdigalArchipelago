@@ -129,9 +129,9 @@ namespace ProdigalArchipelago
             {
                 int keyCount = 0;
                 int keyTotal = 0;
-                if (Archipelago.KEY_ID_START + StartIndex + i < GameMaster.GM.Save.Data.Inventory.Count) // for backwards compatibility
+                if (105 + StartIndex + i < GameMaster.GM.Save.Data.Inventory.Count) // for backwards compatibility
                 {
-                    keyCount = GameMaster.GM.Save.Data.Inventory[Archipelago.KEY_ID_START + StartIndex + i].Count;
+                    keyCount = Key.Keys[StartIndex + i].Count;
                     keyTotal = Archipelago.AP.Data.KeyTotals[StartIndex + i];
                 }
                 int keyMax = Key.Keys[StartIndex + i].Max;
@@ -201,8 +201,8 @@ namespace ProdigalArchipelago
         {
             if (Pause && Archipelago.Enabled && Archipelago.AP.Settings.SpecificKeys)
             {
-                int keyID = Archipelago.AP.DungeonKeyID();
-                int keyCount = keyID == -1 ? 0 : GameMaster.GM.Save.Data.Inventory[Archipelago.KEY_ID_START + keyID].Count;
+                Key key = Archipelago.AP.CurrentDungeonKey();
+                int keyCount = key is null ? 0 : key.Count;
                 __instance.KEYS.UPDATE_COUNT(keyCount);
             }
         }

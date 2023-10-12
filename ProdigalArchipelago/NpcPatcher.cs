@@ -148,7 +148,7 @@ namespace ProdigalArchipelago
             }
             else
             {
-                return GameMaster.GM.Save.Data.Inventory[84].Acquired;
+                return Item.HearthRing.Acquired();
             }
         }
 
@@ -275,19 +275,18 @@ namespace ProdigalArchipelago
         {
             if (Archipelago.Enabled)
             {
-                if (GameMaster.GM.Save.Data.Chests.Contains(210) || !GameMaster.GM.Save.Data.Inventory[71].Acquired)
+                if (GameMaster.GM.Save.Data.Chests.Contains(210) || !Item.OldHairpin.Acquired())
                 {
                     __result = false;
                     return false;
                 }
                 
-                int boots_count = (from id in Archipelago.BOOTS_IDS where GameMaster.GM.Save.Data.Inventory[id].Acquired select id).Count();
-                __result = boots_count >= 4;
+                __result = ItemExtension.AllBoots().Count(boots => boots.Acquired()) >= 4;
                 return false;
             }
             else
             {
-                if (GameMaster.GM.Save.Data.Inventory[15].Acquired || !GameMaster.GM.Save.Data.Inventory[71].Acquired)
+                if (Item.BootsOfGraile.Acquired() || !Item.OldHairpin.Acquired())
                 {
                     __result = false;
                     return false;
@@ -615,7 +614,7 @@ namespace ProdigalArchipelago
             }
             else
             {
-                return GameMaster.GM.Save.Data.Inventory[91].Acquired;
+                return Item.StormBlessing.Acquired();
             }
         }
     }

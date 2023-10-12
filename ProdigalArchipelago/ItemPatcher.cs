@@ -42,9 +42,17 @@ namespace ProdigalArchipelago
                     Name = $"{key.Name} KEY",
                     TooltipText = $"A KEY FOR {key.AltName}.",
                     AboutText = new List<GameMaster.Speech> { GameMaster.CreateSpeech(46, 0, $"A KEY FOR {key.AltName}!", "", 0) },
-                    ItemSprite = GameMaster.GM.ItemData.ItemSprites[39],
+                    ItemSprite = Item.NormalKey.Data().ItemSprite,
                 });
             }
+
+            NewTrapItem("SLOWNESS TRAP");
+            NewTrapItem("RUST TRAP");
+            NewTrapItem("CONFUSION TRAP");
+            NewTrapItem("DISARMING TRAP");
+            NewTrapItem("LIGHT TRAP");
+            NewTrapItem("ZOMBIE TRAP");
+            NewTrapItem("SHADOW TRAP");
 
             ChangeItemAboutText(10, "BLESSED PICKAXE!*I BET THIS WILL DO SOME SERIOUS DAMAGE!");
             ChangeItemAboutText(13, "CLEATED BOOTS!*I SHOULD TALK TO TESS ABOUT THESE.");
@@ -92,6 +100,15 @@ namespace ProdigalArchipelago
         {
             GameMaster.GM.ItemData.Database[id].AboutText.Clear();
             GameMaster.GM.ItemData.Database[id].AboutText.Add(GameMaster.CreateSpeech(46, 0, text, "", 0));
+        }
+
+        public static void NewTrapItem(string name)
+        {
+            GameMaster.GM.ItemData.Database.Add(new ItemDatabase.ItemData
+            {
+                Name = name,
+                AboutText = new List<GameMaster.Speech> { GameMaster.CreateSpeech(46, 0, "{name}!", "", 0) }
+            });
         }
     }
 
@@ -213,11 +230,11 @@ namespace ProdigalArchipelago
                 // Replace freestanding item sprites
                 if (__instance.TYPE == Chest.CHEST_TYPE.GRAB || __instance.TYPE == Chest.CHEST_TYPE.SPRITE)
                 {
-                    int id = Archipelago.AP.GetLocationItem(__instance.ID)?.SpriteID() ?? 0;
-                    if (id == 0) return;
                     SpriteRenderer renderer = __instance.gameObject.GetComponent<SpriteRenderer>();
-                    renderer.sprite = GameMaster.GM.ItemData.Database[id].ItemSprite;
-                    __instance.gameObject.GetComponent<Animator>().enabled = false;
+                    renderer.sprite = Archipelago.AP.GetLocationItem(__instance.ID)?.Sprite(true);
+                    var animator = __instance.gameObject.GetComponent<Animator>();
+                    if(animator)
+                        animator.enabled = false;
                 }
             }
         }
@@ -229,7 +246,7 @@ namespace ProdigalArchipelago
     {
         static bool Prefix(int ItemID)
         {
-            if (Archipelago.Enabled && ItemID == Archipelago.AP_ITEM_ID)
+            if (Archipelago.Enabled && ItemID == (int)Item.ArchipelagoItem)
                 return false;
             return true;
         }
@@ -294,9 +311,7 @@ namespace ProdigalArchipelago
         {
             if (Archipelago.Enabled && Archipelago.AP.Settings.ShuffleGrelinDrops && I >= 96 && I <= 99)
             {
-                int id = Archipelago.AP.GetLocationItem(I - 96 + 240)?.SpriteID() ?? 0;
-                if (id == 0) return;
-                ___SpriteRen.sprite = GameMaster.GM.ItemData.Database[id].ItemSprite;
+                ___SpriteRen.sprite = Archipelago.AP.GetLocationItem(I - 96 + 240)?.Sprite(true);
             }
         }
     }
@@ -493,7 +508,7 @@ namespace ProdigalArchipelago
 
         static void Postfix()
         {
-            GameMaster.GM.PC.Anim.SetBool("WEPCHAIN", GameMaster.GM.Save.Data.Inventory[78].Acquired);
+            GameMaster.GM.PC.Anim.SetBool("WEPCHAIN", Item.WeaponChain.Acquired());
         }
     }
 
@@ -578,7 +593,7 @@ namespace ProdigalArchipelago
                 ___Chatter.Clear();
                 if (Archipelago.AP.BlessingCount() >= Archipelago.AP.Settings.BlessingsRequired)
                 {
-                    if (GameMaster.GM.Save.Data.Inventory[94].Acquired)
+                    if (Item.HerosSoul.Acquired())
                     {
                         ___Chatter.Add(GameMaster.CreateSpeech(46, 0, "THE HERO'S SOUL SLEPT HERE...*I WAS TOLD TO RETURN IT TO WHAT WAS HIS?*WHATEVER THAT MEANS.", "", 0));
 					    GameMaster.GM.UI.InitiateChat(___Chatter, false);
@@ -609,7 +624,7 @@ namespace ProdigalArchipelago
                 {
                     __instance.StartCoroutine((IEnumerator)AccessTools.Method(typeof(SpecialInteract), "CarolineRescue").Invoke(__instance, new object[] {}));
                 }
-                else if (GameMaster.GM.Save.Data.Inventory[63].Acquired)
+                else if (Item.PrisonKey.Acquired())
                 {
                     GameMaster.GM.LoadSFX(76);
                     GameMaster.GM.PC.Unlock();
@@ -626,7 +641,7 @@ namespace ProdigalArchipelago
 
             if (Archipelago.Enabled && __instance.INTERACTABLE == SpecialInteract.INT.TEMPCRYSTAL)
             {
-                if (!GameMaster.GM.Save.Data.Inventory[Archipelago.IRON_PICK_ID].Acquired)
+                if (!Item.IronPick.Acquired())
                     return false;
             }
 
@@ -706,7 +721,7 @@ namespace ProdigalArchipelago
                     case SpecialInteract.INT.CRYSTALHEART:
                         return GameMaster.GM.Save.Data.Chests.Contains(177);
                     case SpecialInteract.INT.MUSICBOX:
-                        if (item == 78)
+                        if (item == (int)Item.WeaponChain)
                             return GameMaster.GM.Save.Data.Chests.Contains(228);
                         break;
                     case SpecialInteract.INT.HARMONICA:
@@ -1037,8 +1052,7 @@ namespace ProdigalArchipelago
             if (Archipelago.Enabled)
             {
                 GameObject itemObj = GameMaster_CastleVannOver_Enumerator_Patch.Item;
-                int spriteID = Archipelago.AP.GetLocationItem(234).SpriteID();
-                itemObj.GetComponent<SpriteRenderer>().sprite = GameMaster.GM.ItemData.Database[spriteID].ItemSprite;
+                itemObj.GetComponent<SpriteRenderer>().sprite = Archipelago.AP.GetLocationItem(234)?.Sprite(true);
                 yield return new WaitForSeconds(2);
                 GameMaster.GM.PC.WalkTo(new Vector3(872, -848, 0), 1, 0);
                 while (!GameMaster.GM.PC.MovementDone)
@@ -1106,7 +1120,7 @@ namespace ProdigalArchipelago
             {
                 return GameMaster.GM.Save.Data.Chests.Contains(237);
             }
-            return GameMaster.GM.Save.Data.Inventory[90].Acquired;
+            return Item.LightBlessing.Acquired();
         }
     }
 

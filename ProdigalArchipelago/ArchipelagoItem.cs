@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEngine;
 using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Models;
 
@@ -11,6 +12,7 @@ namespace ProdigalArchipelago
         public int SlotID;
         public string SlotName;
         public ItemFlags Classification;
+        public Item TrapSpriteID;
 
         public ArchipelagoItem(NetworkItem item, bool received)
         {
@@ -21,15 +23,16 @@ namespace ProdigalArchipelago
             Classification = item.Flags;
         }
 
-        public int LocalID()
+        public Item LocalItem()
         {
             if (SlotID == Archipelago.AP.SlotID)
             {
-                return (int)(ID - Archipelago.ID_BASE);
+                Item item = (Item)(ID - Archipelago.ID_BASE);
+                return item.NonProgressive();
             }
             else
             {
-                return Archipelago.AP_ITEM_ID;
+                return Item.ArchipelagoItem;
             }
         }
 
@@ -49,16 +52,34 @@ namespace ProdigalArchipelago
             };
         }
 
-        public int SpriteID()
+        public Sprite Sprite(bool disguiseTraps)
         {
-            if (ID >= Archipelago.ID_BASE && ID < Archipelago.ID_BASE + GameMaster.GM.ItemData.Database.Count)
-            {
-                return (int)(ID - Archipelago.ID_BASE);
-            }
+            Item spriteItem;
+            
+            if (SlotID == Archipelago.AP.SlotID)
+                spriteItem = LocalItem();
+            else if (ID >= Archipelago.ID_BASE && ID < Archipelago.ID_BASE + GameMaster.GM.ItemData.Database.Count)
+                spriteItem = (Item)(ID - Archipelago.ID_BASE);
             else
+                spriteItem = Item.ArchipelagoItem;
+            
+            if (Classification == ItemFlags.Trap)
             {
-                return Archipelago.AP_ITEM_ID;
+                if (disguiseTraps)
+                {
+                    spriteItem = TrapSpriteID;
+                    if (SlotID == Archipelago.AP.SlotID)
+                    {
+                        spriteItem = spriteItem.NonProgressive();
+                    }
+                }
+                else
+                {
+                    return null;
+                }
             }
+
+            return spriteItem.Data().ItemSprite;
         }
     }
 }

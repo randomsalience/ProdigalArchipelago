@@ -23,23 +23,6 @@ namespace ProdigalArchipelago
         public const int TESS_ID = 48;
         public const int ARMADEL_ID = 57;
 
-        public const int RUST_KNUCKLE_ID = 5;
-        public const int DREAD_HAND_ID = 6;
-        public const int IRON_PICK_ID = 9;
-        public const int BLESSED_PICK_ID = 10;
-        public const int BOLT_ANCHOR_ID = 11;
-        public const int SCARF_ID = 68;
-        public const int HEART_ORE_ID = 70;
-        public const int EMPOWERED_HAND_ID = 76;
-        public const int FLARE_KNUCKLE_ID = 77;
-        public const int WEAPON_CHAIN_ID = 78;
-        public const int AP_ITEM_ID = 101;
-        public const int PROGRESSIVE_KNUCKLE_ID = 102;
-        public const int PROGRESSIVE_HAND_ID = 103;
-        public const int PROGRESSIVE_PICK_ID = 104;
-        public const int KEY_ID_START = 105;
-        public static readonly int[] BOOTS_IDS = {12, 13, 14, 15, 16};
-
         private static readonly int[] LOCS_BASE = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
             21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48,
             49, 50, 51, 52, 53, 62, 63, 65, 66, 67, 68, 69, 70, 71, 72, 73, 76, 81, 82, 83, 84, 85, 86, 87, 88, 89, 91, 92,
@@ -79,7 +62,8 @@ namespace ProdigalArchipelago
         public ArchipelagoSession Session;
         public Dictionary<string, object> SlotData;
         private System.Random Random;
-        private readonly List<Location> LocationTable = new();
+        private readonly SortedDictionary<int, ArchipelagoItem> LocationTable = new();
+        public int[] SecretShopPrices = new int[3];
         private int CheatItemsReceived;
         public bool IsBjergCastle;
 
@@ -91,7 +75,6 @@ namespace ProdigalArchipelago
             public List<(int, long)> ReceivedItemLocations = new();
             public int CheatItemCount = 0;
             public List<int> KeyTotals = new();
-            public int[] SecretShopPrices = new int[3];
         }
 
         public SaveData Data = new();
@@ -156,8 +139,8 @@ namespace ProdigalArchipelago
                 IsBjergCastle = false;
 
                 // Scout unchecked locations
-                var uncheckedLocationIDs = from location in LocationTable where !location.Checked() select ID_BASE + location.ID;
-                var locationInfoTask = Task.Run(async () => await Session.Locations.ScoutLocationsAsync(false, uncheckedLocationIDs.ToArray()));
+                var uncheckedLocationIDs = from locationID in LocationTable.Keys where !LocationChecked(locationID) select ID_BASE + locationID;
+                Task<LocationInfoPacket> locationInfoTask = Task.Run(async () => await Session.Locations.ScoutLocationsAsync(false, uncheckedLocationIDs.ToArray()));
                 yield return new WaitUntil(() => locationInfoTask.IsCompleted);
                 if (locationInfoTask.IsFaulted)
                 {
@@ -166,18 +149,15 @@ namespace ProdigalArchipelago
                 }
                 
                 var locationInfo = locationInfoTask.Result;
-                foreach ((var location, var item) in
-                    from location in LocationTable
-                    join item in locationInfo.Locations
-                    on ID_BASE + location.ID equals item.Location
-                    select (location, item))
+                foreach (var item in locationInfo.Locations)
                 {
-                    location.Item = new ArchipelagoItem(item, false);
+                    int locationID = (int)(item.Location - ID_BASE);
+                    LocationTable[locationID] = new ArchipelagoItem(item, false);
                 }
             }
 
             // Sync checked locations
-            var checkedLocationIDs = from location in LocationTable where location.Checked() select ID_BASE + location.ID;
+            var checkedLocationIDs = from locationID in LocationTable.Keys where LocationChecked(locationID) select ID_BASE + locationID;
             var locationCheckTask = Task.Run(async () => await Session.Locations.CompleteLocationChecksAsync(checkedLocationIDs.ToArray()));
             yield return new WaitUntil(() => locationCheckTask.IsCompleted);
             if (locationCheckTask.IsFaulted)
@@ -201,6 +181,8 @@ namespace ProdigalArchipelago
             Error = "";
             Data.Connection = cdata;
             CheatItemsReceived = 0;
+            TrapControl.Activate();
+            Randomize();
             GameMaster.GM.Save.Save();
         }
 
@@ -209,6 +191,7 @@ namespace ProdigalArchipelago
             Session.Socket.DisconnectAsync();
             Session = null;
             Connected = false;
+            TrapControl.Deactivate();
         }
 
         public void OnSocketClosed(string _)
@@ -231,7 +214,7 @@ namespace ProdigalArchipelago
 
         private void Update()
         {
-            if (Session is not null && Session.Items.Any() && CanReceiveItem())
+            if (Session is not null && Session.Items.Any() && NormalGameState())
             {
                 var item = Session.Items.DequeueItem();
                 if (!Data.ReceivedItemLocations.Contains((item.Player, item.Location)) && item.Location != -1)
@@ -251,9 +234,12 @@ namespace ProdigalArchipelago
             }
         }
 
-        private bool CanReceiveItem()
+        public static bool NormalGameState()
         {
-            return GameMaster.GM.GS == GameMaster.GameState.IN_GAME && !GameMaster.GM.UI.SPEAKING();
+            return GameMaster.GM.GS == GameMaster.GameState.IN_GAME &&
+                GameMaster.GM.PC.ACTIVE_CHARACTER == PlayerCharacter.CHARACTER.ORAN &&
+                GameMaster.GM.PC.PlayerState == PlayerCharacter.MovementState.Normal &&
+                !GameMaster.GM.UI.SPEAKING();
         }
 
         public void InitialPatches()
@@ -272,15 +258,66 @@ namespace ProdigalArchipelago
             GameMaster.GM.Save.Data.Quests[45] = SaveSystem.Quest.QUESTCOMPLETE; // Back of Crystal Caves open
             GameMaster.GM.Save.Data.OverworldState.Add(9); // Skip Revulan dock scene
             GameMaster.GM.Save.Data.Relationships[CAROLINE_ID].Stage = SaveSystem.NPCData.Stages.STAGE0;
+            GameMaster.GM.Save.Data.Quests[22] = SaveSystem.Quest.QUESTCOMPLETE; // Skip statue activation text
 
             if (Settings.SkipOneSmallFavor)
             {
                 GameMaster.GM.Save.Data.Quests[2] = SaveSystem.Quest.STAGE16;
             }
-
             if (Settings.StartWithSpicedHam)
             {
                 GameMaster.GM.Save.Data.SLOTA = PlayerCharacter.BUFFS.RUN;
+            }
+
+            if (Settings.AltarToVar)
+            {
+                GameMaster.GM.Save.Data.Quests[36] = SaveSystem.Quest.QUESTCOMPLETE;
+            }
+            if (Settings.AltarToZolei)
+            {
+                GameMaster.GM.Save.Data.Quests[37] = SaveSystem.Quest.QUESTCOMPLETE;
+            }
+            if (Settings.AltarToRaem)
+            {
+                GameMaster.GM.Save.Data.Quests[38] = SaveSystem.Quest.QUESTCOMPLETE;
+            }
+            if (Settings.AltarToHate)
+            {
+                GameMaster.GM.Save.Data.Quests[39] = SaveSystem.Quest.QUESTCOMPLETE;
+            }
+            if (Settings.CurseOfFrailty)
+            {
+                GameMaster.GM.Save.Data.Quests[84] = SaveSystem.Quest.QUESTCOMPLETE;
+            }
+            if (Settings.CurseOfFamine)
+            {
+                GameMaster.GM.Save.Data.Quests[85] = SaveSystem.Quest.QUESTCOMPLETE;
+            }
+            if (Settings.CurseOfWind)
+            {
+                GameMaster.GM.Save.Data.Quests[86] = SaveSystem.Quest.QUESTCOMPLETE;
+            }
+            if (Settings.CurseOfRust)
+            {
+                GameMaster.GM.Save.Data.Quests[87] = SaveSystem.Quest.QUESTCOMPLETE;
+            }
+            if (Settings.CurseOfBlooms)
+            {
+                GameMaster.GM.Save.Data.Quests[89] = SaveSystem.Quest.QUESTCOMPLETE;
+            }
+            if (Settings.CurseOfFlames)
+            {
+                GameMaster.GM.Save.Data.Quests[90] = SaveSystem.Quest.QUESTCOMPLETE;
+            }
+            if (Settings.CurseOfHorns)
+            {
+                GameMaster.GM.Save.Data.Quests[91] = SaveSystem.Quest.QUESTCOMPLETE;
+            }
+            if (Settings.CurseOfCrowns)
+            {
+                GameMaster.GM.Save.Data.Quests[92] = SaveSystem.Quest.QUESTCOMPLETE;
+                GameMaster.GM.Save.Data.Married = true;
+                GameMaster.GM.Save.Data.Wife = NPC.Name.Revulan;
             }
 
             ColorCheck();
@@ -290,13 +327,12 @@ namespace ProdigalArchipelago
             Data.KeyTotals.Clear();
             for (int i = 0; i < Key.Keys.Count(); i++)
                 Data.KeyTotals.Add(0);
-            
-            Randomize();
         }
 
         public bool CollectItem(int locationID)
         {
-            if (!IsLocationRandomized(locationID))
+            ArchipelagoItem item = GetLocationItem(locationID);
+            if (item is null)
                 return false;
             
             if (Data.ReceivedItemLocations.Contains((SlotID, ID_BASE + locationID)))
@@ -308,19 +344,13 @@ namespace ProdigalArchipelago
             }
 
             GameMaster.GM.Save.Data.Chests.Add(locationID);
-            GameMaster.GM.Save.Save();
-
-            foreach (Location location in LocationTable)
+            if (item.SlotID == SlotID)
             {
-                if (location.ID == locationID)
-                {
-                    if (location.Item.SlotID == SlotID)
-                        Data.ReceivedItemLocations.Add((SlotID, locationID));
-                    StartCoroutine(ReceiveItem(location.Item));
-                    return true;
-                }
+                Data.ReceivedItemLocations.Add((SlotID, locationID));
             }
-
+            StartCoroutine(ReceiveItem(item));
+            
+            GameMaster.GM.Save.Save();
             return true;
         }
 
@@ -339,157 +369,129 @@ namespace ProdigalArchipelago
 
         public ArchipelagoItem GetLocationItem(int locationID)
         {
-            foreach (Location location in LocationTable)
-            {
-                if (location.ID == locationID)
-                {
-                    return location.Item;
-                }
-            }
-
-            return null;
+            if (!LocationTable.TryGetValue(locationID, out var item))
+                return null;
+            return item;
         }
 
         private IEnumerator ReceiveItem(ArchipelagoItem item)
         {
-            int id = item.LocalID();
-
-            if (id == PROGRESSIVE_KNUCKLE_ID)
-            {
-                if (!GameMaster.GM.Save.Data.Inventory[RUST_KNUCKLE_ID].Acquired)
-                {
-                    id = RUST_KNUCKLE_ID;
-                }
-                else
-                {
-                    id = FLARE_KNUCKLE_ID;
-                }
-            }
-
-            if (id == PROGRESSIVE_HAND_ID)
-            {
-                if (!GameMaster.GM.Save.Data.Inventory[DREAD_HAND_ID].Acquired)
-                {
-                    id = DREAD_HAND_ID;
-                }
-                else
-                {
-                    id = EMPOWERED_HAND_ID;
-                }
-            }
-
-            if (id == PROGRESSIVE_PICK_ID)
-            {
-                if (!GameMaster.GM.Save.Data.Inventory[IRON_PICK_ID].Acquired)
-                {
-                    id = IRON_PICK_ID;
-                }
-                else if (!GameMaster.GM.Save.Data.Inventory[BLESSED_PICK_ID].Acquired)
-                {
-                    id = BLESSED_PICK_ID;
-                }
-                else
-                {
-                    id = BOLT_ANCHOR_ID;
-                }
-            }
+            Item localItem = item.LocalItem();
+            bool cutscene = GameMaster.GM.GS == GameMaster.GameState.CUTSCENE;
+            GameMaster.GM.PC.CUTSCENE(true);
+            GameMaster.GM.PC.EMOTE.ITEM_PICKUP(item.Sprite(false), true);
+            GameMaster.GM.PC.Anim.SetBool("ITEM", true);
 
             if (item.SlotID == SlotID)
             {
-                GameMaster.GM.Save.AddToInventory(id, true);
-            }
-
-            if (id >= KEY_ID_START && id < KEY_ID_START + Key.Keys.Count())
-            {
-                Data.KeyTotals[id - KEY_ID_START]++;
-            }
-
-            if (id == WEAPON_CHAIN_ID)
-            {
-                GameMaster.GM.PC.Anim.SetBool("WEPCHAIN", true);
-            }
-
-            if (id == SCARF_ID)
-            {
-                GameMaster.GM.PC.EquipScarf();
-            }
-
-            ColorCheck();
-
-            bool cutscene = GameMaster.GM.GS == GameMaster.GameState.CUTSCENE;
-            GameMaster.GM.PC.CUTSCENE(true);
-            int spriteID = item.SlotID == SlotID ? id : item.SpriteID();
-            GameMaster.GM.PC.EMOTE.ITEM_PICKUP(GameMaster.GM.ItemData.Database[spriteID].ItemSprite, true);
-            GameMaster.GM.PC.Anim.SetBool("ITEM", true);
-
-            if (id == HEART_ORE_ID)
-            {
-                GameMaster.GM.PC.Heal(1);
-                GameMaster.GM.Save.Data.Ores++;
-                List<GameMaster.Speech> speech = new();
-                switch (GameMaster.GM.Save.Data.Ores)
+                bool rusted = localItem switch
                 {
-                    case 4:
-                        speech.Add(GameMaster.CreateSpeech(46, 0, "A FRAGMENT OF HEART ORE! NOW MY VITALITY WILL BE INCREASED!", "", 0));
-                        GameMaster.GM.Save.Data.Ores = 0;
-                        if (GameMaster.GM.Save.Data.Quests[39] == SaveSystem.Quest.QUESTCOMPLETE)
-                        {
-                            GameMaster.GM.BGM.PlayJingle(21);
-                        }
-                        else
-                        {
-                            GameMaster.GM.BGM.PlayJingle(20);
-                            GameMaster.GM.PC.IncreaseMaxpHP();
-                        }
-                        break;
-                    case 3:
-                        speech.Add(GameMaster.CreateSpeech(46, 0, "A FRAGMENT OF HEART ORE! ONLY ONE MORE FRAGMENT TO GO!", "", 0));
-                        GameMaster.GM.BGM.PlayJingle(21);
-                        break;
-                    case 2:
-                        speech.Add(GameMaster.CreateSpeech(46, 0, "A FRAGMENT OF HEART ORE! ONLY TWO MORE FRAGMENTS TO GO!", "", 0));
-                        GameMaster.GM.BGM.PlayJingle(21);
-                        break;
-                    case 1:
-                        speech.Add(GameMaster.CreateSpeech(46, 0, "A FRAGMENT OF HEART ORE! ONLY THREE MORE FRAGMENTS TO GO!", "", 0));
-                        GameMaster.GM.BGM.PlayJingle(21);
-                        break;
+                    Item.BlessedPick => GameMaster.GM.Save.Data.Quests[87] == SaveSystem.Quest.QUESTCOMPLETE,
+                    Item.BoltAnchor => GameMaster.GM.Save.Data.Quests[87] == SaveSystem.Quest.QUESTCOMPLETE,
+                    _ => false, 
+                };
+
+                if (!rusted)
+                {
+                    GameMaster.GM.Save.AddToInventory((int)localItem, true);
                 }
-                GameMaster.GM.UI.InitiateChat(speech, false);
+
+                if (localItem.IsKey())
+                {
+                    Data.KeyTotals[localItem.ToKeyID()]++;
+                }
+
+                if (localItem == Item.WeaponChain)
+                {
+                    GameMaster.GM.PC.Anim.SetBool("WEPCHAIN", true);
+                }
+
+                if (localItem == Item.SilveredScarf)
+                {
+                    GameMaster.GM.PC.EquipScarf();
+                }
+
+                ColorCheck();
+
+                if (localItem == Item.HeartOre)
+                {
+                    GameMaster.GM.PC.Heal(1);
+                    List<GameMaster.Speech> speech = new();
+                    if (GameMaster.GM.Save.Data.Quests[39] == SaveSystem.Quest.QUESTCOMPLETE)
+                    {
+                        speech.Add(GameMaster.CreateSpeech(46, 0, "A FRAGMENT OF HEART ORE CRUMBLES AND DISAPPEARS.", "", 0));
+                        GameMaster.GM.BGM.PlayJingle(21);
+                    }
+                    else
+                    {
+                        GameMaster.GM.Save.Data.Ores++;
+                        switch (GameMaster.GM.Save.Data.Ores)
+                        {
+                            case 4:
+                                speech.Add(GameMaster.CreateSpeech(46, 0, "A FRAGMENT OF HEART ORE! NOW MY VITALITY WILL BE INCREASED!", "", 0));
+                                GameMaster.GM.Save.Data.Ores = 0;
+                                GameMaster.GM.BGM.PlayJingle(20);
+                                GameMaster.GM.PC.IncreaseMaxpHP();
+                                break;
+                            case 3:
+                                speech.Add(GameMaster.CreateSpeech(46, 0, "A FRAGMENT OF HEART ORE! ONLY ONE MORE FRAGMENT TO GO!", "", 0));
+                                GameMaster.GM.BGM.PlayJingle(21);
+                                break;
+                            case 2:
+                                speech.Add(GameMaster.CreateSpeech(46, 0, "A FRAGMENT OF HEART ORE! ONLY TWO MORE FRAGMENTS TO GO!", "", 0));
+                                GameMaster.GM.BGM.PlayJingle(21);
+                                break;
+                            case 1:
+                                speech.Add(GameMaster.CreateSpeech(46, 0, "A FRAGMENT OF HEART ORE! ONLY THREE MORE FRAGMENTS TO GO!", "", 0));
+                                GameMaster.GM.BGM.PlayJingle(21);
+                                break;
+                        }
+                    }
+                    GameMaster.GM.UI.InitiateChat(speech, false);
+                }
+                else
+                {
+                    if (localItem.Data().MAJOR && !rusted)
+                    {
+                        GameMaster.GM.BGM.PlayJingle(20);
+                    }
+                    else
+                    {
+                        GameMaster.GM.BGM.PlayJingle(21);
+                    }
+
+                    switch (localItem)
+                    {
+                        case Item.Gold1:
+                            GameMaster.GM.Save.AddCurrency(1);
+                            break;
+                        case Item.Gold10:
+                            GameMaster.GM.Save.AddCurrency(10);
+                            break;
+                        case Item.Gold20:
+                            GameMaster.GM.Save.AddCurrency(20);
+                            break;
+                        case Item.Gold100:
+                            GameMaster.GM.Save.AddCurrency(100);
+                            break;
+                    }
+
+                    if (!rusted)
+                    {
+                        GameMaster.GM.UI.InitiateChat(localItem.Data().AboutText, false);
+                    }
+                    else
+                    {
+                        GameMaster.GM.UI.InitiateChat(new List<GameMaster.Speech> {
+                            GameMaster.CreateSpeech(46, 0, "IT'S TOO DAMAGED TO USE. . .", "", 0),
+                        }, false);
+                    }
+                }
             }
             else
             {
-                if (GameMaster.GM.ItemData.Database[id].MAJOR)
-                {
-                    GameMaster.GM.BGM.PlayJingle(20);
-                }
-                else
-                {
-                    GameMaster.GM.BGM.PlayJingle(21);
-                }
-                switch (id)
-                {
-                    case 1:
-                        GameMaster.GM.Save.AddCurrency(1);
-                        break;
-                    case 2:
-                        GameMaster.GM.Save.AddCurrency(25);
-                        break;
-                    case 3:
-                        GameMaster.GM.Save.AddCurrency(50);
-                        break;
-                    case 4:
-                        GameMaster.GM.Save.AddCurrency(100);
-                        break;
-                }
-                if (item.SlotID != SlotID)
-                {
-                    GameMaster.GM.UI.InitiateChat(item.Speech(), false);
-                }
-                else
-                {
-                    GameMaster.GM.UI.InitiateChat(GameMaster.GM.ItemData.Database[id].AboutText, false);
-                }
+                GameMaster.GM.BGM.PlayJingle(21);
+                GameMaster.GM.UI.InitiateChat(item.Speech(), false);
             }
 
             while (GameMaster.GM.UI.SPEAKING())
@@ -559,40 +561,28 @@ namespace ProdigalArchipelago
             LocationTable.Clear();
             foreach (int locationID in locations)
             {
-                LocationTable.Add(new Location(locationID));
+                LocationTable[locationID] = null;
             }
         }
 
         public bool IsLocationRandomized(int locationID)
         {
-            foreach (Location location in LocationTable)
-            {
-                if (location.ID == locationID)
-                    return true;
-            }
-            return false;
+            return LocationTable.ContainsKey(locationID);
+        }
+
+        public bool LocationChecked(int locationID)
+        {
+            return GameMaster.GM.Save.Data.Chests.Contains(locationID);
         }
 
         public int ColorCount()
         {
-            int colors = 0;
-            foreach (int id in new int[] {43, 44, 53, 74, 75})
-            {
-                if (GameMaster.GM.Save.Data.Inventory[id].Acquired)
-                    colors++;
-            }
-            return colors;
+            return ItemExtension.AllColors().Count(item => item.Acquired());
         }
 
         public int BlessingCount()
         {
-            int blessings = 0;
-            foreach (int id in new int[] {89, 90, 91, 92, 93})
-            {
-                if (GameMaster.GM.Save.Data.Inventory[id].Acquired)
-                    blessings++;
-            }
-            return blessings;
+            return ItemExtension.AllBlessings().Count(item => item.Acquired());
         }
 
         public void ColorCheck()
@@ -633,17 +623,17 @@ namespace ProdigalArchipelago
             GameMaster.GM.UI.InitiateChat(chat, question);
         }
 
-        public int DungeonKeyID()
+        public Key CurrentDungeonKey()
         {
             int currentScene = (int)AccessTools.Field(typeof(GameMaster), "CurrentScene").GetValue(GameMaster.GM);
-            if (currentScene == 8 && IsBjergCastle)
-                return 13;
+            if (currentScene == Key.BjergCastle.Scene && IsBjergCastle)
+                return Key.BjergCastle;
             foreach (Key key in Key.Keys)
             {
                 if (key.Scene == currentScene)
-                    return key.ID;
+                    return key;
             }
-            return -1;
+            return null;
         }
 
         public void StartWarp()
@@ -691,6 +681,7 @@ namespace ProdigalArchipelago
             {
                 RandomizeSecretShopPrices();
             }
+            RandomizeTrapAppearances();
         }
 
         private void RandomizeSecretShopPrices()
@@ -700,11 +691,11 @@ namespace ProdigalArchipelago
                 ArchipelagoItem item = GetLocationItem(LOCS_SECRET_SHOP[i]);
                 if (item is null)
                 {
-                    Data.SecretShopPrices[i] = 0;
+                    SecretShopPrices[i] = 0;
                 }
                 else
                 {
-                    Data.SecretShopPrices[i] = item.Classification switch
+                    SecretShopPrices[i] = item.Classification switch
                     {
                         ItemFlags.Advancement => Random.Next(150, 300),
                         ItemFlags.NeverExclude => Random.Next(50, 200),
@@ -712,6 +703,17 @@ namespace ProdigalArchipelago
                         _ => Random.Next(0, 100),
                     };
                 }
+            }
+        }
+
+        private void RandomizeTrapAppearances()
+        {
+            List<Item> majorItems = ItemExtension.MajorItems();
+            foreach ((_, var item) in LocationTable)
+            {
+                Item trapSpriteID = majorItems[Random.Next(majorItems.Count)];
+                if (item is not null)
+                    item.TrapSpriteID = trapSpriteID;
             }
         }
     }

@@ -21,15 +21,15 @@ namespace ProdigalArchipelago
                 ___Chatter.Clear();
                 GameMaster.GM.UI.SLOT_INT(__instance);
 
-                int keyID = Archipelago.AP.DungeonKeyID();
-                if (keyID == -1)
+                Key key = Archipelago.AP.CurrentDungeonKey();
+                if (key is null)
                     return false;
 
-                if (GameMaster.GM.Save.Data.Inventory[Archipelago.KEY_ID_START + keyID].Count > 0 && !___Locked)
+                if (key.Count > 0 && !___Locked)
                 {
                     ___Locked = true;
                     GameMaster.GM.LoadSFX(76);
-                    GameMaster.GM.Save.Data.Inventory[Archipelago.KEY_ID_START + keyID].Count--;
+                    key.Count--;
                     __instance.GetComponent<LockBlock>().Unlock();
                 }
                 else
@@ -175,9 +175,8 @@ namespace ProdigalArchipelago
             int locationID = Archipelago.LOCS_SECRET_SHOP[num];
             if (Archipelago.AP.Settings.ShuffleSecretShop && !GameMaster.GM.Save.Data.Chests.Contains(locationID))
             {
-                int spriteID = Archipelago.AP.GetLocationItem(locationID).SpriteID();
-                item.Sprite.GetComponent<SpriteRenderer>().sprite = GameMaster.GM.ItemData.Database[spriteID].ItemSprite;
-                price = Archipelago.AP.Data.SecretShopPrices[num];
+                item.Sprite.GetComponent<SpriteRenderer>().sprite = Archipelago.AP.GetLocationItem(locationID)?.Sprite(true);
+                price = Archipelago.AP.SecretShopPrices[num];
                 return false;
             }
             else
@@ -225,7 +224,7 @@ namespace ProdigalArchipelago
 
         static void SetSecretShopDialogue(List<GameMaster.Speech> chat, Interactable interactable, int num)
         {
-            int price = Archipelago.AP.Data.SecretShopPrices[num];
+            int price = Archipelago.AP.SecretShopPrices[num];
             ArchipelagoItem item = Archipelago.AP.GetLocationItem(Archipelago.LOCS_SECRET_SHOP[num]);
             chat.Add(GameMaster.CreateSpeech(23, 0, $"{item.Name} FOR {item.SlotName}.", "ZAEGUL", 10));
             string description = item.Classification switch
@@ -381,13 +380,13 @@ namespace ProdigalArchipelago
         {
             if (Archipelago.Enabled && __instance.ID == QuestDoor.DoorID.ID12)
             {
-                __result = GameMaster.GM.Save.Data.Inventory[50].Count >= Archipelago.AP.Settings.CrestFragmentsRequired;
+                __result = Item.CrestFragment.Count() >= Archipelago.AP.Settings.CrestFragmentsRequired;
                 return false;
             }
 
             if (Archipelago.Enabled && __instance.ID == QuestDoor.DoorID.ID24)
             {
-                __result = GameMaster.GM.Save.Data.Inventory[20].Count >= Archipelago.AP.Settings.CoinsOfCrowlRequired;
+                __result = Item.CoinOfCrowl.Count() >= Archipelago.AP.Settings.CoinsOfCrowlRequired;
                 return false;
             }
 

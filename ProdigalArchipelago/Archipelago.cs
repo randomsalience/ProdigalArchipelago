@@ -244,7 +244,7 @@ public class Archipelago : MonoBehaviour
 
     public void InitialPatches()
     {
-        for (int i = 0; i < 19; i++)
+        for (int i = 0; i < 28; i++)
         {
             GameMaster.GM.Save.Data.Inventory.Add(new SaveSystem.Item());
         }

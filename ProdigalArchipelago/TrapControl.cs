@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using HarmonyLib;
 
 namespace ProdigalArchipelago;
@@ -20,12 +21,13 @@ public class TrapControl : MonoBehaviour
     public int GlitchTimer = 0;
 
     public int GlitchCount = 0;
-
+    public bool RunToggle = false;
     public PlayerCharacter.Boots BootSlot = PlayerCharacter.Boots.Base;
     public PlayerCharacter.Rings RingSlot = PlayerCharacter.Rings.Base;
 
+    public GameObject Glitch;
+
     private readonly List<GameMaster.Speech> Chatter = [];
-    private readonly GameObject Error = GameObject.Find("Error");
 
     public enum TrapType
     {
@@ -68,9 +70,13 @@ public class TrapControl : MonoBehaviour
         {
             case TrapType.Slowness:
                 SlownessTimer = TRAP_TIME;
+                RunToggle = GameMaster.GM.Save.PlayerOptions.RUN_TOGGLE == SaveSystem.TOGGLE.ON &&
+                            GameMaster.GM.PC.MSTATUS == PlayerCharacter.RUN_STATE.RUNNING;
                 break;
             case TrapType.Rust:
                 RustTimer = TRAP_TIME;
+                RunToggle = GameMaster.GM.Save.PlayerOptions.RUN_TOGGLE == SaveSystem.TOGGLE.ON &&
+                            GameMaster.GM.PC.MSTATUS == PlayerCharacter.RUN_STATE.RUNNING;
                 break;
             case TrapType.Disarming:
                 DisarmingTimer = TRAP_TIME;
@@ -141,13 +147,15 @@ public class TrapControl : MonoBehaviour
 
         if (GlitchTimer > 0)
         {
-            if (Random.Range(0, 30 * GlitchCount) == 0)
+            if (Random.Range(0, GlitchCount) == 0)
             {
                 GlitchCount++;
-                GameObject obj = Instantiate(Error);
+                GameObject obj = Instantiate(Glitch);
+                obj.GetComponent<SpriteRenderer>().sortingLayerName = "UI";
                 obj.transform.SetParent(GameMaster.GM.UI.transform);
                 obj.transform.localPosition = new Vector3(Random.Range(-4, 5) * 16, Random.Range(-4, 5) * 16, 0);
                 obj.AddComponent<GlitchTimer>();
+                obj.SetActive(true);
             }
             GlitchTimer--;
         }
@@ -189,7 +197,7 @@ public class TrapControl : MonoBehaviour
 
     private void SpawnZombies()
     {
-        var spawnLocations = new (int, int)[] {(48, 0), (32, 32), (0, 48), (-32, 32), (-48, 0), (-32, -32), (0, -48), (32, -32)};
+        var spawnLocations = new (int, int)[] {(24, 0), (16, 16), (0, 24), (-16, 16), (-24, 0), (-16, -16), (0, -24), (16, -16)};
         foreach ((var deltaX, var deltaY) in spawnLocations)
         {
             Vector3 position = GameMaster.GM.PC.transform.position;
@@ -213,11 +221,14 @@ public class TrapControl : MonoBehaviour
     private IEnumerator LoveTrap()
     {
         GameMaster.GM.CUTSCENE(true);
-        GameMaster.GM.PC.transform.position = new Vector3(1944, -1984);
-        GameMaster.GM.PC.ForceLoadCheck();
         GameMaster.GM.PC.Hide(true);
-        yield return new WaitForSeconds(1);
+        GameMaster.GM.CutsceneZoneLoad(2, new Vector3(1944, -1984, 0));
+        yield return new WaitForSeconds(3);
         GameMaster.GM.CG.LoadCG(9);
+        while ((bool)AccessTools.Field(typeof(GameMaster), "Loading").GetValue(GameMaster.GM))
+        {
+            yield return null;
+        }
         yield return new WaitForSeconds(3);
         Chatter.Clear();
         Chatter.Add(GameMaster.CreateSpeech(2, 1, "I HAVE NEVER FELT LOVE, IN ALL MY LIFE.", "OAKLEY", 5));
@@ -233,6 +244,7 @@ public class TrapControl : MonoBehaviour
         GameMaster.GM.Save.Data.Wife = NPC.Name.Purple;
         GameMaster.GM.Save.Data.Married = true;
         GameMaster.GM.Save.Data.Relationships[2].Stage = SaveSystem.NPCData.Stages.MARRIED;
+        GameMaster.GM.Save.Data.Quests[18] = SaveSystem.Quest.QUESTCOMPLETE;
         foreach (int id in new int[] {0, 1, 3, 5, 6, 8, 17, 48, 55})
         {
             if (GameMaster.GM.Save.Data.Relationships[id].Stage == SaveSystem.NPCData.Stages.MARRIED)
@@ -264,12 +276,62 @@ public class GlitchTimer : MonoBehaviour
 
     private void Update()
     {
+        if (!Archipelago.NormalGameState())
+        {
+            return;
+        }
+
         Timer--;
         if (Timer <= 0 || TrapControl.TC.GlitchTimer <= 0)
         {
             TrapControl.TC.GlitchCount--;
             Destroy(gameObject);
         }
+    }
+}
+
+[HarmonyPatch(typeof(GameMaster))]
+[HarmonyPatch("LoadInSequence")]
+class GameMaster_LoadInSequence_Patch
+{
+    public static bool SkipFade = false;
+
+    static IEnumerator Postfix(IEnumerator __result, GameMaster __instance)
+    {
+        if (Archipelago.Enabled)
+        {
+            __instance.Fader.LoadScreen(true);
+            while (__instance.Fader.Status != 0)
+            {
+                yield return null;
+            }
+            var aload = SceneManager.LoadSceneAsync(23);
+            while (!aload.isDone)
+            {
+                yield return null;
+            }
+            TrapControl.TC.Glitch = Object.Instantiate(GameObject.Find("Ending").GetComponent<Room>().RoomItems.transform.Find("Error1").gameObject);
+            TrapControl.TC.Glitch.transform.SetParent(TrapControl.TC.transform);
+            TrapControl.TC.Glitch.SetActive(false);
+            SkipFade = true;
+        }
+
+        while (__result.MoveNext())
+        {
+            yield return __result.Current;
+        }
+
+        SkipFade = false;
+    }
+}
+
+[HarmonyPatch(typeof(FadeController))]
+[HarmonyPatch(nameof(FadeController.LoadScreen))]
+class FadeController_LoadScreen_Patch
+{
+    static bool Prefix(bool On)
+    {
+        return !(Archipelago.Enabled && On && GameMaster_LoadInSequence_Patch.SkipFade);
     }
 }
 
@@ -284,6 +346,22 @@ class PlayerCharacter_CAN_RUN_Patch
             return false;
         }
         return __result;
+    }
+}
+
+[HarmonyPatch(typeof(PlayerCharacter))]
+[HarmonyPatch("GET_RUN")]
+class PlayerCharacter_GET_RUN_Patch
+{
+    static bool Prefix(ref bool __result)
+    {
+        if (Archipelago.Enabled && GameMaster.GM.Save.PlayerOptions.RUN_TOGGLE == SaveSystem.TOGGLE.ON && TrapControl.TC.RunToggle &&
+                    (bool)AccessTools.Method(typeof(PlayerCharacter), "CAN_RUN").Invoke(GameMaster.GM.PC, [])) {
+            TrapControl.TC.RunToggle = false;
+            __result = true;
+            return false;
+        }
+        return true;
     }
 }
 

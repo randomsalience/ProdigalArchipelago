@@ -51,8 +51,10 @@ class ItemDatabase_BeginDatabase_Patch
         NewTrapItem("CONFUSION TRAP");
         NewTrapItem("DISARMING TRAP");
         NewTrapItem("LIGHT TRAP");
+        NewTrapItem("GLITCH TRAP");
         NewTrapItem("ZOMBIE TRAP");
         NewTrapItem("SHADOW TRAP");
+        NewTrapItem("LOVE TRAP");
 
         ChangeItemAboutText(10, "BLESSED PICKAXE!*I BET THIS WILL DO SOME SERIOUS DAMAGE!");
         ChangeItemAboutText(13, "CLEATED BOOTS!*I SHOULD TALK TO TESS ABOUT THESE.");
@@ -107,7 +109,7 @@ class ItemDatabase_BeginDatabase_Patch
         GameMaster.GM.ItemData.Database.Add(new ItemDatabase.ItemData
         {
             Name = name,
-            AboutText = [GameMaster.CreateSpeech(46, 0, "{name}!", "", 0)]
+            AboutText = [GameMaster.CreateSpeech(46, 0, $"{name}!", "", 0)]
         });
     }
 }

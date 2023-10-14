@@ -46,10 +46,7 @@ namespace ProdigalArchipelago
                 _ => "F",
             };
 
-            return new List<GameMaster.Speech>
-            {
-                GameMaster.CreateSpeech(46, 0, $"FOUND @{kind}{Name.ToUpper()}@*FOR {SlotName.ToUpper()}!", "", 0)
-            };
+            return [GameMaster.CreateSpeech(46, 0, $"FOUND @{kind}{Name.ToUpper()}@*FOR {SlotName.ToUpper()}!", "", 0)];
         }
 
         public Sprite Sprite(bool disguiseTraps)

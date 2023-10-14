@@ -139,13 +139,15 @@ namespace ProdigalArchipelago
         }
     }
 
-    // Remove or shuffle major items from Zaegul's shop, also disable rocket boots
+    // Remove or shuffle major items from Zaegul's shop, disable rocket boots, prevent winged boots from rusting
     [HarmonyPatch(typeof(ShopItem))]
     [HarmonyPatch("OnEnable")]
     class ShopItem_OnEnable_Patch
     {
-        static bool Prefix(ShopItem __instance, ref int ___Price)
+        static bool Prefix(ShopItem __instance, ref int ___Price, out bool __state)
         {
+            __state = __instance.IT == ShopItem.ItemType.Boots && __instance.IDNum == ShopItem.ID.One;
+
             if (Archipelago.Enabled && __instance.IT == ShopItem.ItemType.SecretShop)
             {
                 switch (__instance.IDNum)
@@ -168,6 +170,14 @@ namespace ProdigalArchipelago
             }
 
             return true;
+        }
+
+        static void Postfix(ShopItem __instance, bool __state)
+        {
+            if (Archipelago.Enabled && __state)
+            {
+                __instance.IT = ShopItem.ItemType.Boots;
+            }
         }
 
         static bool InitializeSecretShopItem(ShopItem item, ref int price, int num, ShopItem.ID alternate)
@@ -515,9 +525,7 @@ namespace ProdigalArchipelago
 
         static string PickHint1()
         {
-            string pickHint = Archipelago.AP.PickHint();
-            pickHint = pickHint == "" ? "SOMEWHERE" : $"AT @C{pickHint}@";
-            return Archipelago.Enabled ? $"I'M SURE YOU CAN FIND WHAT IS NEEDED {pickHint}." : "I'M SURE YOU CAN FIND WHAT IS NEEDED IN THE OLD MINE.";
+            return Archipelago.Enabled ? $"I'M SURE YOU CAN FIND WHAT IS NEEDED {Archipelago.AP.PickHint()}." : "I'M SURE YOU CAN FIND WHAT IS NEEDED IN THE OLD MINE.";
         }
 
         static string PickHint2()

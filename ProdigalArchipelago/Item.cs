@@ -116,8 +116,10 @@ namespace ProdigalArchipelago
         ConfusionTrap = 121,
         DisarmingTrap = 122,
         LightTrap = 123,
-        ZombieTrap = 124,
-        ShadowTrap = 125,
+        GlitchTrap = 124,
+        ZombieTrap = 125,
+        ShadowTrap = 126,
+        LoveTrap = 127,
     }
 
     public static class ItemExtension
@@ -147,6 +149,16 @@ namespace ProdigalArchipelago
             return (int)item - 105;
         }
 
+        public static bool IsTrap(this Item item)
+        {
+            return (int)item >= 119 && (int)item <= 127;
+        }
+
+        public static TrapControl.TrapType ToTrapType(this Item item)
+        {
+            return (TrapControl.TrapType)(item - 119);
+        }
+
         public static Item NonProgressive(this Item item)
         {
             switch (item)
@@ -172,44 +184,44 @@ namespace ProdigalArchipelago
 
         public static List<Item> AllBoots()
         {
-            return new List<Item>
-            {
+            return
+            [
                 Item.LuckyBoots,
                 Item.CleatedBoots,
                 Item.AnchorGreaves,
                 Item.BootsOfGraile,
                 Item.WingedBoots,
-            };
+            ];
         }
 
         public static List<Item> AllColors()
         {
-            return new List<Item>
-            {
+            return
+            [
                 Item.FuryHeart,
                 Item.ShatteredSoul,
                 Item.SunsetPainting,
                 Item.FrozenHeart,
                 Item.RedCrystal,
-            };
+            ];
         }
 
         public static List<Item> AllBlessings()
         {
-            return new List<Item>
-            {
+            return
+            [
                 Item.LifeBlessing,
                 Item.LightBlessing,
                 Item.StormBlessing,
                 Item.EarthBlessing,
                 Item.WaterBlessing,
-            };
+            ];
         }
 
         public static List<Item> MajorItems()
         {
-            return new List<Item>
-            {
+            return
+            [
                 Item.Lariat,
                 Item.LuckyBoots,
                 Item.CleatedBoots,
@@ -252,7 +264,7 @@ namespace ProdigalArchipelago
                 Item.ProgressiveKnuckle,
                 Item.ProgressiveHand,
                 Item.ProgressivePick,
-            };
+            ];
         }
     }
 }

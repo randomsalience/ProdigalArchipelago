@@ -23,22 +23,22 @@ namespace ProdigalArchipelago
         public const int TESS_ID = 48;
         public const int ARMADEL_ID = 57;
 
-        private static readonly int[] LOCS_BASE = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
+        private static readonly int[] LOCS_BASE = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
             21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48,
             49, 50, 51, 52, 53, 62, 63, 65, 66, 67, 68, 69, 70, 71, 72, 73, 76, 81, 82, 83, 84, 85, 86, 87, 88, 89, 91, 92,
             93, 94, 95, 96, 97, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 125, 126, 127,
             128, 129, 130, 131, 132, 133, 134, 135, 136, 142, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155,
             156, 157, 158, 159, 160, 161, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 177, 178, 179, 180,
             181, 182, 183, 200, 201, 202, 203, 204, 205, 208, 209, 210, 211, 212, 213, 224, 225, 226, 227, 228, 229, 230,
-            231, 232, 233, 234, 235, 236, 237, 238, 239};
-        private static readonly int[] LOCS_GRELIN = {240, 241, 242, 243};
-        private static readonly int[] LOCS_TRADE = {206, 207, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223};
+            231, 232, 233, 234, 235, 236, 237, 238, 239];
+        private static readonly int[] LOCS_GRELIN = [240, 241, 242, 243];
+        private static readonly int[] LOCS_TRADE = [206, 207, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223];
         private const int LOC_ULNI = 223;
-        private static readonly int[] LOCS_HIDDEN = {0, 137, 138, 139, 140, 141, 162, 175, 176, 184};
-        private static readonly int[] LOCS_CASTLE = {54, 55, 56, 57, 58, 59, 60, 61, 248};
-        private static readonly int[] LOCS_DIVE = {98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 124, 244};
-        private static readonly int[] LOCS_ENLIGHTENMENT = {64, 74, 75, 77, 78, 79, 80, 90};
-        public static readonly int[] LOCS_SECRET_SHOP = {245, 246, 247};
+        private static readonly int[] LOCS_HIDDEN = [0, 137, 138, 139, 140, 141, 162, 175, 176, 184];
+        private static readonly int[] LOCS_CASTLE = [54, 55, 56, 57, 58, 59, 60, 61, 248];
+        private static readonly int[] LOCS_DIVE = [98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 124, 244];
+        private static readonly int[] LOCS_ENLIGHTENMENT = [64, 74, 75, 77, 78, 79, 80, 90];
+        public static readonly int[] LOCS_SECRET_SHOP = [245, 246, 247];
 
         public static bool Enabled;
         public static Archipelago AP;
@@ -62,7 +62,7 @@ namespace ProdigalArchipelago
         public ArchipelagoSession Session;
         public Dictionary<string, object> SlotData;
         private System.Random Random;
-        private readonly SortedDictionary<int, ArchipelagoItem> LocationTable = new();
+        private readonly SortedDictionary<int, ArchipelagoItem> LocationTable = [];
         public int[] SecretShopPrices = new int[3];
         private int CheatItemsReceived;
         public bool IsBjergCastle;
@@ -72,9 +72,9 @@ namespace ProdigalArchipelago
         {
             public ConnectionData Connection;
             public int Seed = 0;
-            public List<(int, long)> ReceivedItemLocations = new();
+            public List<(int, long)> ReceivedItemLocations = [];
             public int CheatItemCount = 0;
-            public List<int> KeyTotals = new();
+            public List<int> KeyTotals = [];
         }
 
         public SaveData Data = new();
@@ -217,18 +217,18 @@ namespace ProdigalArchipelago
             if (Session is not null && Session.Items.Any() && NormalGameState())
             {
                 var item = Session.Items.DequeueItem();
-                if (!Data.ReceivedItemLocations.Contains((item.Player, item.Location)) && item.Location != -1)
+                if (!Data.ReceivedItemLocations.Contains((item.Player, item.Location)) && item.Location != -1 && item.Location != -2)
                 {
                     Data.ReceivedItemLocations.Add((item.Player, item.Location));
                     StartCoroutine(ReceiveItem(new ArchipelagoItem(item, true)));
                 }
-                else if (item.Location == -1)
+                else if (item.Location == -1 || item.Location == -2)
                 {
                     CheatItemsReceived++;
                     if (CheatItemsReceived > Data.CheatItemCount)
                     {
                         Data.CheatItemCount = CheatItemsReceived;
-                        StartCoroutine(ReceiveItem(new ArchipelagoItem(item, true)));
+                        StartCoroutine(ReceiveItem(new ArchipelagoItem(item, true), item.Location == -2));
                     }
                 }
             }
@@ -264,9 +264,14 @@ namespace ProdigalArchipelago
             {
                 GameMaster.GM.Save.Data.Quests[2] = SaveSystem.Quest.STAGE16;
             }
+
             if (Settings.StartWithSpicedHam)
             {
                 GameMaster.GM.Save.Data.SLOTA = PlayerCharacter.BUFFS.RUN;
+            }
+            if (Settings.StartWithWingedBoots)
+            {
+                GameMaster.GM.Save.Data.BootSlot = PlayerCharacter.Boots.Winged;
             }
 
             if (Settings.AltarToVar)
@@ -374,13 +379,17 @@ namespace ProdigalArchipelago
             return item;
         }
 
-        private IEnumerator ReceiveItem(ArchipelagoItem item)
+        private IEnumerator ReceiveItem(ArchipelagoItem item, bool skipDisplay = false)
         {
             Item localItem = item.LocalItem();
+
             bool cutscene = GameMaster.GM.GS == GameMaster.GameState.CUTSCENE;
-            GameMaster.GM.PC.CUTSCENE(true);
-            GameMaster.GM.PC.EMOTE.ITEM_PICKUP(item.Sprite(false), true);
-            GameMaster.GM.PC.Anim.SetBool("ITEM", true);
+            if (!skipDisplay)
+            {
+                GameMaster.GM.PC.CUTSCENE(true);
+                GameMaster.GM.PC.EMOTE.ITEM_PICKUP(item.Sprite(false), true);
+                GameMaster.GM.PC.Anim.SetBool("ITEM", true);
+            }
 
             if (item.SlotID == SlotID)
             {
@@ -416,11 +425,11 @@ namespace ProdigalArchipelago
                 if (localItem == Item.HeartOre)
                 {
                     GameMaster.GM.PC.Heal(1);
-                    List<GameMaster.Speech> speech = new();
+                    List<GameMaster.Speech> speech = [];
+                    int jingle = 21;
                     if (GameMaster.GM.Save.Data.Quests[39] == SaveSystem.Quest.QUESTCOMPLETE)
                     {
                         speech.Add(GameMaster.CreateSpeech(46, 0, "A FRAGMENT OF HEART ORE CRUMBLES AND DISAPPEARS.", "", 0));
-                        GameMaster.GM.BGM.PlayJingle(21);
                     }
                     else
                     {
@@ -430,34 +439,49 @@ namespace ProdigalArchipelago
                             case 4:
                                 speech.Add(GameMaster.CreateSpeech(46, 0, "A FRAGMENT OF HEART ORE! NOW MY VITALITY WILL BE INCREASED!", "", 0));
                                 GameMaster.GM.Save.Data.Ores = 0;
-                                GameMaster.GM.BGM.PlayJingle(20);
+                                jingle = 20;
                                 GameMaster.GM.PC.IncreaseMaxpHP();
                                 break;
                             case 3:
                                 speech.Add(GameMaster.CreateSpeech(46, 0, "A FRAGMENT OF HEART ORE! ONLY ONE MORE FRAGMENT TO GO!", "", 0));
-                                GameMaster.GM.BGM.PlayJingle(21);
                                 break;
                             case 2:
                                 speech.Add(GameMaster.CreateSpeech(46, 0, "A FRAGMENT OF HEART ORE! ONLY TWO MORE FRAGMENTS TO GO!", "", 0));
-                                GameMaster.GM.BGM.PlayJingle(21);
                                 break;
                             case 1:
                                 speech.Add(GameMaster.CreateSpeech(46, 0, "A FRAGMENT OF HEART ORE! ONLY THREE MORE FRAGMENTS TO GO!", "", 0));
-                                GameMaster.GM.BGM.PlayJingle(21);
                                 break;
                         }
                     }
-                    GameMaster.GM.UI.InitiateChat(speech, false);
+                    if (!skipDisplay)
+                    {
+                        GameMaster.GM.BGM.PlayJingle(jingle);
+                        GameMaster.GM.UI.InitiateChat(speech, false);
+                    }
                 }
                 else
                 {
-                    if (localItem.Data().MAJOR && !rusted)
+                    if (!skipDisplay)
                     {
-                        GameMaster.GM.BGM.PlayJingle(20);
-                    }
-                    else
-                    {
-                        GameMaster.GM.BGM.PlayJingle(21);
+                        if (localItem.Data().MAJOR && !rusted)
+                        {
+                            GameMaster.GM.BGM.PlayJingle(20);
+                        }
+                        else
+                        {
+                            GameMaster.GM.BGM.PlayJingle(21);
+                        }
+
+                        if (!rusted)
+                        {
+                            GameMaster.GM.UI.InitiateChat(localItem.Data().AboutText, false);
+                        }
+                        else
+                        {
+                            GameMaster.GM.UI.InitiateChat([
+                                GameMaster.CreateSpeech(46, 0, "IT'S TOO DAMAGED TO USE. . .", "", 0),
+                            ], false);
+                        }
                     }
 
                     switch (localItem)
@@ -475,23 +499,17 @@ namespace ProdigalArchipelago
                             GameMaster.GM.Save.AddCurrency(100);
                             break;
                     }
-
-                    if (!rusted)
-                    {
-                        GameMaster.GM.UI.InitiateChat(localItem.Data().AboutText, false);
-                    }
-                    else
-                    {
-                        GameMaster.GM.UI.InitiateChat(new List<GameMaster.Speech> {
-                            GameMaster.CreateSpeech(46, 0, "IT'S TOO DAMAGED TO USE. . .", "", 0),
-                        }, false);
-                    }
                 }
             }
-            else
+            else if (!skipDisplay)
             {
                 GameMaster.GM.BGM.PlayJingle(21);
                 GameMaster.GM.UI.InitiateChat(item.Speech(), false);
+            }
+
+            if (localItem.IsTrap())
+            {
+                TrapControl.TC.NewTrap(localItem.ToTrapType());
             }
 
             while (GameMaster.GM.UI.SPEAKING())
@@ -595,17 +613,21 @@ namespace ProdigalArchipelago
 
         public string PickHint()
         {
+            if (Item.IronPick.Acquired())
+            {
+                return "@CIN YOUR POCKET@";
+            }
             try
             {
                 var player = (string)SlotData["pick_hint_player"];
                 var location = (string)SlotData["pick_hint_location"];
                 if (player == SlotName)
                     return location.ToUpper();
-                return $"{location.ToUpper()} IN {player.ToUpper()}'s WORLD";
+                return $"AT @C{location.ToUpper()} IN {player.ToUpper()}'s WORLD@";
             }
             catch (Exception)
             {
-                return "";
+                return "SOMEWHERE";
             }
         }
 

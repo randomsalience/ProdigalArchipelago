@@ -6,7 +6,7 @@
     <Description>Archipelago mod for Prodigal</Description>
     <Version>0.1.0</Version>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <LangVersion>latest</LangVersion>
+    <LangVersion>preview</LangVersion>
     <ProdigalRefs>D:/SteamLibrary/steamapps/common/Prodigal/Prodigal_Data/Managed</ProdigalRefs>
     <BepinPlugins>D:/SteamLibrary/steamapps/common/Prodigal/BepInEx/plugins</BepinPlugins>
   </PropertyGroup>

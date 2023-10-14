@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ProdigalArchipelago
 {
-    public class ArchipelagoSettings
+    public class ArchipelagoSettings(Dictionary<string, object> slotData)
     {
         public enum GoalOption
         {
@@ -21,72 +21,38 @@ namespace ProdigalArchipelago
             Shuffle = 2,
         }
 
-        public bool SpecificKeys;
-        public int ColorsRequired;
-        public int BlessingsRequired;
-        public int CrestFragmentsRequired;
-        public int CoinsOfCrowlRequired;
-        public GoalOption Goal;
-        public TradingQuestOption TradingQuest;
-        public bool ShuffleGrelinDrops;
-        public bool ShuffleHiddenItems;
-        public bool ShuffleBjergCastle;
-        public bool ShuffleDaemonsDive;
-        public bool ShuffleEnlightenment;
-        public bool ShuffleSecretShop;
-        public bool LongJumpsInLogic; // for backward compatibility
-        public bool SkipsInLogic;
-        public bool StartWithSpicedHam;
-        public bool SkipOneSmallFavor;
-        public bool FakeDreadHand;
-        public bool FastFishing;
-        public bool AltarToVar;
-        public bool AltarToZolei;
-        public bool AltarToRaem;
-        public bool AltarToHate;
-        public bool CurseOfFrailty;
-        public bool CurseOfFamine;
-        public bool CurseOfRust;
-        public bool CurseOfWind;
-        public bool CurseOfBlooms;
-        public bool CurseOfCrowns;
-        public bool CurseOfHorns;
-        public bool CurseOfFlames;
-
-        public ArchipelagoSettings(Dictionary<string, object> slotData)
-        {
-            SpecificKeys = GetOrDefault(slotData, "specific_keys", 1) != 0;
-            ColorsRequired = GetOrDefault(slotData, "colors_required", 5);
-            BlessingsRequired = GetOrDefault(slotData, "blessings_required", 0);
-            CrestFragmentsRequired = GetOrDefault(slotData, "crest_fragments_required", 5);
-            CoinsOfCrowlRequired = GetOrDefault(slotData, "coins_of_crowl_required", 13);
-            Goal = (GoalOption)GetOrDefault(slotData, "goal", 0);
-            TradingQuest = (TradingQuestOption)GetOrDefault(slotData, "trading_quest", 0);
-            ShuffleGrelinDrops = GetOrDefault(slotData, "shuffle_grelin_drops", 0) != 0;
-            ShuffleHiddenItems = GetOrDefault(slotData, "shuffle_hidden_items", 0) != 0;
-            ShuffleBjergCastle = GetOrDefault(slotData, "shuffle_bjerg_castle", 0) != 0;
-            ShuffleDaemonsDive = GetOrDefault(slotData, "shuffle_daemons_dive", 0) != 0;
-            ShuffleEnlightenment = GetOrDefault(slotData, "shuffle_enlightenment", 0) != 0;
-            ShuffleSecretShop = GetOrDefault(slotData, "shuffle_secret_shop", 0) != 0;
-            LongJumpsInLogic = GetOrDefault(slotData, "long_jumps_in_logic", 0) != 0;
-            SkipsInLogic = GetOrDefault(slotData, "skips_in_logic", 0) != 0;
-            StartWithSpicedHam = GetOrDefault(slotData, "start_with_spiced_ham", 0) != 0;
-            SkipOneSmallFavor = GetOrDefault(slotData, "skip_one_small_favor", 0) != 0;
-            FakeDreadHand = GetOrDefault(slotData, "fake_dread_hand", 0) != 0;
-            FastFishing = GetOrDefault(slotData, "fast_fishing", 0) != 0;
-            AltarToVar = GetOrDefault(slotData, "altar_to_var", 0) != 0;
-            AltarToZolei = GetOrDefault(slotData, "altar_to_zolei", 0) != 0;
-            AltarToRaem = GetOrDefault(slotData, "altar_to_raem", 0) != 0;
-            AltarToHate = GetOrDefault(slotData, "altar_to_hate", 0) != 0;
-            CurseOfFrailty = GetOrDefault(slotData, "curse_of_frailty", 0) != 0;
-            CurseOfFamine = GetOrDefault(slotData, "curse_of_famine", 0) != 0;
-            CurseOfRust = GetOrDefault(slotData, "curse_of_rust", 0) != 0;
-            CurseOfWind = GetOrDefault(slotData, "curse_of_wind", 0) != 0;
-            CurseOfBlooms = GetOrDefault(slotData, "curse_of_blooms", 0) != 0;
-            CurseOfCrowns = GetOrDefault(slotData, "curse_of_crowns", 0) != 0;
-            CurseOfHorns = GetOrDefault(slotData, "curse_of_horns", 0) != 0;
-            CurseOfFlames = GetOrDefault(slotData, "curse_of_flames", 0) != 0;
-        }
+        public bool SpecificKeys = GetOrDefault(slotData, "specific_keys", 1) != 0;
+        public int ColorsRequired = GetOrDefault(slotData, "colors_required", 5);
+        public int BlessingsRequired = GetOrDefault(slotData, "blessings_required", 0);
+        public int CrestFragmentsRequired = GetOrDefault(slotData, "crest_fragments_required", 5);
+        public int CoinsOfCrowlRequired = GetOrDefault(slotData, "coins_of_crowl_required", 13);
+        public GoalOption Goal = (GoalOption)GetOrDefault(slotData, "goal", 0);
+        public TradingQuestOption TradingQuest = (TradingQuestOption)GetOrDefault(slotData, "trading_quest", 0);
+        public bool ShuffleGrelinDrops = GetOrDefault(slotData, "shuffle_grelin_drops", 0) != 0;
+        public bool ShuffleHiddenItems = GetOrDefault(slotData, "shuffle_hidden_items", 0) != 0;
+        public bool ShuffleBjergCastle = GetOrDefault(slotData, "shuffle_bjerg_castle", 0) != 0;
+        public bool ShuffleDaemonsDive = GetOrDefault(slotData, "shuffle_daemons_dive", 0) != 0;
+        public bool ShuffleEnlightenment = GetOrDefault(slotData, "shuffle_enlightenment", 0) != 0;
+        public bool ShuffleSecretShop = GetOrDefault(slotData, "shuffle_secret_shop", 0) != 0;
+        public bool LongJumpsInLogic = GetOrDefault(slotData, "long_jumps_in_logic", 0) != 0; // for backward compatibility
+        public bool SkipsInLogic = GetOrDefault(slotData, "skips_in_logic", 0) != 0;
+        public bool StartWithSpicedHam = GetOrDefault(slotData, "start_with_spiced_ham", 0) != 0;
+        public bool StartWithWingedBoots = GetOrDefault(slotData, "start_with_winged_boots", 0) != 0;
+        public bool SkipOneSmallFavor = GetOrDefault(slotData, "skip_one_small_favor", 0) != 0;
+        public bool FakeDreadHand = GetOrDefault(slotData, "fake_dread_hand", 0) != 0;
+        public bool FastFishing = GetOrDefault(slotData, "fast_fishing", 0) != 0;
+        public bool AltarToVar = GetOrDefault(slotData, "altar_to_var", 0) != 0;
+        public bool AltarToZolei = GetOrDefault(slotData, "altar_to_zolei", 0) != 0;
+        public bool AltarToRaem = GetOrDefault(slotData, "altar_to_raem", 0) != 0;
+        public bool AltarToHate = GetOrDefault(slotData, "altar_to_hate", 0) != 0;
+        public bool CurseOfFrailty = GetOrDefault(slotData, "curse_of_frailty", 0) != 0;
+        public bool CurseOfFamine = GetOrDefault(slotData, "curse_of_famine", 0) != 0;
+        public bool CurseOfRust = GetOrDefault(slotData, "curse_of_rust", 0) != 0;
+        public bool CurseOfWind = GetOrDefault(slotData, "curse_of_wind", 0) != 0;
+        public bool CurseOfBlooms = GetOrDefault(slotData, "curse_of_blooms", 0) != 0;
+        public bool CurseOfCrowns = GetOrDefault(slotData, "curse_of_crowns", 0) != 0;
+        public bool CurseOfHorns = GetOrDefault(slotData, "curse_of_horns", 0) != 0;
+        public bool CurseOfFlames = GetOrDefault(slotData, "curse_of_flames", 0) != 0;
 
         public bool GoalVar()
         {

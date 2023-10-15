@@ -18,7 +18,9 @@ This is a mod for the game [Prodigal](https://store.steampowered.com/app/1393820
 2. Start a new game of Prodigal, and select Archipelago.
 3. Enter the server address, port number, slot name, and optionally password, then select Start.
 
-There is currently no built-in way to run Archipelago CLI commands (such as !hint) or view previously delivered or received items in this mod. To run or view these, connect the Text Client installed from [Archipelago's Github releases page](https://github.com/ArchipelagoMW/Archipelago/releases/) with the same server information that you provide to the game.
+This mod includes a built-in map tracker. However, there is currently no built-in way to run Archipelago CLI commands (such as !hint) or view previously delivered or received items in this mod.
+
+To run Archipelago CLI commands or view items delivered/received in real time, connect a Text Client installed from [Archipelago's Github releases page](https://github.com/ArchipelagoMW/Archipelago/releases/) with the same server information that you provide to the game.
 
 ## Gameplay Tips
 

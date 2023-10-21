@@ -18,6 +18,10 @@ This is a mod for the game [Prodigal](https://store.steampowered.com/app/1393820
 2. Start a new game of Prodigal, and select Archipelago.
 3. Enter the server address, port number, slot name, and optionally password, then select Start.
 
+This mod includes a built-in map tracker. However, there is currently no built-in way to run Archipelago CLI commands (such as !hint) or view previously delivered or received items in this mod.
+
+To run Archipelago CLI commands or view items delivered/received in real time, connect a Text Client installed from [Archipelago's Github releases page](https://github.com/ArchipelagoMW/Archipelago/releases/) with the same server information that you provide to the game.
+
 ## Gameplay Tips
 
 This section describes changes which have been made to the randomizer, as well as information about the requirements for some of the less obvious checks.
@@ -51,3 +55,5 @@ This section describes changes which have been made to the randomizer, as well a
 - To get the boots check from Tess, obtain any four pairs of boots and the Hairpin.
 - To get the item from the Light Spirit, sleep after defeating Amadeus.
 - To get the item from Caroline, get captured by the pirates and inspect the lock.
+- The Tara One Small Favor fetch quest is one check currently ("Tara Reward"). You can configure it in your settings YAML to do the full quest or for Tara to give you the reward item immediately.
+- The Colorless Void Trading Quest is broken up into separate locations for purposes of Archipelago hints, depending on your settings. For separate items, you can hint_location each NPC (eg, "Leer Trade") or check the end of the quest (either "Ulni Trade" or "Complete Trading Quest").

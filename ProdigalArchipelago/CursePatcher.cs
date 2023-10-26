@@ -20,6 +20,8 @@ class GameMaster_PlayerDied_Patch
                 return false;
             }
 
+            Archipelago.AP.Stats.DeathCount++;
+
             __instance.ChatOver();
             __instance.GS = GameMaster.GameState.LOCKED;
             AccessTools.Field(typeof(GameMaster), "Dying").SetValue(__instance, true);

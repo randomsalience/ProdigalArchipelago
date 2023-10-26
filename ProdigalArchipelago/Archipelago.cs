@@ -78,6 +78,7 @@ public class Archipelago : MonoBehaviour
     }
 
     public SaveData Data = new();
+    public ArchipelagoStats Stats = new();
 
     public static void Setup()
     {
@@ -171,7 +172,10 @@ public class Archipelago : MonoBehaviour
         {
             int chestID = (int)(locationID - ID_BASE);
             if (!GameMaster.GM.Save.Data.Chests.Contains(chestID))
+            {
                 GameMaster.GM.Save.Data.Chests.Add(chestID);
+                Stats.ItemsCollected++;
+            }
         }
 
         // Connection successful
@@ -332,6 +336,8 @@ public class Archipelago : MonoBehaviour
         Data.KeyTotals.Clear();
         for (int i = 0; i < Key.Keys.Count(); i++)
             Data.KeyTotals.Add(0);
+        
+        Stats.ItemsTotal = LocationTable.Count();
     }
 
     public bool CollectItem(int locationID)
@@ -349,6 +355,8 @@ public class Archipelago : MonoBehaviour
         }
 
         GameMaster.GM.Save.Data.Chests.Add(locationID);
+        Stats.ItemsCollected++;
+
         if (item.SlotID == SlotID)
         {
             Data.ReceivedItemLocations.Add((SlotID, locationID));
@@ -393,6 +401,8 @@ public class Archipelago : MonoBehaviour
 
         if (item.SlotID == SlotID)
         {
+            Stats.Collect(localItem);
+
             bool rusted = localItem switch
             {
                 Item.BlessedPick => GameMaster.GM.Save.Data.Quests[87] == SaveSystem.Quest.QUESTCOMPLETE,
@@ -523,6 +533,7 @@ public class Archipelago : MonoBehaviour
 
     public void Finish()
     {
+        Stats.FinishTime = (int)GameMaster.GM.Save.Data.PlayTime;
         StartCoroutine(SendFinish());
     }
 
@@ -552,7 +563,10 @@ public class Archipelago : MonoBehaviour
         {
             int chestID = (int)(locationID - ID_BASE);
             if (!GameMaster.GM.Save.Data.Chests.Contains(chestID))
+            {
                 GameMaster.GM.Save.Data.Chests.Add(chestID);
+                Stats.ItemsCollected++;
+            }
         }
     }
 
@@ -665,6 +679,7 @@ public class Archipelago : MonoBehaviour
 
     private IEnumerator Warp()
     {
+        Stats.WarpCount++;
         GameMaster.GM.UnPauseGame();
         GameMaster.GM.GS = GameMaster.GameState.LOAD;
         GameMaster.GM.Fader.LoadScreen(true);

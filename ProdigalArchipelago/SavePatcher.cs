@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.Serialization.Formatters.Binary;
+using Newtonsoft.Json;
 using UnityEngine;
 using HarmonyLib;
 
@@ -84,17 +85,18 @@ class SaveButton_Setup_Patch
                 code.labels.Add(label_save_exists);
                 yield return code;
 
+                yield return new CodeInstruction(OpCodes.Ldloc, local_is_archipelago);
+                yield return new CodeInstruction(OpCodes.Brfalse, label_load_normal_save);
+                yield return new CodeInstruction(OpCodes.Pop);
+                yield return new CodeInstruction(OpCodes.Ldarg_0);
+                yield return new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(SaveButton), "ID"));
+                yield return new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(ArchipelagoSave), nameof(ArchipelagoSave.Deserialize)));
+                yield return new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(ArchipelagoSave), nameof(ArchipelagoSave.GameData)));
+                yield return new CodeInstruction(OpCodes.Stloc, local_player_save);
                 yield return new CodeInstruction(OpCodes.Ldloc, local_filename);
                 yield return new CodeInstruction(OpCodes.Ldc_I4_3);
                 yield return new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(File), nameof(File.Open), [typeof(string), typeof(FileMode)]));
                 yield return new CodeInstruction(OpCodes.Stloc_1);
-                yield return new CodeInstruction(OpCodes.Ldloc, local_is_archipelago);
-                yield return new CodeInstruction(OpCodes.Brfalse, label_load_normal_save);
-                yield return new CodeInstruction(OpCodes.Ldloc_1);
-                yield return new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(BinaryFormatter), nameof(BinaryFormatter.Deserialize), [typeof(Stream)]));
-                yield return new CodeInstruction(OpCodes.Castclass, typeof(CompoundSave));
-                yield return new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(CompoundSave), nameof(CompoundSave.GameData)));
-                yield return new CodeInstruction(OpCodes.Stloc, local_player_save);
                 yield return new CodeInstruction(OpCodes.Br, label_save_loaded);
                 yield return new CodeInstruction(OpCodes.Ldloc_1)
                 {
@@ -189,12 +191,10 @@ class SaveSystem_Load_Patch
         
         if (File.Exists(Application.persistentDataPath + "/APS" + ___ID + ".syr"))
         {
-            BinaryFormatter binaryFormatter = new();
-            FileStream fileStream = File.Open(Application.persistentDataPath + "/APS" + ___ID + ".syr", FileMode.Open);
-            var save = (CompoundSave)binaryFormatter.Deserialize(fileStream);
+            var save = ArchipelagoSave.Deserialize(___ID);
             __instance.Data = save.GameData;
             Archipelago.AP.Data = save.ArchipelagoData;
-            fileStream.Close();
+            Archipelago.AP.Stats = save.ArchipelagoStats;
             switch (__instance.Data.CurrentAct)
             {
                 case SaveSystem.Act.Intro:
@@ -258,14 +258,12 @@ class SaveSystem_Save_Patch
                     ___ID = "3";
                     break;
             }
-            var binaryFormatter = new BinaryFormatter();
-            var fileStream = File.Create(Application.persistentDataPath + "/APS" + ___ID + ".syr");
-            var save = new CompoundSave {
+            var save = new ArchipelagoSave {
                 GameData = __instance.Data,
                 ArchipelagoData = Archipelago.AP.Data,
+                ArchipelagoStats = Archipelago.AP.Stats,
             };
-            binaryFormatter.Serialize(fileStream, save);
-            fileStream.Close();
+            save.Serialize(___ID);
             return false;
         }
 
@@ -364,5 +362,49 @@ class SaveSystem_FileCheck_Patch
         {
             __result = true;
         }
+    }
+}
+
+public class ArchipelagoSave
+{
+    public SaveSystem.PlayerSave GameData;
+    public Archipelago.SaveData ArchipelagoData;
+    public ArchipelagoStats ArchipelagoStats;
+
+    public static ArchipelagoSave Deserialize(string id)
+    {
+        string fileName = Application.persistentDataPath + "/APS" + id + ".syr";
+        try
+        {
+            string fileText = File.ReadAllText(fileName);
+            return JsonConvert.DeserializeObject<ArchipelagoSave>(fileText);
+        }
+        catch (JsonException)
+        {
+            // Use old save file format
+            BinaryFormatter binaryFormatter = new();
+            FileStream fileStream = File.Open(fileName, FileMode.Open);
+            var oldSave = (CompoundSave)binaryFormatter.Deserialize(fileStream);
+            fileStream.Close();
+            var save = new ArchipelagoSave
+            {
+                GameData = oldSave.GameData,
+                ArchipelagoData = oldSave.ArchipelagoData,
+                ArchipelagoStats = new()
+                {
+                    Enabled = false,
+                },
+            };
+            // Resave in new format
+            save.Serialize(id);
+            return save;
+        }
+    }
+
+    public void Serialize(string id)
+    {
+        string fileName = Application.persistentDataPath + "/APS" + id + ".syr";
+        string fileText = JsonConvert.SerializeObject(this);
+        File.WriteAllText(fileName, fileText);
     }
 }

@@ -778,6 +778,31 @@ class SpecialInteract_AcquTime_Patch
     }
 }
 
+[HarmonyPatch(typeof(SpecialInteract))]
+[HarmonyPatch("OnEnable")]
+class SpecialInteract_OnEnable_Patch
+{
+    static bool Prefix(SpecialInteract __instance, Animator ___ANIM)
+    {
+        if (Archipelago.Enabled) {
+            switch (__instance.INTERACTABLE)
+            {
+                case SpecialInteract.INT.HARMONICA:
+                     __instance.GetComponent<SpriteRenderer>().enabled = !GameMaster.GM.Save.Data.Chests.Contains(227);
+                    return false;
+                case SpecialInteract.INT.EARTHPILLARDG:
+                    ___ANIM.SetBool("ACTIVE", !GameMaster.GM.Save.Data.Chests.Contains(235));
+                    return false;
+                case SpecialInteract.INT.WATERPILLARDG:
+                    ___ANIM.SetBool("ACTIVE", !GameMaster.GM.Save.Data.Chests.Contains(230));
+                    return false;
+            }
+        }
+
+        return true;
+    }
+}
+
 // Allow competing in arena without a pick
 [HarmonyPatch(typeof(Molly))]
 [HarmonyPatch(nameof(Molly.ArenaChat))]

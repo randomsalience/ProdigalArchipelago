@@ -80,7 +80,7 @@ class TrackerDot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         else if (inLogic)
             sprite.color = new Color(0.98f, 0.95f, 0.21f);
         else if (outOfLogic)
-            sprite.color = new Color(0.87f, 0.44f, 0.15f);
+            sprite.color = new Color(0.98f, 0.63f, 0.07f);
         else
             sprite.color = new Color(0.93f, 0.22f, 0.30f);
     }

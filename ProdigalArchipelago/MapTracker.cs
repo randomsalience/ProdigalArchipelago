@@ -104,7 +104,7 @@ class MapTracker : MonoBehaviour
                 new TrackerLocation("Heart Ore", 144, () => HasPick() && (CanClimb() || (HasLariat() && HasKnuckle()))),
             ]),
             TrackerDot.NewDot("Casino", 38, 5, false, () => true, [
-                new TrackerLocation("Tara Reward", 200, () => true),
+                new TrackerLocation("Tara Small Favor Reward", 200, () => true),
                 new TrackerLocation("Crocodile", 209, () => true),
                 new TrackerLocation("Cactus Hidden Item", 175, () => true),
             ]),
@@ -120,7 +120,7 @@ class MapTracker : MonoBehaviour
                 new TrackerLocation("Stealth Mission", 203, () => Item.CursedBones.Acquired() && Item.CursedPick.Acquired()),
             ]),
             TrackerDot.NewDot("Arena", -26, -41, false, () => true, [
-                new TrackerLocation("Mariana", 204, () => CanHit()),
+                new TrackerLocation("Mariana Reward", 204, () => CanHit()),
             ]),
             TrackerDot.NewDot("Red's Inn", 7, -52, false, () => true, [
                 new TrackerLocation("Keaton Fishing Gift", 205, () => HasLariat()),
@@ -129,13 +129,13 @@ class MapTracker : MonoBehaviour
                 new TrackerLocation("Xavier Blessing", 208, () => Item.CursedBones.Acquired() && Item.CursedPick.Acquired()),
             ]),
             TrackerDot.NewDot("Lynn", 3, -40, false, () => true, [
-                new TrackerLocation("Gift", 211, () => CanReturnStolenItems()),
+                new TrackerLocation("Return 4 Stolen Items", 211, () => CanReturnStolenItems()),
             ]),
             TrackerDot.NewDot("Bolivar", 19, -24, false, () => true, [
-                new TrackerLocation("Gift", 212, () => Item.Shaedrite.Acquired() && Item.DrownedOre.Acquired() && Item.MiasmicExtract.Acquired() && Item.BrokenSword.Acquired()),
+                new TrackerLocation("Give 4 Materials", 212, () => Item.Shaedrite.Acquired() && Item.DrownedOre.Acquired() && Item.MiasmicExtract.Acquired() && Item.BrokenSword.Acquired()),
             ]),
             TrackerDot.NewDot("Hooded Figure", 15, 45, false, () => true, [
-                new TrackerLocation("Reward", 213, () => Item.EerieMask.Acquired() && HasHand2() && CanClimb() && CanHit()),
+                new TrackerLocation("Defeat Hooded Figure", 213, () => Item.EerieMask.Acquired() && HasHand2() && CanClimb() && CanHit()),
             ]),
             TrackerDot.NewDot("Farmhouse", 11, -40, false, () => true, [
                 new TrackerLocation("Quinlan Trade", 207, () => Item.TheCarrotCake.Acquired()),
@@ -256,7 +256,7 @@ class MapTracker : MonoBehaviour
                 new TrackerLocation("Rat Potion", 63, () => HasLariat() && HasPick() && HasKnuckle() && HasHand()),
             ]),
             TrackerDot.NewDot("Crocasino", 36, 10, true, () => HasKnuckle(), [
-                new TrackerLocation("Gator Key", 232, () => HasLariat() || CanLongJump()),
+                new TrackerLocation("Gator Key", 232, () => HasLariat() || CanLongJump() || (HasFlare() && Item.GatorKey.Acquired())),
                 new TrackerLocation("Jail Chest", 50, () => Item.BunnyKey.Acquired() && (HasLariat() || HasFlare()) && (Item.GatorKey.Acquired() || (HasKnuckle() && (HasLariat() || CanLongJump())))),
                 new TrackerLocation("Hidden Chest", 68, () => (HasLariat() || HasFlare()) && ((Item.GatorKey.Acquired() && HasPick()) || (HasKnuckle() && (HasLariat() || CanLongJump())))),
                 new TrackerLocation("Turtle Chest", 22, () => HasLariat() && HasKnuckle()),
@@ -327,7 +327,7 @@ class MapTracker : MonoBehaviour
                 new TrackerLocation("West - Near Boss Chest", 41, () => TimeOut1() && HasPick() && HasLariat() && HasKnuckle() && HasKey(Key.TimeOut, 3),
                     () => TimeOut1() && HasPick() && HasLariat() && HasKnuckle() && CanOpen(Key.TimeOut, 9)),
                 new TrackerLocation("East - Ball Push Chest", 40, () => TimeOut2() && ((HasLariat() && HasKnuckle()) || CanLongJump())),
-                new TrackerLocation("East - Invisible Floor Chest", 93, () => TimeOut2() && HasKnuckle() && (HasKey(Key.TimeOut, 2) || HasFlare()),
+                new TrackerLocation("East - Invisible Floor Chest", 93, () => TimeOut2() && HasKnuckle() && (HasKey(Key.TimeOut, 3) || HasFlare()),
                     () => TimeOut2() && HasKnuckle() && (CanOpen(Key.TimeOut, 37) || HasFlare())),
                 new TrackerLocation("Color Correction", 236, () => TimeOut1() && HasPick() && HasLariat() && HasKnuckle() && HasKey(Key.TimeOut, 3),
                     () => TimeOut1() && HasPick() && HasLariat() && HasKnuckle() && CanOpen(Key.TimeOut, 9)),

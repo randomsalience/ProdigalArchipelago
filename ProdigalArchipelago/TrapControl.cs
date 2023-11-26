@@ -51,7 +51,10 @@ public class TrapControl : MonoBehaviour
 
     public static void Deactivate()
     {
-        Destroy(TC.gameObject);
+        if (TC is not null)
+        {
+            Destroy(TC.gameObject);
+        }
     }
 
     public void NewTrap(TrapType type)

@@ -97,7 +97,6 @@ class TrackerDot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             Text text = TextBox.transform.GetChild(1).GetComponent<Text>();
             text.text = $"<b>{Name}</b>\n{string.Join('\n', lines)}";
             text.font = ResourceManager.GetFont();
-            text.fontSize = ResourceManager.GetFontSize();
             TextBox.transform.GetChild(0).GetComponent<Image>().rectTransform.sizeDelta = new Vector2(text.preferredWidth + 4 * GetScale(), text.preferredHeight + 4 * GetScale());
             PositionTextBox();
             TextBox.SetActive(true);

@@ -1,4 +1,4 @@
-using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using HarmonyLib;
@@ -21,7 +21,7 @@ class UIPatch
 
     private static void CreateWarpButton()
     {
-        WarpButton = UnityEngine.Object.Instantiate(GameMaster.GM.UI.transform.GetChild(2).GetChild(0).GetChild(2).gameObject);
+        WarpButton = Object.Instantiate(GameMaster.GM.UI.transform.GetChild(2).GetChild(0).GetChild(2).gameObject);
         WarpButton.name = "WarpButton";
         WarpButton.transform.parent = GameMaster.GM.UI.transform.GetChild(2).GetChild(0);
         WarpButton.SetActive(false);
@@ -282,6 +282,51 @@ class CHAT_BOX_WORD_COUNT_Patch
             __result = KEYS.Count - KID;
             return false;
         }
+
+        return true;
+    }
+}
+
+// Add stats screen to ending
+[HarmonyPatch(typeof(GameMaster))]
+[HarmonyPatch("ClosingSplashes")]
+class GameMaster_ClosingSplashes_Patch
+{
+    public static bool Waiting = false;
+
+    static IEnumerator Postfix(IEnumerator __result)
+    {
+        bool apEnabled = Archipelago.Enabled;
+        Waiting = true;
+
+        while (__result.MoveNext())
+        {
+            yield return __result.Current;
+        }
+
+        if (apEnabled && Archipelago.AP.Stats.Enabled)
+        {
+            yield return new WaitForSeconds(1);
+            StatsScreen.Instance.Activate();
+        }
+
+        Waiting = false;
+    }
+}
+
+[HarmonyPatch(typeof(UI))]
+[HarmonyPatch(nameof(UI.SplashOut))]
+class UI_SplashOut_Patch
+{
+    static bool Prefix()
+    {
+        if (GameMaster_ClosingSplashes_Patch.Waiting)
+        {
+            return false;
+        }
+
+        StatsScreen.Instance.Deactivate();
+        Archipelago.Enabled = false;
 
         return true;
     }

@@ -11,6 +11,7 @@ public static class SpriteManager
     public static Sprite ErrorSprite;
     public static Sprite GameChoiceBGSprite;
     public static Sprite KeyScreenBGSprite;
+    public static Sprite StatsScreenBGSprite;
     public static Sprite TrackerDotSprite;
     public static Sprite TrackerDotLargeSprite;
     public static Sprite WarpSelectedSprite;
@@ -25,6 +26,7 @@ public static class SpriteManager
         ErrorSprite = LoadSprite("Error.png");
         GameChoiceBGSprite = LoadSprite("GameChoiceBG.png");
         KeyScreenBGSprite = LoadSprite("KeyScreenBG.png");
+        StatsScreenBGSprite = LoadSprite("StatsScreenBG.png");
         TrackerDotSprite = LoadSprite("TrackerDot.png");
         TrackerDotLargeSprite = LoadSprite("TrackerDotLarge.png");
         WarpSelectedSprite = LoadSprite("WarpSelected.png");
@@ -33,8 +35,10 @@ public static class SpriteManager
 
         GameMaster.GM.UI.THIN_FONT[8] = LoadSprite("ParenLThin.png");
         GameMaster.GM.UI.THIN_FONT[9] = LoadSprite("ParenRThin.png");
+        GameMaster.GM.UI.THIN_FONT[15] = LoadSprite("SlashThin.png");
         GameMaster.GM.UI.THICK_FONT[8] = LoadSprite("ParenLThick.png");
         GameMaster.GM.UI.THICK_FONT[9] = LoadSprite("ParenRThick.png");
+        GameMaster.GM.UI.THICK_FONT[15] = LoadSprite("SlashThick.png");
     }
 
     static Sprite LoadSprite(string filename)

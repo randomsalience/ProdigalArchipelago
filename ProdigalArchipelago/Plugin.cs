@@ -50,6 +50,7 @@ class GameMaster_Awake_Patch
         NewGameMenu.Create();
         ConnectionMenu.Create();
         KeyPage.Create();
+        StatsScreen.Create();
         MapTracker.Create();
         CastleSailor.Create();
     }

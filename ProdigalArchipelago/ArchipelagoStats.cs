@@ -19,6 +19,7 @@ public class ArchipelagoStats
     public int DeathCount;
     public int WarpCount;
     public int KillCount;
+    public int FallCount;
     public int DamageTaken;
     public int KeysBroken;
 
@@ -73,6 +74,23 @@ class PlayerCharacter_APPLY_DAMAGE_Patch
         {
             int damage = __state - (GameMaster.GM.PC.HP + GameMaster.GM.PC.GrayHP);
             Archipelago.AP.Stats.DamageTaken += damage;
+        }
+    }
+}
+
+[HarmonyPatch(typeof(PlayerCharacter))]
+[HarmonyPatch("FALL_DAMAGE")]
+class PlayerCharacter_FALL_DAMAGE_Patch
+{
+    static void Prefix()
+    {
+        if (Archipelago.Enabled)
+        {
+            Archipelago.AP.Stats.FallCount++;
+            if (!GameMaster.GM.PC.BUFF_CHECK(PlayerCharacter.BUFFS.FEATHER) && GameMaster.GM.Save.Data.RingSlot != PlayerCharacter.Rings.WEDDING_LYNN)
+            {
+                Archipelago.AP.Stats.DamageTaken++;
+            }
         }
     }
 }

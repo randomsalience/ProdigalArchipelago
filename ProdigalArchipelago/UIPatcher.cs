@@ -26,9 +26,9 @@ class UIPatch
         WarpButton.transform.parent = GameMaster.GM.UI.transform.GetChild(2).GetChild(0);
         WarpButton.SetActive(false);
         var button = WarpButton.GetComponent<UIButton>();
-        button.SelectedSprite = SpriteManager.WarpSelectedSprite;
-        button.HitSprite = SpriteManager.WarpHitSprite;
-        AccessTools.Field(typeof(UIButton), "NormalSprite").SetValue(button, SpriteManager.WarpNormalSprite);
+        button.SelectedSprite = ResourceManager.WarpSelectedSprite;
+        button.HitSprite = ResourceManager.WarpHitSprite;
+        AccessTools.Field(typeof(UIButton), "NormalSprite").SetValue(button, ResourceManager.WarpNormalSprite);
     }
 
     private static void CreateErrorIndicator()
@@ -38,7 +38,7 @@ class UIPatch
         ErrorIndicator.transform.localPosition = new Vector3(98, -20, 0);
         ErrorIndicator.SetActive(false);
         var sprite = ErrorIndicator.AddComponent<SpriteRenderer>();
-        sprite.sprite = SpriteManager.ErrorSprite;
+        sprite.sprite = ResourceManager.ErrorSprite;
         sprite.sortingLayerName = "UI";
         sprite.sortingOrder = 10;
     }
@@ -116,7 +116,7 @@ class KeyPage : MonoBehaviour
 
         GameObject bg = new("KeyPageBG");
         var renderer = bg.AddComponent<SpriteRenderer>();
-        renderer.sprite = SpriteManager.KeyScreenBGSprite;
+        renderer.sprite = ResourceManager.KeyScreenBGSprite;
         renderer.sortingLayerName = "UI";
         renderer.sortingOrder = 8;
         bg.transform.parent = transform;
@@ -327,7 +327,6 @@ class UI_SplashOut_Patch
 
         StatsScreen.Instance.Deactivate();
         Archipelago.Enabled = false;
-
         return true;
     }
 }

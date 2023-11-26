@@ -17,7 +17,7 @@ class ItemDatabase_BeginDatabase_Patch
         GameMaster.GM.ItemData.Database.Add(new ItemDatabase.ItemData
         {
             Name = "ARCHIPELAGO ITEM",
-            ItemSprite = SpriteManager.ArchipelagoSprite,
+            ItemSprite = ResourceManager.ArchipelagoSprite,
         });
         GameMaster.GM.ItemData.Database.Add(new ItemDatabase.ItemData
         {

@@ -21,7 +21,7 @@ class TrackerDot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         obj.transform.SetParent(MapTracker.Instance.transform);
         obj.transform.localPosition = new Vector3(x, y, 0);
         var sprite = obj.AddComponent<SpriteRenderer>();
-        sprite.sprite = large ? SpriteManager.TrackerDotLargeSprite : SpriteManager.TrackerDotSprite;
+        sprite.sprite = large ? ResourceManager.TrackerDotLargeSprite : ResourceManager.TrackerDotSprite;
         sprite.sortingLayerName = "UI";
         sprite.sortingOrder = 10;
         var collider = obj.AddComponent<BoxCollider2D>();
@@ -41,7 +41,6 @@ class TrackerDot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         var textObj = new GameObject($"DotTextBoxText{name}");
         textObj.transform.SetParent(dot.TextBox.transform, false);
         var text = textObj.AddComponent<Text>();
-        text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
         text.color = new Color(0.92f, 0.87f, 0.76f);
         text.horizontalOverflow = HorizontalWrapMode.Overflow;
         var fitter = textObj.AddComponent<ContentSizeFitter>();
@@ -97,7 +96,8 @@ class TrackerDot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         {
             Text text = TextBox.transform.GetChild(1).GetComponent<Text>();
             text.text = $"<b>{Name}</b>\n{string.Join('\n', lines)}";
-            text.fontSize = (int)(4 * GetScale());
+            text.font = ResourceManager.GetFont();
+            text.fontSize = ResourceManager.GetFontSize();
             TextBox.transform.GetChild(0).GetComponent<Image>().rectTransform.sizeDelta = new Vector2(text.preferredWidth + 4 * GetScale(), text.preferredHeight + 4 * GetScale());
             PositionTextBox();
             TextBox.SetActive(true);

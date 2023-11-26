@@ -58,7 +58,7 @@ public class ConnectionMenu : MonoBehaviour
 
         BG = new GameObject("ConnectionSetupBG");
         var bgSprite = BG.AddComponent<SpriteRenderer>();
-        bgSprite.sprite = SpriteManager.ConnectionSetupBGSprite;
+        bgSprite.sprite = ResourceManager.ConnectionSetupBGSprite;
         bgSprite.sortingOrder = 1;
         bgSprite.sortingLayerName = "UI";
         BG.transform.parent = transform;
@@ -70,10 +70,10 @@ public class ConnectionMenu : MonoBehaviour
         PasswordText = Menu.CreateTextObjects("Password", 8, transform, -20, -18, TextColor);
         StartText = Menu.CreateTextObjects("Start", 5, transform, -11, -38, TextColor);
 
-        ServerEntry = CreateInputField("ServerEntry", 124, 0);
-        PortEntry = CreateInputField("PortEntry", 24, 5);
-        SlotEntry = CreateInputField("SlotEntry", -76, 16);
-        PasswordEntry = CreateInputField("PasswordEntry", -176, 0);
+        ServerEntry = CreateInputField("ServerEntry", 122, 0);
+        PortEntry = CreateInputField("PortEntry", 22, 5);
+        SlotEntry = CreateInputField("SlotEntry", -78, 16);
+        PasswordEntry = CreateInputField("PasswordEntry", -178, 0);
 
         PortEntry.GetComponent<InputField>().contentType = InputField.ContentType.IntegerNumber;
         PasswordEntry.GetComponent<InputField>().contentType = InputField.ContentType.Password;
@@ -81,8 +81,8 @@ public class ConnectionMenu : MonoBehaviour
         ErrorText = new GameObject("ErrorText");
         var text = ErrorText.AddComponent<Text>();
         text.alignment = TextAnchor.UpperCenter;
-        text.fontSize = 24;
-        text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+        text.fontSize = ResourceManager.GetFontSize();
+        text.font = ResourceManager.GetFont();
         text.color = Color.red;
         text.horizontalOverflow = HorizontalWrapMode.Overflow;
         ErrorText.transform.SetParent(UI.transform, false);
@@ -155,8 +155,8 @@ public class ConnectionMenu : MonoBehaviour
         entry.AddComponent<CanvasRenderer>();
         var text = entry.AddComponent<Text>();
         text.alignment = TextAnchor.UpperCenter;
-        text.fontSize = 24;
-        text.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+        text.fontSize = ResourceManager.GetFontSize();
+        text.font = ResourceManager.GetFont();
         text.color = Color.black;
         text.horizontalOverflow = HorizontalWrapMode.Overflow;
         var input = entry.AddComponent<InputField>();

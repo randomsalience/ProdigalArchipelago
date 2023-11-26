@@ -29,7 +29,7 @@ public class StatsScreen : MonoBehaviour
         obj.transform.SetParent(GameMaster.GM.UI.transform.GetChild(1));
         Instance = obj.AddComponent<StatsScreen>();
         var renderer = obj.AddComponent<SpriteRenderer>();
-        renderer.sprite = SpriteManager.StatsScreenBGSprite;
+        renderer.sprite = ResourceManager.StatsScreenBGSprite;
         renderer.sortingLayerName = "UI";
         renderer.sortingOrder = 8;
     }

@@ -33,7 +33,7 @@ public class NewGameMenu : MonoBehaviour
     {
         Bg = new GameObject("NewGameBG");
         var bgSprite = Bg.AddComponent<SpriteRenderer>();
-        bgSprite.sprite = SpriteManager.GameChoiceBGSprite;
+        bgSprite.sprite = ResourceManager.GameChoiceBGSprite;
         bgSprite.sortingOrder = 1;
         bgSprite.sortingLayerName = "UI";
         Bg.transform.parent = transform;
@@ -44,7 +44,7 @@ public class NewGameMenu : MonoBehaviour
 
         Selector = new GameObject("GameTypeSelector");
         var selectorSprite = Selector.AddComponent<SpriteRenderer>();
-        selectorSprite.sprite = SpriteManager.ArrowSprite;
+        selectorSprite.sprite = ResourceManager.ArrowSprite;
         selectorSprite.sortingOrder = 2;
         selectorSprite.sortingLayerName = "UI";
         Selector.transform.parent = transform;

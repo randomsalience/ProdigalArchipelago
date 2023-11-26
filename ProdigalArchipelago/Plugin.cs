@@ -43,7 +43,7 @@ class GameMaster_Awake_Patch
 {
     private static void Postfix()
     {
-        SpriteManager.LoadSprites();
+        ResourceManager.Load();
         Menu.Setup();
         UIPatch.Setup();
         Archipelago.Setup();

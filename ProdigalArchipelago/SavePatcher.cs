@@ -130,7 +130,7 @@ class SaveButton_Setup_Patch
                     yield return new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(SaveButton), nameof(SaveButton.Icons)));
                     yield return new CodeInstruction(OpCodes.Ldc_I4, 13);
                     yield return new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(List<SpriteRenderer>), "get_Item"));
-                    yield return new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(SpriteManager), nameof(SpriteManager.ArchipelagoSprite)));
+                    yield return new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(ResourceManager), nameof(ResourceManager.ArchipelagoSprite)));
                     yield return new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(SpriteRenderer), "set_sprite"));
 
                     yield return new CodeInstruction(OpCodes.Ldloc, local_player_save)

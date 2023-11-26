@@ -3,8 +3,14 @@ using UnityEngine;
 
 namespace ProdigalArchipelago;
 
-public static class SpriteManager
+public static class ResourceManager
 {
+    private static Font Font8;
+    private static Font Font16;
+    private static Font Font20;
+    private static Font Font30;
+    private static Font Font40;
+
     public static Sprite ArchipelagoSprite;
     public static Sprite ArrowSprite;
     public static Sprite ConnectionSetupBGSprite;
@@ -18,8 +24,16 @@ public static class SpriteManager
     public static Sprite WarpNormalSprite;
     public static Sprite WarpHitSprite;
 
-    public static void LoadSprites()
+    public static void Load()
     {
+        AssetBundle bundle = AssetBundle.LoadFromFile($"{Application.dataPath}/../BepInEx/plugins/Archipelago/res/font");
+        Font8 = bundle.LoadAsset<Font>("Atkinson-Hyperlegible-Regular-8.ttf");
+        Font16 = bundle.LoadAsset<Font>("Atkinson-Hyperlegible-Regular-16.ttf");
+        Font20 = bundle.LoadAsset<Font>("Atkinson-Hyperlegible-Regular-20.ttf");
+        Font30 = bundle.LoadAsset<Font>("Atkinson-Hyperlegible-Regular-30.ttf");
+        Font40 = bundle.LoadAsset<Font>("Atkinson-Hyperlegible-Regular-40.ttf");
+        bundle.Unload(false);
+        
         ArchipelagoSprite = LoadSprite("Archipelago.png");
         ArrowSprite = LoadSprite("Arrow.png");
         ConnectionSetupBGSprite = LoadSprite("ConnectionSetupBG.png");
@@ -47,5 +61,29 @@ public static class SpriteManager
         tex.LoadImage(File.ReadAllBytes($"{Application.dataPath}/../BepInEx/plugins/Archipelago/res/{filename}"));
         tex.filterMode = FilterMode.Point;
         return Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f), 1);
+    }
+
+    public static Font GetFont()
+    {
+        return GameMaster.GM.Save.PlayerOptions.Resolution switch
+        {
+            1 => Font16,
+            2 => Font20,
+            3 => Font30,
+            4 => Font40,
+            _ => Font8,
+        };
+    }
+
+    public static int GetFontSize()
+    {
+        return GameMaster.GM.Save.PlayerOptions.Resolution switch
+        {
+            1 => 16,
+            2 => 20,
+            3 => 30,
+            4 => 40,
+            _ => 8,
+        };
     }
 }

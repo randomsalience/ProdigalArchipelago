@@ -95,7 +95,7 @@ class MapTracker : MonoBehaviour
                 new TrackerLocation("Heart Ore", 147, () => HasPick() && (HasLariat() || (Skips() && HasFlare()))),
             ]),
             TrackerDot.NewDot("Near Smithy", 29, -32, false, () => true, [
-                new TrackerLocation("Heart Ore", 148, () => HasPick() && HasLariat()),
+                new TrackerLocation("Heart Ore", 148, () => HasPick() && (HasLariat() || (Skips() && Item.WeaponChain.Acquired()))),
             ]),
             TrackerDot.NewDot("Near Pond", 66, -30, false, () => true, [
                 new TrackerLocation("Heart Ore", 145, () => HasPick()),

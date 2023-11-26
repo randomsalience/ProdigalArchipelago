@@ -761,3 +761,17 @@ class KirHasa_Lynn_Patch
         }
     }
 }
+
+// Prevent the Murder Mystery quest from starting, as it can break the One Small Favor quest
+[HarmonyPatch(typeof(Hugh))]
+[HarmonyPatch("FireEvent")]
+class Hugh_EventCheck_Patch
+{
+    static void Postfix()
+    {
+        if (Archipelago.Enabled && GameMaster.GM.Save.Data.Relationships[13].Stage == SaveSystem.NPCData.Stages.STAGE2)
+        {
+            GameMaster.GM.Save.Data.Relationships[13].Stage = SaveSystem.NPCData.Stages.STAGE3;
+        }
+    }
+}

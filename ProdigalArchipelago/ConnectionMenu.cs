@@ -81,6 +81,7 @@ public class ConnectionMenu : MonoBehaviour
         ErrorText = new GameObject("ErrorText");
         var text = ErrorText.AddComponent<Text>();
         text.alignment = TextAnchor.UpperCenter;
+        text.fontSize = ResourceManager.GetFontSize();
         text.font = ResourceManager.GetFont();
         text.color = Color.red;
         text.horizontalOverflow = HorizontalWrapMode.Overflow;
@@ -154,6 +155,7 @@ public class ConnectionMenu : MonoBehaviour
         entry.AddComponent<CanvasRenderer>();
         var text = entry.AddComponent<Text>();
         text.alignment = TextAnchor.UpperCenter;
+        text.fontSize = ResourceManager.GetFontSize();
         text.font = ResourceManager.GetFont();
         text.color = Color.black;
         text.horizontalOverflow = HorizontalWrapMode.Overflow;

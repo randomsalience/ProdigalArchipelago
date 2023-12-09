@@ -233,6 +233,7 @@ class SaveSystem_CreateSave_Patch
                 break;
         }
         __instance.SaveSlot = SS;
+        __instance.Data = new();
         Menu.NewGame(SS);
         return false;
     }
@@ -304,7 +305,8 @@ class SaveSystem_NewSave_Patch
         {
             __instance.Data = new SaveSystem.PlayerSave
             {
-                Name = name
+                Name = name,
+                Chests = __instance.Data.Chests,
             };
             AccessTools.Method(typeof(SaveSystem), "PopulateData").Invoke(__instance, []);
             Archipelago.AP.InitialPatches();

@@ -101,7 +101,7 @@ public class Archipelago : MonoBehaviour
             yield break;
         }
 
-        var loginTask = Task.Run(async () => await Session.LoginAsync(GAME_NAME, cdata.SlotName, ItemsHandlingFlags.IncludeStartingInventory, new Version(VERSION), password: cdata.Password));
+        var loginTask = Task.Run(async () => await Session.LoginAsync(GAME_NAME, cdata.SlotName, ItemsHandlingFlags.AllItems, new Version(VERSION), password: cdata.Password));
         yield return new WaitUntil(() => loginTask.IsCompleted);
         if (loginTask.IsFaulted)
         {
@@ -344,10 +344,18 @@ public class Archipelago : MonoBehaviour
     {
         ArchipelagoItem item = GetLocationItem(locationID);
         if (item is null)
+        {
             return false;
+        }
         
         if (Data.ReceivedItemLocations.Contains((SlotID, ID_BASE + locationID)))
+        {
             return true;
+        }
+        if (item.SlotID == SlotID)
+        {
+            Data.ReceivedItemLocations.Add((SlotID, ID_BASE + locationID));
+        }
 
         if (Connected)
         {
@@ -356,11 +364,6 @@ public class Archipelago : MonoBehaviour
 
         GameMaster.GM.Save.Data.Chests.Add(locationID);
         Stats.ItemsCollected++;
-
-        if (item.SlotID == SlotID)
-        {
-            Data.ReceivedItemLocations.Add((SlotID, locationID));
-        }
         StartCoroutine(ReceiveItem(item));
         
         GameMaster.GM.Save.Save();
@@ -636,7 +639,7 @@ public class Archipelago : MonoBehaviour
             var player = (string)SlotData["pick_hint_player"];
             var location = (string)SlotData["pick_hint_location"];
             if (player == SlotName)
-                return location.ToUpper();
+                return $"AT @C{location.ToUpper()}@";
             return $"AT @C{location.ToUpper()} IN {player.ToUpper()}'s WORLD@";
         }
         catch (Exception)

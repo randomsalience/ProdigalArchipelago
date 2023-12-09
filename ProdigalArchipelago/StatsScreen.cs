@@ -22,11 +22,14 @@ public class StatsScreen : MonoBehaviour
     List<GameObject> DamageTakenText;
     List<GameObject> KeysBrokenText;
 
+    public bool Active = false;
+    int Timer = 0;
+
     public static void Create()
     {
         GameObject obj = new("StatsScreen");
         obj.SetActive(false);
-        obj.transform.SetParent(GameMaster.GM.UI.transform.GetChild(1));
+        obj.transform.SetParent(GameMaster.GM.UI.transform);
         Instance = obj.AddComponent<StatsScreen>();
         var renderer = obj.AddComponent<SpriteRenderer>();
         renderer.sprite = ResourceManager.StatsScreenBGSprite;
@@ -69,16 +72,35 @@ public class StatsScreen : MonoBehaviour
         Menu.RenderText(KillsText, $"KILLS {Cap(Archipelago.AP.Stats.KillCount)}");
         Menu.RenderText(DamageTakenText, $"DAMAGE TAKEN {Cap(Archipelago.AP.Stats.DamageTaken)}");
         Menu.RenderText(KeysBrokenText, $"KEYS BROKEN {Cap(Archipelago.AP.Stats.KeysBroken)}");
+
+        if (Timer > 0)
+        {
+            Timer--;
+        }
     }
 
     public void Activate()
     {
+        Active = true;
         gameObject.SetActive(true);
+        Timer = 120;
+        Plugin.ButtonInput += OnButtonInput;
     }
 
     public void Deactivate()
     {
+        Active = false;
         gameObject.SetActive(false);
+        Timer = 0;
+        Plugin.ButtonInput -= OnButtonInput;
+    }
+
+    public void OnButtonInput(Button button, bool up)
+    {
+        if (!up && Timer == 0 && (button == Button.A || button == Button.B || button == Button.Start))
+        {
+            Deactivate();
+        }
     }
 
     private string HMS(int time)

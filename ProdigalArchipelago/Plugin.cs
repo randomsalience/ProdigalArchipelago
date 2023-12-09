@@ -6,12 +6,23 @@ using HarmonyLib;
 
 namespace ProdigalArchipelago;
 
+public enum Button
+{
+    A,
+    B,
+    X,
+    Y,
+    Start,
+    Trigger,
+}
+
 [BepInPlugin("com.randomsalience.prodigal.archipelago", "Archipelago", "0.1.4")]
 [BepInProcess("Prodigal.exe")]
 public class Plugin : BaseUnityPlugin
 {
     private static Plugin Instance;
     public static new BepInEx.Logging.ManualLogSource Logger;
+    public static Action<Button, bool> ButtonInput;
 
     private void Awake()
     {
@@ -41,7 +52,7 @@ public class Plugin : BaseUnityPlugin
 [HarmonyPatch("Awake")]
 class GameMaster_Awake_Patch
 {
-    private static void Postfix()
+    static void Postfix()
     {
         ResourceManager.Load();
         Menu.Setup();
@@ -53,5 +64,95 @@ class GameMaster_Awake_Patch
         StatsScreen.Create();
         MapTracker.Create();
         CastleSailor.Create();
+    }
+}
+
+[HarmonyPatch(typeof(GameMaster))]
+[HarmonyPatch(nameof(GameMaster.AButton))]
+class GameMaster_AButton_Patch
+{
+    static bool Prefix(bool Up)
+    {
+        if (Plugin.ButtonInput is not null)
+        {
+            Plugin.ButtonInput(Button.A, Up);
+            return false;
+        }
+        return true;
+    }
+}
+
+[HarmonyPatch(typeof(GameMaster))]
+[HarmonyPatch(nameof(GameMaster.BButton))]
+class GameMaster_BButton_Patch
+{
+    static bool Prefix(bool Up)
+    {
+        if (Plugin.ButtonInput is not null)
+        {
+            Plugin.ButtonInput(Button.B, Up);
+            return false;
+        }
+        return true;
+    }
+}
+
+[HarmonyPatch(typeof(GameMaster))]
+[HarmonyPatch(nameof(GameMaster.XButton))]
+class GameMaster_XButton_Patch
+{
+    static bool Prefix(bool Up)
+    {
+        if (Plugin.ButtonInput is not null)
+        {
+            Plugin.ButtonInput(Button.X, Up);
+            return false;
+        }
+        return true;
+    }
+}
+
+[HarmonyPatch(typeof(GameMaster))]
+[HarmonyPatch(nameof(GameMaster.YButton))]
+class GameMaster_YButton_Patch
+{
+    static bool Prefix(bool Up)
+    {
+        if (Plugin.ButtonInput is not null)
+        {
+            Plugin.ButtonInput(Button.Y, Up);
+            return false;
+        }
+        return true;
+    }
+}
+
+[HarmonyPatch(typeof(GameMaster))]
+[HarmonyPatch(nameof(GameMaster.StartButton))]
+class GameMaster_StartButton_Patch
+{
+    static bool Prefix()
+    {
+        if (Plugin.ButtonInput is not null)
+        {
+            Plugin.ButtonInput(Button.Start, false);
+            return false;
+        }
+        return true;
+    }
+}
+
+[HarmonyPatch(typeof(GameMaster))]
+[HarmonyPatch(nameof(GameMaster.TRIGGER_Button))]
+class GameMaster_TRIGGER_Button_Patch
+{
+    static bool Prefix(bool Up)
+    {
+        if (Plugin.ButtonInput is not null)
+        {
+            Plugin.ButtonInput(Button.Trigger, Up);
+            return false;
+        }
+        return true;
     }
 }

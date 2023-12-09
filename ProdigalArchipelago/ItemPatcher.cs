@@ -1195,20 +1195,12 @@ class GameMaster_TrialComplete_Patch
     }
 }
 
-// Change item from Shadow Oran, and send victory upon defeat
+// Change item from Shadow Oran
 [HarmonyPatch(typeof(ShadowOranHM))]
 [HarmonyPatch("DeathScene")]
 [HarmonyPatch(MethodType.Enumerator)]
-class ShadowOranHM_DeathScene_Patch
+class ShadowOranHM_DeathScene_Enumerator_Patch
 {
-    static void Prefix()
-    {
-        if (Archipelago.Enabled && Archipelago.AP.Settings.GoalShadow())
-        {
-            Archipelago.AP.Finish();
-        }
-    }
-
     static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator il)
     {
         return GenericItemPatcher.Transpiler(instructions, il, 244);

@@ -292,41 +292,67 @@ class CHAT_BOX_WORD_COUNT_Patch
 [HarmonyPatch("ClosingSplashes")]
 class GameMaster_ClosingSplashes_Patch
 {
-    public static bool Waiting = false;
-
     static IEnumerator Postfix(IEnumerator __result)
     {
-        bool apEnabled = Archipelago.Enabled;
-        Waiting = true;
+        if (Archipelago.Enabled && Archipelago.AP.Stats.Enabled && Archipelago.AP.Stats.FinishTime != 0)
+        {
+            StatsScreen.Instance.Activate();
+
+            while (StatsScreen.Instance.Active)
+            {
+                yield return null;
+            }
+        }
 
         while (__result.MoveNext())
         {
             yield return __result.Current;
         }
-
-        if (apEnabled && Archipelago.AP.Stats.Enabled)
-        {
-            yield return new WaitForSeconds(1);
-            StatsScreen.Instance.Activate();
-        }
-
-        Waiting = false;
     }
 }
 
-[HarmonyPatch(typeof(UI))]
-[HarmonyPatch(nameof(UI.SplashOut))]
-class UI_SplashOut_Patch
+[HarmonyPatch(typeof(GameMaster))]
+[HarmonyPatch("FinaleEnding")]
+class GameMaster_FinaleEnding_Patch
 {
-    static bool Prefix()
+    static IEnumerator Postfix(IEnumerator __result)
     {
-        if (GameMaster_ClosingSplashes_Patch.Waiting)
+        if (Archipelago.Enabled && Archipelago.AP.Stats.Enabled && Archipelago.AP.Stats.FinishTime != 0)
         {
-            return false;
+            StatsScreen.Instance.Activate();
+
+            while (StatsScreen.Instance.Active)
+            {
+                yield return null;
+            }
         }
 
-        StatsScreen.Instance.Deactivate();
-        Archipelago.Enabled = false;
-        return true;
+        while (__result.MoveNext())
+        {
+            yield return __result.Current;
+        }
+    }
+}
+
+[HarmonyPatch(typeof(GameMaster))]
+[HarmonyPatch("CANNON_ENDING")]
+class GameMaster_CANNON_ENDING_Patch
+{
+    static IEnumerator Postfix(IEnumerator __result)
+    {
+        if (Archipelago.Enabled && Archipelago.AP.Stats.Enabled && Archipelago.AP.Stats.FinishTime != 0)
+        {
+            StatsScreen.Instance.Activate();
+
+            while (StatsScreen.Instance.Active)
+            {
+                yield return null;
+            }
+        }
+
+        while (__result.MoveNext())
+        {
+            yield return __result.Current;
+        }
     }
 }

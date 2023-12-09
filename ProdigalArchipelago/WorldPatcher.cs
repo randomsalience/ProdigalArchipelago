@@ -124,17 +124,52 @@ class SpecialInteract_HerosRestEnd_Patch
     }
 }
 
+// Send finish on defeating Shadow Oran
+[HarmonyPatch(typeof(ShadowOranHM))]
+[HarmonyPatch("DeathScene")]
+class ShadowOranHM_DeathScene_Patch
+{
+    static IEnumerator Postfix(IEnumerator __result, ShadowOranHM.BOSS_TYPE ___BOSS_LOC)
+    {
+        while (__result.MoveNext())
+        {
+            yield return __result.Current;
+        }
+
+        if (Archipelago.Enabled && ___BOSS_LOC == ShadowOranHM.BOSS_TYPE.BASE && Archipelago.AP.Settings.GoalShadow())
+        {
+            yield return new WaitForSeconds(1);
+            while (GameMaster.GM.GS != GameMaster.GameState.IN_GAME)
+            {
+                yield return null;
+            }
+            Archipelago.AP.Finish();
+            GameMaster.GM.StartCoroutine((IEnumerator)AccessTools.Method(typeof(GameMaster), "ClosingSplashes").Invoke(GameMaster.GM, [true]));
+        }
+    }
+}
+
 // Send finish on defeating Torran
 [HarmonyPatch(typeof(FIFTH))]
 [HarmonyPatch("ENDING")]
-[HarmonyPatch(MethodType.Enumerator)]
 class FIFTH_ENDING_Patch
 {
-    static void Prefix()
+    static IEnumerator Postfix(IEnumerator __result)
     {
+        while (__result.MoveNext())
+        {
+            yield return __result.Current;
+        }
+
         if (Archipelago.Enabled && Archipelago.AP.Settings.GoalTorran())
         {
+            yield return new WaitForSeconds(1);
+            while (GameMaster.GM.GS != GameMaster.GameState.IN_GAME)
+            {
+                yield return null;
+            }
             Archipelago.AP.Finish();
+            GameMaster.GM.StartCoroutine((IEnumerator)AccessTools.Method(typeof(GameMaster), "ClosingSplashes").Invoke(GameMaster.GM, [true]));
         }
     }
 }

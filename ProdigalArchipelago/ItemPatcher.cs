@@ -765,7 +765,6 @@ class SpecialInteract_AcquTime_Patch
 
     static IEnumerator AcquTime()
     {
-        Plugin.Logger.LogInfo("AcquTime");
         yield return new WaitForSeconds(0.25f);
         GameMaster.GM.CUTSCENE(true);
         while (GameMaster.GM.UI.SPEAKING())
@@ -782,8 +781,10 @@ class SpecialInteract_AcquTime_Patch
 [HarmonyPatch("OnEnable")]
 class SpecialInteract_OnEnable_Patch
 {
-    static bool Prefix(SpecialInteract __instance, Animator ___ANIM)
+    static bool Prefix(SpecialInteract __instance, ref Animator ___ANIM, List<GameMaster.Speech> ___Chatter)
     {
+        ___Chatter.Clear();
+        ___ANIM = __instance.GetComponent<Animator>();
         if (Archipelago.Enabled) {
             switch (__instance.INTERACTABLE)
             {

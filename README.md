@@ -38,8 +38,8 @@ This section describes changes which have been made to the randomizer, as well a
 - Bolivar hints the location of a pick.
 - Bjerg Castle (Mariana's marriage dungeon) may be shuffled into the pool. If it is, there will be a sailor outside the arena who will take you there at any time.
 - Extra checks are added on Yhorte, Siska, and Inkwell, as well as Color Correction (beating Me?). If Bjerg Castle is shuffled, a check is added on Captain Crossbones.
-- To enter the lighthouse, you must collect a certain number of Colors (Shattered Soul, Fury Heart, Frozen Heart, Red Crystal, Sunset Painting).
-- To obtain the Hero's Soul, you must collect a certain number of Blessings.
+- To enter the lighthouse, you must collect a certain number of Colors (Shattered Soul, Fury Heart, Frozen Heart, Red Crystal, Sunset Painting). Colors can be hinted in the text client using `!hint Color`.
+- To obtain the Hero's Soul, you must collect a certain number of Blessings. Blessings can be hinted in the text client using `!hint Blessing`.
 - To enter Enlightenment, you must obtain the Hero's Soul and the Empowered Hand and absorb the tar in the hidden room in the Crocasino.
 - The lighthouse door will tell you the number of colors required. The hero's grave will tell you the number of blessings required.
 - Time Out 2 now opens at the same time as Time Out 1 (when you give two colors to Colorgrave).

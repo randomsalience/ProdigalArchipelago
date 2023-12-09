@@ -74,4 +74,16 @@ public static class ResourceManager
             _ => Font8,
         };
     }
+
+    public static int GetFontSize()
+    {
+        return GameMaster.GM.Save.PlayerOptions.Resolution switch
+        {
+            1 => 16,
+            2 => 20,
+            3 => 30,
+            4 => 40,
+            _ => 8,
+        };
+    }
 }

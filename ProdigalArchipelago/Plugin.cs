@@ -16,7 +16,7 @@ public enum Button
     Trigger,
 }
 
-[BepInPlugin("com.randomsalience.prodigal.archipelago", "Archipelago", "0.1.5")]
+[BepInPlugin("com.randomsalience.prodigal.archipelago", "Archipelago", "0.1.5.1")]
 [BepInProcess("Prodigal.exe")]
 public class Plugin : BaseUnityPlugin
 {

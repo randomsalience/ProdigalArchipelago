@@ -40,7 +40,8 @@ public class Archipelago : MonoBehaviour
     private static readonly int[] LOCS_ENLIGHTENMENT = [64, 74, 75, 77, 78, 79, 80, 90];
     public static readonly int[] LOCS_SECRET_SHOP = [245, 246, 247];
 
-    public static bool Enabled;
+    public static bool Enabled = false;
+    public static bool Debug = false;
     public static Archipelago AP;
     private static GameObject Obj;
 
@@ -715,6 +716,17 @@ public class Archipelago : MonoBehaviour
         GameMaster.GM.UI.US = UI.UIState.NULL;
         GameMaster.GM.GS = GameMaster.GameState.IN_GAME;
         GameMaster.GM.PC.CUTSCENE(false);
+    }
+
+    public IEnumerator EndGame()
+    {
+        yield return new WaitForSeconds(1);
+        while (GameMaster.GM.GS != GameMaster.GameState.IN_GAME)
+        {
+            yield return null;
+        }
+        Archipelago.AP.Finish();
+        GameMaster.GM.StartCoroutine((IEnumerator)AccessTools.Method(typeof(GameMaster), "ClosingSplashes").Invoke(GameMaster.GM, [true]));
     }
 
     private void Randomize()

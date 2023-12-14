@@ -138,13 +138,7 @@ class ShadowOranHM_DeathScene_Patch
 
         if (Archipelago.Enabled && ___BOSS_LOC == ShadowOranHM.BOSS_TYPE.BASE && Archipelago.AP.Settings.GoalShadow())
         {
-            yield return new WaitForSeconds(1);
-            while (GameMaster.GM.GS != GameMaster.GameState.IN_GAME)
-            {
-                yield return null;
-            }
-            Archipelago.AP.Finish();
-            GameMaster.GM.StartCoroutine((IEnumerator)AccessTools.Method(typeof(GameMaster), "ClosingSplashes").Invoke(GameMaster.GM, [true]));
+            Archipelago.AP.StartCoroutine(Archipelago.AP.EndGame());
         }
     }
 }
@@ -163,13 +157,7 @@ class FIFTH_ENDING_Patch
 
         if (Archipelago.Enabled && Archipelago.AP.Settings.GoalTorran())
         {
-            yield return new WaitForSeconds(1);
-            while (GameMaster.GM.GS != GameMaster.GameState.IN_GAME)
-            {
-                yield return null;
-            }
-            Archipelago.AP.Finish();
-            GameMaster.GM.StartCoroutine((IEnumerator)AccessTools.Method(typeof(GameMaster), "ClosingSplashes").Invoke(GameMaster.GM, [true]));
+            Archipelago.AP.StartCoroutine(Archipelago.AP.EndGame());
         }
     }
 }
@@ -786,6 +774,36 @@ class Dockmaster_Skip_Patch
         if (Archipelago.Enabled)
         {
             Archipelago.AP.IsBjergCastle = false;
+        }
+    }
+}
+
+// Debug code to activate all warps
+[HarmonyPatch(typeof(LevelStatue))]
+[HarmonyPatch("StatueDisable")]
+class LevelStatue_StatueDisable_Patch
+{
+    static void Prefix(LevelStatue __instance)
+    {
+        if (Archipelago.Debug)
+        {
+            AccessTools.Method(typeof(LevelStatue), "StatueEnable").Invoke(__instance, []);
+        }
+    }
+}
+
+// Debug code to remove all light pillars
+[HarmonyPatch(typeof(LIGHT_PILLAR))]
+[HarmonyPatch("OnEnable")]
+class LIGHT_PILLAR_OnEnable_Patch
+{
+    static void Postfix(LIGHT_PILLAR __instance)
+    {
+        if (Archipelago.Debug)
+        {
+            __instance.STATUS = LIGHT_PILLAR.STATE.SHROUDED;
+            __instance.GetComponent<Animator>().SetTrigger("DEAD");
+            __instance.GetComponent<Collider2D>().enabled = false;
         }
     }
 }

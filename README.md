@@ -57,3 +57,10 @@ This section describes changes which have been made to the randomizer, as well a
 - To get the item from Caroline, get captured by the pirates and inspect the lock.
 - The Tara One Small Favor fetch quest is one check currently ("Tara Reward"). You can configure it in your settings YAML to do the full quest or for Tara to give you the reward item immediately.
 - The Colorless Void Trading Quest is broken up into separate locations for purposes of Archipelago hints, depending on your settings. For separate items, you can hint_location each NPC (eg, "Leer Trade") or check the end of the quest (either "Ulni Trade" or "Complete Trading Quest").
+
+## Build Instructions
+
+1. Install BepInEx as above (steps 1-3 of installation instructions).
+2. Make a copy of the file `ProdigalArchipelago.csproj.template` and name it `ProdigalArchipelago.csproj`.
+3. Replace the text `PATH_TO_PRODIGAL_DIRECTORY` in this file with the path to the directory containing the Prodigal executable.
+4. Run `dotnet build`.

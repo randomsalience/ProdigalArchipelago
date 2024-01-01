@@ -1,5 +1,5 @@
 .vscode
 ProdigalArchipelago/bin
-ProdigalArchipelago/lib
 ProdigalArchipelago/obj
 ProdigalArchipelago/.editorconfig
+ProdigalArchipelago/ProdigalArchipelago.csproj

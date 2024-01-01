@@ -4,11 +4,12 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <AssemblyName>ProdigalArchipelago</AssemblyName>
     <Description>Archipelago mod for Prodigal</Description>
-    <Version>0.1.0</Version>
+    <Version>0.1.5</Version>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>preview</LangVersion>
-    <ProdigalRefs>D:/SteamLibrary/steamapps/common/Prodigal/Prodigal_Data/Managed</ProdigalRefs>
-    <BepinPlugins>D:/SteamLibrary/steamapps/common/Prodigal/BepInEx/plugins</BepinPlugins>
+    <ProdigalRoot>PATH_TO_PRODIGAL_DIRECTORY</ProdigalRoot>
+    <ProdigalRefs>$(ProdigalRoot)/Prodigal_Data/Managed</ProdigalRefs>
+    <BepinPlugins>$(ProdigalRoot)/BepInEx/plugins</BepinPlugins>
   </PropertyGroup>
 
   <ItemGroup>

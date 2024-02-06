@@ -64,6 +64,7 @@ class GameMaster_Awake_Patch
         StatsScreen.Create();
         MapTracker.Create();
         CastleSailor.Create();
+        ArchipelagoConsole.Create();
     }
 }
 

@@ -10,6 +10,7 @@ using HarmonyLib;
 using Archipelago.MultiClient.Net;
 using Archipelago.MultiClient.Net.Enums;
 using Archipelago.MultiClient.Net.Packets;
+using Archipelago.MultiClient.Net.MessageLog.Messages;
 
 namespace ProdigalArchipelago;
 
@@ -22,6 +23,8 @@ public class Archipelago : MonoBehaviour
     public const int CAROLINE_ID = 5;
     public const int TESS_ID = 48;
     public const int ARMADEL_ID = 57;
+
+    private const int MESSAGE_LOG_SIZE = 20;
 
     private static readonly int[] LOCS_BASE = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20,
         21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48,
@@ -62,6 +65,7 @@ public class Archipelago : MonoBehaviour
     public ArchipelagoSettings Settings;
     public ArchipelagoSession Session;
     public Dictionary<string, object> SlotData;
+    public List<LogMessage> MessageLog = [];
     private System.Random Random;
     private readonly SortedDictionary<int, ArchipelagoItem> LocationTable = [];
     public int[] SecretShopPrices = new int[3];
@@ -182,6 +186,7 @@ public class Archipelago : MonoBehaviour
         // Connection successful
         Session.Socket.SocketClosed += OnSocketClosed;
         Session.Locations.CheckedLocationsUpdated += OnCheckedLocationsUpdated;
+        Session.MessageLog.OnMessageReceived += OnMessageReceived;
         Connected = true;
         Error = "";
         Data.Connection = cdata;
@@ -239,6 +244,24 @@ public class Archipelago : MonoBehaviour
         }
     }
 
+    private void OnMessageReceived(LogMessage message)
+    {
+        MessageLog.Add(message);
+        if (MessageLog.Count >= MESSAGE_LOG_SIZE)
+        {
+            MessageLog.RemoveAt(0);
+        }
+    }
+
+    public void SendMessageToServer(string message)
+    {
+        SayPacket packet = new()
+        {
+            Text = message
+        };
+        Session.Socket.SendPacketAsync(packet);
+    }
+
     public static bool NormalGameState()
     {
         return GameMaster.GM.GS == GameMaster.GameState.IN_GAME &&
@@ -264,6 +287,7 @@ public class Archipelago : MonoBehaviour
         GameMaster.GM.Save.Data.OverworldState.Add(9); // Skip Revulan dock scene
         GameMaster.GM.Save.Data.Relationships[CAROLINE_ID].Stage = SaveSystem.NPCData.Stages.STAGE0;
         GameMaster.GM.Save.Data.Quests[22] = SaveSystem.Quest.QUESTCOMPLETE; // Skip statue activation text
+        GameMaster.GM.Save.Data.OverworldState.Add(8); // Skip Colorless Void intro scene
 
         if (Settings.SkipOneSmallFavor)
         {

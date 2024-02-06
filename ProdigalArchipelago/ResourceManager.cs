@@ -14,6 +14,7 @@ public static class ResourceManager
     public static Sprite ArchipelagoSprite;
     public static Sprite ArrowSprite;
     public static Sprite ConnectionSetupBGSprite;
+    public static Sprite ConsoleBGSprite;
     public static Sprite ErrorSprite;
     public static Sprite GameChoiceBGSprite;
     public static Sprite KeyScreenBGSprite;
@@ -37,6 +38,7 @@ public static class ResourceManager
         ArchipelagoSprite = LoadSprite("Archipelago.png");
         ArrowSprite = LoadSprite("Arrow.png");
         ConnectionSetupBGSprite = LoadSprite("ConnectionSetupBG.png");
+        ConsoleBGSprite = LoadSprite("ConsoleBG.png");
         ErrorSprite = LoadSprite("Error.png");
         GameChoiceBGSprite = LoadSprite("GameChoiceBG.png");
         KeyScreenBGSprite = LoadSprite("KeyScreenBG.png");

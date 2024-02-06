@@ -753,10 +753,11 @@ class SpecialInteract_InteractWith_Patch
 [HarmonyPatch("AcquTime")]
 class SpecialInteract_AcquTime_Patch
 {
-    static bool Prefix(ref IEnumerator __result)
+    static bool Prefix(List<GameMaster.Speech> ___Chatter, ref IEnumerator __result)
     {
         if (Archipelago.Enabled)
         {
+            ___Chatter.Clear();
             __result = AcquTime();
             return false;
         }
@@ -765,15 +766,14 @@ class SpecialInteract_AcquTime_Patch
 
     static IEnumerator AcquTime()
     {
-        yield return new WaitForSeconds(0.25f);
         GameMaster.GM.CUTSCENE(true);
+        yield return new WaitForSeconds(0.25f);
         while (GameMaster.GM.UI.SPEAKING())
         {
             yield return null;
         }
         GameMaster.GM.PC.Anim.SetBool("ITEM", false);
-        yield return new WaitForSeconds(0.5f);
-        GameMaster.GM.DGTPOUT();
+        GameMaster.GM.CUTSCENE(false);
     }
 }
 
@@ -908,25 +908,31 @@ class CombatChallenge_ArenaWin_Enumerator_Patch
 }
 
 // Remove cutscene and add item after defeating Yhote
-[HarmonyPatch(typeof(Amadeus))]
-[HarmonyPatch(nameof(Amadeus.FireBjerg))]
-class Amadeus_FireBjerg_Patch
+[HarmonyPatch(typeof(Yhote))]
+[HarmonyPatch("DeathTimer")]
+class Yhote_DeathTimer_Patch
 {
-    static bool Prefix(Amadeus __instance)
+    static bool Prefix(Yhote __instance, ref IEnumerator __result)
     {
-        if (Archipelago.Enabled)
+        if (Archipelago.Enabled && __instance.BOSS_LOC == Yhote.BOSS_TYPE.BASE)
         {
-            __instance.StartCoroutine(PostBjergScene());
+            __result = DeathScene(__instance);
             return false;
         }
         return true;
     }
 
-    static IEnumerator PostBjergScene()
+    static IEnumerator DeathScene(Yhote __instance)
     {
-        GameMaster.GM.PC.CUTSCENE(true);
-        GameMaster.GM.CutsceneFade(false, 1);
-        yield return new WaitForSeconds(1);
+        GameObject blastBase = Resources.Load<GameObject>("Prefabs/Effects/BlastChain");
+        GameObject blast = UnityEngine.Object.Instantiate(blastBase, __instance.transform.position, __instance.transform.rotation);
+        blast.GetComponent<ExplosionLoop>().Begin(new Vector2(48, 48));
+        GameMaster.GM.BGM.Pause();
+        yield return new WaitForSeconds(5);
+        var spriteRen = (SpriteRenderer)AccessTools.Field(typeof(Yhote), "SpriteRen").GetValue(__instance);
+        spriteRen.color = Color.clear;
+        UnityEngine.Object.Destroy(blast);
+        GameMaster.GM.Save.Data.Bosses.Add(7);
         Archipelago.AP.CollectItem(233);
         while (GameMaster.GM.UI.SPEAKING())
         {
@@ -1154,45 +1160,38 @@ class Interactable_Reply_Patch
 
 // Change Color Correction
 [HarmonyPatch(typeof(GameMaster))]
-[HarmonyPatch("TrialComplete")]
-[HarmonyPatch(MethodType.Enumerator)]
-class GameMaster_TrialComplete_Patch
+[HarmonyPatch(nameof(GameMaster.TrialEnding))]
+class GameMaster_TrialEnding_Patch
 {
-    static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator il)
-    {
-        Label label_not_archipelago = il.DefineLabel();
-        bool attach_label = false;
-
-        foreach (var code in instructions)
-        {
-            if (attach_label)
-            {
-                code.labels.Add(label_not_archipelago);
-                attach_label = false;
-            }
-
-            yield return code;
-
-            if (code.opcode == OpCodes.Callvirt && (MethodInfo)code.operand == AccessTools.Method(typeof(Animator), nameof(Animator.ResetTrigger), [typeof(string)]))
-            {
-                yield return new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(Archipelago), nameof(Archipelago.Enabled)));
-                yield return new CodeInstruction(OpCodes.Brfalse, label_not_archipelago);
-                yield return new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(Archipelago), nameof(Archipelago.AP)));
-                yield return new CodeInstruction(OpCodes.Ldc_I4, 236);
-                yield return new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(Archipelago), nameof(Archipelago.CollectItem)));
-                yield return new CodeInstruction(OpCodes.Pop);
-                attach_label = true;
-            }
-        }
-    }
-
-    static void Postfix()
+    static bool Prefix(GameMaster __instance)
     {
         if (Archipelago.Enabled)
         {
-            GameMaster.GM.Save.Data.Recolored = false;
-            Archipelago.AP.ColorCheck();
+            GameMaster.GM.PC.CUTSCENE(true);
+            __instance.StartCoroutine(TrialComplete());
+            return false;
         }
+        return true;
+    }
+
+    static IEnumerator TrialComplete()
+    {
+        GameMaster.GM.Save.Data.Quests[7] = SaveSystem.Quest.STAGE3;
+        GameMaster.GM.Save.Data.Quests[8] = SaveSystem.Quest.STAGE3;
+        GameMaster.GM.Save.Data.Quests[6] = SaveSystem.Quest.STAGE10;
+        GameMaster.GM.CutsceneFade(true, 1);
+        yield return new WaitForSeconds(1);
+        GameMaster.GM.PC.transform.position = new Vector3(1192, -624, 0);
+        GameMaster.GM.PC.AnimDirection(MotherBrain.Direction.Up);
+        GameMaster.GM.PC.ForceLoadCheck();
+        GameMaster.GM.CutsceneFade(false, 1);
+        yield return new WaitForSeconds(2);
+        Archipelago.AP.CollectItem(236);
+        while (GameMaster.GM.UI.SPEAKING())
+        {
+            yield return null;
+        }
+        GameMaster.GM.CUTSCENE(false);
     }
 }
 

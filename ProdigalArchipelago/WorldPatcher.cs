@@ -346,45 +346,46 @@ class COLOR_CONTROL_COLOR_CORRECT_Patch
 }
 
 // Remove the Bolivar reveal scene when opening the Castle Vann gate
-[HarmonyPatch(typeof(Lock))]
-[HarmonyPatch(nameof(Lock.Unlock))]
-class Lock_Unlock_Patch
+[HarmonyPatch(typeof(Bolivar))]
+[HarmonyPatch(nameof(Bolivar.RevealEvent))]
+class Bolivar_RevealEvent_Patch
 {
-    static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions, ILGenerator il)
+    static bool Prefix(Bolivar __instance)
     {
-        int count = 0;
-        int skip = 0;
-        bool patched = false;
-
-        var label_ap_enabled = il.DefineLabel();
-
-        foreach (var code in instructions)
+        if (Archipelago.Enabled)
         {
-            if (count == 2 && !patched)
-            {
-                patched = true;
-                yield return new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(Archipelago), nameof(Archipelago.Enabled)))
-                {
-                    labels = new List<Label>(code.labels)
-                };
-                yield return new CodeInstruction(OpCodes.Brtrue, label_ap_enabled);
-                code.labels.Clear();
-                skip = 15;
-            }
-            if (code.opcode == OpCodes.Ret)
-            {
-                count++;
-            }
-            if (skip > 0)
-            {
-                skip--;
-                if (skip == 0)
-                {
-                    code.labels.Add(label_ap_enabled);
-                }
-            }
-            yield return code;
+            GameMaster.GM.Save.Data.OverworldState.Add(7);
+            __instance.StartCoroutine(CastleEntry());
+            return false;
         }
+        return true;
+    }
+
+    static IEnumerator CastleEntry()
+    {
+        MotherBrain.MB.DespawnAllNPCS();
+        GameMaster.GM.CUTSCENE(true);
+        yield return new WaitForSeconds(2);
+        GameMaster.GM.PC.AnimDirection(MotherBrain.Direction.Left);
+        GameMaster.GM.PC.WalkTo(new Vector3(520, -352, 0), 1, 1);
+        while (!GameMaster.GM.PC.MovementDone)
+        {
+            yield return null;
+        }
+        GameMaster.GM.PC.AnimDirection(MotherBrain.Direction.Up);
+        GameMaster.GM.PC.WalkTo(new Vector3(520, -248, 0), 1, 1);
+        while (!GameMaster.GM.PC.MovementDone)
+        {
+            yield return null;
+        }
+        GameMaster.GM.CutsceneZoneLoad(10, new Vector2(472, -1048));
+        yield return new WaitForSeconds(2);
+        GameMaster.GM.PC.WalkTo(new Vector3(472, -904, 0), 1, 1);
+        while (!GameMaster.GM.PC.MovementDone)
+        {
+            yield return null;
+        }
+        GameMaster.GM.CUTSCENE(false);
     }
 }
 
@@ -401,6 +402,38 @@ class Amadeus_SpawnCheck_Patch
             return false;
         }
         return true;
+    }
+}
+
+// Remove entering lighthouse cutscene
+[HarmonyPatch(typeof(Bolivar))]
+[HarmonyPatch(nameof(Bolivar.Lighthouse))]
+class Bolivar_LighthouseEntry_Patch
+{
+    static bool Prefix(Bolivar __instance)
+    {
+        if (Archipelago.Enabled)
+        {
+            __instance.StartCoroutine(LighthouseEntry());
+            return false;
+        }
+        return true;
+    }
+
+    static IEnumerator LighthouseEntry()
+    {
+        GameMaster.GM.Save.Data.OverworldState.Add(22);
+        GameMaster.GM.CUTSCENE(true);
+        yield return new WaitForSeconds(1);
+        GameMaster.GM.CutsceneZoneLoad(11, new Vector2(72, -1120));
+        yield return new WaitForSeconds(2);
+        GameMaster.GM.PC.WalkTo(new Vector3(72, -1064, 0), 1, 0);
+        while (!GameMaster.GM.PC.MovementDone)
+        {
+            yield return null;
+        }
+        MotherBrain.MB.DespawnAllNPCS();
+        GameMaster.GM.CUTSCENE(false);
     }
 }
 

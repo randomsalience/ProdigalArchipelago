@@ -1206,3 +1206,26 @@ class ShadowOranHM_DeathScene_Enumerator_Patch
         return GenericItemPatcher.Transpiler(instructions, il, 244);
     }
 }
+
+// Add item on Hero's Soul
+[HarmonyPatch(typeof(SpecialInteract))]
+[HarmonyPatch("GetSoul")]
+class SpecialInteract_GetSoul_Patch
+{
+    static IEnumerator Postfix(IEnumerator __result)
+    {
+        while (__result.MoveNext())
+        {
+            yield return __result.Current;
+        }
+
+        GameMaster.GM.CUTSCENE(true);
+        Archipelago.AP.CollectItem(249);
+        while (GameMaster.GM.UI.SPEAKING())
+        {
+            yield return null;
+        }
+        GameMaster.GM.PC.Anim.SetBool("ITEM", false);
+        GameMaster.GM.CUTSCENE(false);
+    }
+}

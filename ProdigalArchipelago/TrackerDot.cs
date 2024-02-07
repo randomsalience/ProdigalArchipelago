@@ -58,23 +58,43 @@ class TrackerDot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         bool all = true;
         bool inLogic = false;
         bool outOfLogic = false;
+        bool hinted = false;
 
         foreach (var location in Locations)
         {
             if (!Archipelago.AP.IsLocationRandomized(location.ID) || GameMaster.GM.Save.Data.Chests.Contains(location.ID))
+            {
                 continue;
+            }
+
+            bool reachable = false;
             sprite.enabled = true;
 
             if (Logic() && location.Logic())
+            {
                 inLogic = true;
+                reachable = true;
+            }
             else
+            {
                 all = false;
+            }
             
             if (Logic() && location.KeyLogic is not null && location.KeyLogic())
+            {
                 outOfLogic = true;
+                reachable = true;
+            }
+
+            if (reachable && Archipelago.AP.HintedLocations.Contains(location.ID))
+            {
+                hinted = true;
+            }
         }
 
-        if (all)
+        if (hinted)
+            sprite.color = new Color(0.17f, 1.00f, 1.00f);
+        else if (all)
             sprite.color = new Color(0.35f, 0.90f, 0.22f);
         else if (inLogic)
             sprite.color = new Color(0.98f, 0.95f, 0.21f);

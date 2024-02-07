@@ -16,6 +16,9 @@ class TrackerLocation(string name, int id, Func<bool> logic, Func<bool> keyLogic
 
     public string GetText(bool regionInLogic)
     {
+        if (regionInLogic && Archipelago.AP.HintedLocations.Contains(ID) && (Logic() || (KeyLogic is not null && KeyLogic())))
+            return $"<color=#2BFFFF>{Name}</color>";
+
         if (regionInLogic && Logic())
             return Name;
         

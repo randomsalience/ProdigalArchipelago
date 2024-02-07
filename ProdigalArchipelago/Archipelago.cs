@@ -9,6 +9,7 @@ using UnityEngine.SceneManagement;
 using HarmonyLib;
 using Archipelago.MultiClient.Net;
 using Archipelago.MultiClient.Net.Enums;
+using Archipelago.MultiClient.Net.Models;
 using Archipelago.MultiClient.Net.Packets;
 using Archipelago.MultiClient.Net.MessageLog.Messages;
 
@@ -17,7 +18,7 @@ namespace ProdigalArchipelago;
 public class Archipelago : MonoBehaviour
 {
     public const string GAME_NAME = "Prodigal";
-    public const string VERSION = "0.4.2";
+    public const string VERSION = "0.4.4";
     public const long ID_BASE = 77634425000;
 
     public const int CAROLINE_ID = 5;
@@ -71,6 +72,7 @@ public class Archipelago : MonoBehaviour
     public int[] SecretShopPrices = new int[3];
     private int CheatItemsReceived;
     public bool IsBjergCastle;
+    public List<int> HintedLocations = [];
 
     [Serializable]
     public class SaveData
@@ -184,13 +186,16 @@ public class Archipelago : MonoBehaviour
         }
 
         // Connection successful
-        Session.Socket.SocketClosed += OnSocketClosed;
-        Session.Locations.CheckedLocationsUpdated += OnCheckedLocationsUpdated;
-        Session.MessageLog.OnMessageReceived += OnMessageReceived;
         Connected = true;
         Error = "";
         Data.Connection = cdata;
         CheatItemsReceived = 0;
+        MessageLog.Clear();
+        HintedLocations.Clear();
+        Session.Socket.SocketClosed += OnSocketClosed;
+        Session.Locations.CheckedLocationsUpdated += OnCheckedLocationsUpdated;
+        Session.MessageLog.OnMessageReceived += OnMessageReceived;
+        Session.DataStorage.TrackHints(OnHintsUpdated);
         TrapControl.Activate();
         Randomize();
         GameMaster.GM.Save.Save();
@@ -247,7 +252,7 @@ public class Archipelago : MonoBehaviour
     private void OnMessageReceived(LogMessage message)
     {
         MessageLog.Add(message);
-        if (MessageLog.Count >= MESSAGE_LOG_SIZE)
+        if (MessageLog.Count > MESSAGE_LOG_SIZE)
         {
             MessageLog.RemoveAt(0);
         }
@@ -260,6 +265,21 @@ public class Archipelago : MonoBehaviour
             Text = message
         };
         Session.Socket.SendPacketAsync(packet);
+    }
+
+    private void OnHintsUpdated(Hint[] hints)
+    {
+        foreach (var hint in hints)
+        {
+            if (hint.FindingPlayer == SlotID)
+            {
+                int location = (int)(hint.LocationId - ID_BASE);
+                if (!HintedLocations.Contains(location))
+                {
+                    HintedLocations.Add(location);
+                }
+            }
+        }
     }
 
     public static bool NormalGameState()

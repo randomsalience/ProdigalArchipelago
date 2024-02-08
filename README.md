@@ -18,9 +18,7 @@ This is a mod for the game [Prodigal](https://store.steampowered.com/app/1393820
 2. Start a new game of Prodigal, and select Archipelago.
 3. Enter the server address, port number, slot name, and optionally password, then select Start.
 
-This mod includes a built-in map tracker. However, there is currently no built-in way to run Archipelago CLI commands (such as !hint) or view previously delivered or received items in this mod.
-
-To run Archipelago CLI commands or view items delivered/received in real time, connect a Text Client installed from [Archipelago's Github releases page](https://github.com/ArchipelagoMW/Archipelago/releases/) with the same server information that you provide to the game.
+Pressing F1 in the game opens the Archipelago console. Here you can view a list of recently sent items, and use server commands such as !hint. Alternatively, you can use the Text Client installed from [Archipelago's Github releases page](https://github.com/ArchipelagoMW/Archipelago/releases/) with the same server information that you provide to the game.
 
 ## Gameplay Tips
 
@@ -30,7 +28,7 @@ This section describes changes which have been made to the randomizer, as well a
 - If "Specific Keys" is turned on, keys are specific to each dungeon. If this option is on, two new pages are added to the inventory menu. For each dungeon, these pages have three columns showing the number of keys you currently have, the number of keys you have obtained, and the total number of keys for the dungeon.
 - Buying ice keys from Zaegul is in logic if you have the Harmonica, access to the secret shop in the Tidal Mines, and a means of making money. If "Specific Keys" is turned off, buying normal keys from Zaegul is also in logic.
 - A warp to town button has been added to the menu. Besides being convenient, this allows you to obtain checks that would otherwise softlock you.
-- The map in the menu now includes a tracker. Locations are green if all items can be obtained, yellow if some can be obtained, or red if none can be obtained. Orange means that items can be obtained out of logic by spending keys. Hover over a location with the mouse to see a list of all checks at that location.
+- The map in the menu now includes a tracker. Locations are green if all items can be obtained, yellow if some can be obtained, or red if none can be obtained. Orange means that items can be obtained out of logic by spending keys. Cyan means that an item has been hinted at that location and is reachable. Hover over a location with the mouse to see a list of all checks at that location.
 - Altars and curses may be activated through Archipelago options. These mostly act like vanilla, with some exceptions: Defiling Zolei's altar makes drops rarer, but still existent; defiling Hate's altar does not enable permadeath; and accepting the Curse of Horns does not disable all gold, it only removes gold and other junk from the item pool (and replaces them with traps).
 - Accepting curses does not start you with the Winged Boots, but an option to start with the boots is available.
 - Traps may be enabled, either through their own option, which replaces a few added junk items, or through the Curse of Horns, which replaces all junk items. Beware, traps look like normal items until you pick them up! See the settings page or template YAML for a description of the trap types.

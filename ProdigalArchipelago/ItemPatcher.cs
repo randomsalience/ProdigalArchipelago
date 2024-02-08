@@ -580,7 +580,7 @@ class SpecialInteract_CarolineRescue_Patch
 [HarmonyPatch(nameof(SpecialInteract.InteractWith))]
 class SpecialInteract_InteractWith_Patch
 {
-    static bool Prefix(SpecialInteract __instance, List<GameMaster.Speech> ___Chatter)
+    static bool Prefix(SpecialInteract __instance, List<GameMaster.Speech> ___Chatter, Animator ___ANIM)
     {
         if (Archipelago.Enabled && __instance.INTERACTABLE == SpecialInteract.INT.SKIP_BOOK)
         {
@@ -645,6 +645,28 @@ class SpecialInteract_InteractWith_Patch
         {
             if (!Item.IronPick.Acquired())
                 return false;
+        }
+
+        if (Archipelago.Enabled && __instance.INTERACTABLE == SpecialInteract.INT.WATERPILLARDG)
+        {
+            if (!GameMaster.GM.Save.Data.Chests.Contains(230))
+            {
+                ___ANIM.SetBool("ACTIVE", false);
+                Archipelago.AP.CollectItem(230);
+                __instance.StartCoroutine(AcquTime());
+                return false;
+            }
+        }
+
+        if (Archipelago.Enabled && __instance.INTERACTABLE == SpecialInteract.INT.EARTHPILLARDG)
+        {
+            if (!GameMaster.GM.Save.Data.Chests.Contains(235))
+            {
+                ___ANIM.SetBool("ACTIVE", false);
+                Archipelago.AP.CollectItem(235);
+                __instance.StartCoroutine(AcquTime());
+                return false;
+            }
         }
 
         return true;
@@ -747,33 +769,15 @@ class SpecialInteract_InteractWith_Patch
         }
         return GameMaster.GM.Save.Data.BSlot == PlayerCharacter.Item.RustKnuckle2;
     }
-}
-
-[HarmonyPatch(typeof(SpecialInteract))]
-[HarmonyPatch("AcquTime")]
-class SpecialInteract_AcquTime_Patch
-{
-    static bool Prefix(List<GameMaster.Speech> ___Chatter, ref IEnumerator __result)
-    {
-        if (Archipelago.Enabled)
-        {
-            ___Chatter.Clear();
-            __result = AcquTime();
-            return false;
-        }
-        return true;
-    }
 
     static IEnumerator AcquTime()
     {
-        GameMaster.GM.CUTSCENE(true);
         yield return new WaitForSeconds(0.25f);
         while (GameMaster.GM.UI.SPEAKING())
         {
             yield return null;
         }
         GameMaster.GM.PC.Anim.SetBool("ITEM", false);
-        GameMaster.GM.CUTSCENE(false);
     }
 }
 

@@ -366,25 +366,6 @@ class Bolivar_RevealEvent_Patch
         MotherBrain.MB.DespawnAllNPCS();
         GameMaster.GM.CUTSCENE(true);
         yield return new WaitForSeconds(2);
-        GameMaster.GM.PC.AnimDirection(MotherBrain.Direction.Left);
-        GameMaster.GM.PC.WalkTo(new Vector3(520, -352, 0), 1, 1);
-        while (!GameMaster.GM.PC.MovementDone)
-        {
-            yield return null;
-        }
-        GameMaster.GM.PC.AnimDirection(MotherBrain.Direction.Up);
-        GameMaster.GM.PC.WalkTo(new Vector3(520, -248, 0), 1, 1);
-        while (!GameMaster.GM.PC.MovementDone)
-        {
-            yield return null;
-        }
-        GameMaster.GM.CutsceneZoneLoad(10, new Vector2(472, -1048));
-        yield return new WaitForSeconds(2);
-        GameMaster.GM.PC.WalkTo(new Vector3(472, -904, 0), 1, 1);
-        while (!GameMaster.GM.PC.MovementDone)
-        {
-            yield return null;
-        }
         GameMaster.GM.CUTSCENE(false);
     }
 }

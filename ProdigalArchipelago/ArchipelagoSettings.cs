@@ -34,6 +34,7 @@ public class ArchipelagoSettings(Dictionary<string, object> slotData)
     public bool ShuffleDaemonsDive = GetOrDefault(slotData, "shuffle_daemons_dive", 0) != 0;
     public bool ShuffleEnlightenment = GetOrDefault(slotData, "shuffle_enlightenment", 0) != 0;
     public bool ShuffleSecretShop = GetOrDefault(slotData, "shuffle_secret_shop", 0) != 0;
+    public bool ItemOnHerosSoul = GetOrDefault(slotData, "item_on_heros_soul", 0) != 0;
     public bool LongJumpsInLogic = GetOrDefault(slotData, "long_jumps_in_logic", 0) != 0; // for backward compatibility
     public bool SkipsInLogic = GetOrDefault(slotData, "skips_in_logic", 0) != 0;
     public bool StartWithSpicedHam = GetOrDefault(slotData, "start_with_spiced_ham", 0) != 0;

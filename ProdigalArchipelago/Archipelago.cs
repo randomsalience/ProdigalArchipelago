@@ -43,6 +43,7 @@ public class Archipelago : MonoBehaviour
     private static readonly int[] LOCS_DIVE = [98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 124, 244];
     private static readonly int[] LOCS_ENLIGHTENMENT = [64, 74, 75, 77, 78, 79, 80, 90];
     public static readonly int[] LOCS_SECRET_SHOP = [245, 246, 247];
+    private const int LOC_HEROS_SOUL = 249;
 
     public static bool Enabled = false;
     public static bool Debug = false;
@@ -637,6 +638,8 @@ public class Archipelago : MonoBehaviour
             locations.AddRange(LOCS_ENLIGHTENMENT);
         if (Settings.ShuffleSecretShop)
             locations.AddRange(LOCS_SECRET_SHOP);
+        if (Settings.ItemOnHerosSoul)
+            locations.Add(LOC_HEROS_SOUL);
 
         LocationTable.Clear();
         foreach (int locationID in locations)

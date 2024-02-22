@@ -18,6 +18,8 @@ public class ArchipelagoConsole : MonoBehaviour
     private static InputAction ConsoleAction;
     private static GameMaster.GameState PreviousGameState;
     private static UI.UIState PreviousUIState;
+    private static float PreviousTimeScale;
+    private static int PreviousTimeMulti;
 
     private GameObject BG;
     private GameObject Canvas;
@@ -45,16 +47,15 @@ public class ArchipelagoConsole : MonoBehaviour
             Instance.SetActive(false);
             GameMaster.GM.GS = PreviousGameState;
             GameMaster.GM.UI.US = PreviousUIState;
-            if (PreviousGameState == GameMaster.GameState.IN_GAME)
-            {
-                Time.timeScale = 1.0f;
-                GameMaster.GM.TimeMulti = 1;
-            }
+            Time.timeScale = PreviousTimeScale;
+            GameMaster.GM.TimeMulti = PreviousTimeMulti;
         }
         else if (Archipelago.Enabled && Archipelago.AP.Session is not null)
         {
             PreviousGameState = GameMaster.GM.GS;
             PreviousUIState = GameMaster.GM.UI.US;
+            PreviousTimeScale = Time.timeScale;
+            PreviousTimeMulti = GameMaster.GM.TimeMulti;
             Instance.SetActive(true);
             GameMaster.GM.GS = GameMaster.GameState.UI;
             GameMaster.GM.UI.US = UI.UIState.LOCKED;

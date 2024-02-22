@@ -259,7 +259,7 @@ class ShopItem_AskAbout_Patch
     {
         int price = Archipelago.AP.SecretShopPrices[num];
         ArchipelagoItem item = Archipelago.AP.GetLocationItem(Archipelago.LOCS_SECRET_SHOP[num]);
-        chat.Add(GameMaster.CreateSpeech(23, 0, $"{item.Name} FOR {item.SlotName}.", "ZAEGUL", 10));
+        chat.Add(GameMaster.CreateSpeech(23, 0, $"{UIPatch.Sanitize(item.Name)} FOR {UIPatch.Sanitize(item.SlotName)}.", "ZAEGUL", 10));
         string description = item.Classification switch
         {
             ItemFlags.Advancement => $"IS VERY GOOD ITEM SO MUST SELL FOR {price}G. WILL YOU BUY?",
@@ -579,10 +579,8 @@ class Bolivar_PickReminder_Patch
     {
         if (Archipelago.Enabled)
         {
-            string pickHint = Archipelago.AP.PickHint();
-            pickHint = pickHint == "" ? "SOMEWHERE" : $"AT {pickHint}";
             ___Chatter.Add(GameMaster.CreateSpeech(11, 1, "DID YOU FIND A PICK YET?", "BOLIVAR", 3));
-            ___Chatter.Add(GameMaster.CreateSpeech(11, 0, $"THERE IS ONE, I AM SURE, {pickHint}.", "BOLIVAR", 3));
+            ___Chatter.Add(GameMaster.CreateSpeech(11, 0, $"THERE IS ONE, I AM SURE, {Archipelago.AP.PickHint()}.", "BOLIVAR", 3));
             GameMaster.GM.UI.InitiateChat(___Chatter, QuestionEnd: false);
             return false;
         }

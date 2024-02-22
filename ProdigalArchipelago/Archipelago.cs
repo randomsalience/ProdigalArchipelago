@@ -687,8 +687,8 @@ public class Archipelago : MonoBehaviour
             var player = (string)SlotData["pick_hint_player"];
             var location = (string)SlotData["pick_hint_location"];
             if (player == SlotName)
-                return $"AT @C{location.ToUpper()}@";
-            return $"AT @C{location.ToUpper()} IN {player.ToUpper()}'s WORLD@";
+                return $"AT @C{UIPatch.Sanitize(location)}@";
+            return $"AT @C{UIPatch.Sanitize(location)} IN {UIPatch.Sanitize(player)}'s WORLD@";
         }
         catch (Exception)
         {

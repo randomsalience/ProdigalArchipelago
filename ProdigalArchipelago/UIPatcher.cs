@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using HarmonyLib;
+using System.Text.RegularExpressions;
 
 namespace ProdigalArchipelago;
 
@@ -60,6 +61,14 @@ class UIPatch
     {
         WarpButton.SetActive(false);
         GameMaster.GM.UI.gameObject.transform.GetChild(2).GetChild(0).GetChild(2).gameObject.SetActive(true);
+    }
+
+    public static string Sanitize(string name)
+    {
+        name = name.ToUpper()
+            .Replace('[', '(')
+            .Replace(']', ')');
+        return Regex.Replace(name, @"[^A-Z0-9 ,!?.:;\-%'()/]", "?");
     }
 }
 

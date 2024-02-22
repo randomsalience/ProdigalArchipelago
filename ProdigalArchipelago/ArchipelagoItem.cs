@@ -17,7 +17,14 @@ public class ArchipelagoItem
     public ArchipelagoItem(NetworkItem item, bool received)
     {
         ID = item.Item;
-        Name = Archipelago.AP.Session.Items.GetItemName(ID);
+        try
+        {
+            Name = Archipelago.AP.Session.Items.GetItemName(ID);
+        }
+        catch
+        {
+            Name = "an item";
+        }
         SlotID = received ? Archipelago.AP.SlotID : item.Player;
         SlotName = Archipelago.AP.Session.Players.GetPlayerName(SlotID);
         Classification = item.Flags;
@@ -46,7 +53,7 @@ public class ArchipelagoItem
             _ => "F",
         };
 
-        return [GameMaster.CreateSpeech(46, 0, $"FOUND @{kind}{Name.ToUpper()}@*FOR {SlotName.ToUpper()}!", "", 0)];
+        return [GameMaster.CreateSpeech(46, 0, $"FOUND @{kind}{UIPatch.Sanitize(Name)}@*FOR {UIPatch.Sanitize(SlotName)}!", "", 0)];
     }
 
     public Sprite Sprite(bool disguiseTraps)

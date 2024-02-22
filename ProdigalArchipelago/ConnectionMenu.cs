@@ -248,6 +248,7 @@ public class ConnectionMenu : MonoBehaviour
         foreach (var field in textFields)
         {
             field.GetComponent<Text>().fontSize = ResourceManager.GetFontSize();
+            field.GetComponent<Text>().font = ResourceManager.GetFont();
         }
     }
 }

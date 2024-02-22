@@ -6,6 +6,8 @@ using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.UI;
 using UnityEngine.UI;
 using Archipelago.MultiClient.Net.MessageLog.Messages;
+using Archipelago.MultiClient.Net.MessageLog.Parts;
+using Models = Archipelago.MultiClient.Net.Models;
 
 namespace ProdigalArchipelago;
 
@@ -148,8 +150,53 @@ public class ArchipelagoConsole : MonoBehaviour
     private string MessageString(LogMessage message)
     {
         var parts = from part in message.Parts select
-            $"<color=#{part.Color.R:X2}{part.Color.G:X2}{part.Color.B:X2}>{part.Text}</color>";
+            $"<color=#{ReplacementColor(part.Color)}>{part.Text}</color>";
         return string.Join("", parts);
+    }
+
+    private string ReplacementColor(Models.Color color)
+    {
+        if (color == Models.Color.Black)
+        {
+            return "000000";
+        }
+        if (color == Models.Color.Red)
+        {
+            return "EE0000";
+        }
+        if (color == Models.Color.Green)
+        {
+            return "00FF7F";
+        }
+        if (color == Models.Color.Yellow)
+        {
+            return "FAFAD2";
+        }
+        if (color == Models.Color.Blue)
+        {
+            return "6495ED";
+        }
+        if (color == Models.Color.Magenta)
+        {
+            return "EE00EE";
+        }
+        if (color == Models.Color.Cyan)
+        {
+            return "00EEEE";
+        }
+        if (color == Models.Color.SlateBlue)
+        {
+            return "6D8BE8";
+        }
+        if (color == Models.Color.Plum)
+        {
+            return "AF99EF";
+        }
+        if (color == Models.Color.Salmon)
+        {
+            return "FA8072";
+        }
+        return "FFFFFF";
     }
 
     private void Submit(InputAction.CallbackContext _)

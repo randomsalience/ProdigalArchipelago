@@ -365,3 +365,18 @@ class GameMaster_CANNON_ENDING_Patch
         }
     }
 }
+
+// Font size change
+[HarmonyPatch(typeof(OPTIONS_BUTTON))]
+[HarmonyPatch(nameof(OPTIONS_BUTTON.Adjust))]
+class OPTIONS_BUTTON_Adjust_Patch
+{
+    static void Postfix(OPTIONS_BUTTON __instance)
+    {
+        if (__instance.SETTING == OPTIONS_BUTTON.OPTION.RESO)
+        {
+            ConnectionMenu.Instance.GetComponent<ConnectionMenu>().UpdateFontSize();
+            ArchipelagoConsole.Instance.GetComponent<ArchipelagoConsole>().UpdateFontSize();
+        }
+    }
+}

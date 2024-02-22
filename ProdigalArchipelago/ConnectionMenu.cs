@@ -241,4 +241,13 @@ public class ConnectionMenu : MonoBehaviour
     {
         return Frozen || Selected != 4;
     }
+
+    public void UpdateFontSize()
+    {
+        List<GameObject> textFields = [ServerEntry, PortEntry, SlotEntry, PasswordEntry, ErrorText];
+        foreach (var field in textFields)
+        {
+            field.GetComponent<Text>().fontSize = ResourceManager.GetFontSize();
+        }
+    }
 }

@@ -11,8 +11,9 @@ namespace ProdigalArchipelago;
 
 public class ArchipelagoConsole : MonoBehaviour
 {
+    public static GameObject Instance;
+    
     private static InputAction ConsoleAction;
-    private static GameObject Instance;
     private static GameMaster.GameState PreviousGameState;
     private static UI.UIState PreviousUIState;
 
@@ -157,5 +158,11 @@ public class ArchipelagoConsole : MonoBehaviour
         Archipelago.AP.SendMessageToServer(input.text);
         input.text = "";
         StartCoroutine(ActivateInput());
+    }
+
+    public void UpdateFontSize()
+    {
+        TextBox.GetComponent<Text>().fontSize = ResourceManager.GetFontSize();
+        InputBox.GetComponent<Text>().fontSize = ResourceManager.GetFontSize();
     }
 }

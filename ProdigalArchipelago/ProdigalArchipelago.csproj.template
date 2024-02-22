@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <AssemblyName>ProdigalArchipelago</AssemblyName>
     <Description>Archipelago mod for Prodigal</Description>
-    <Version>0.1.5</Version>
+    <Version>0.2.1</Version>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>preview</LangVersion>
     <ProdigalRoot>PATH_TO_PRODIGAL_DIRECTORY</ProdigalRoot>

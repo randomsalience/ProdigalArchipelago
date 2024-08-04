@@ -634,6 +634,21 @@ class Revulan_EventCheck_Patch
     }
 }
 
+[HarmonyPatch(typeof(Revulan))]
+[HarmonyPatch("BlessingCount")]
+class Revulan_BlessingCount_Patch
+{
+    static bool Prefix(ref bool __result)
+    {
+        if (Archipelago.Enabled)
+        {
+            __result = Archipelago.AP.BlessingCount() >= 2;
+            return false;
+        }
+        return true;
+    }
+}
+
 [HarmonyPatch(typeof(Butler))]
 [HarmonyPatch("ButlerEnding")]
 [HarmonyPatch(MethodType.Enumerator)]

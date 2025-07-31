@@ -18,7 +18,7 @@ namespace ProdigalArchipelago;
 public class Archipelago : MonoBehaviour
 {
     public const string GAME_NAME = "Prodigal";
-    public const string VERSION = "0.4.4";
+    public const string VERSION = "0.6.2";
     public const long ID_BASE = 77634425000;
 
     public const int CAROLINE_ID = 5;
@@ -149,7 +149,7 @@ public class Archipelago : MonoBehaviour
 
             // Scout unchecked locations
             var uncheckedLocationIDs = from locationID in LocationTable.Keys where !LocationChecked(locationID) select ID_BASE + locationID;
-            Task<LocationInfoPacket> locationInfoTask = Task.Run(async () => await Session.Locations.ScoutLocationsAsync(false, uncheckedLocationIDs.ToArray()));
+            var locationInfoTask = Task.Run(async () => await Session.Locations.ScoutLocationsAsync(false, uncheckedLocationIDs.ToArray()));
             yield return new WaitUntil(() => locationInfoTask.IsCompleted);
             if (locationInfoTask.IsFaulted)
             {
@@ -158,9 +158,9 @@ public class Archipelago : MonoBehaviour
             }
             
             var locationInfo = locationInfoTask.Result;
-            foreach (var item in locationInfo.Locations)
+            foreach (var item in locationInfo.Values)
             {
-                int locationID = (int)(item.Location - ID_BASE);
+                int locationID = (int)(item.LocationId - ID_BASE);
                 LocationTable[locationID] = new ArchipelagoItem(item, false);
             }
         }
@@ -233,18 +233,18 @@ public class Archipelago : MonoBehaviour
         if (Session is not null && Session.Items.Any() && NormalGameState())
         {
             var item = Session.Items.DequeueItem();
-            if (!Data.ReceivedItemLocations.Contains((item.Player, item.Location)) && item.Location != -1 && item.Location != -2)
+            if (!Data.ReceivedItemLocations.Contains((item.Player, item.LocationId)) && item.LocationId != -1 && item.LocationId != -2)
             {
-                Data.ReceivedItemLocations.Add((item.Player, item.Location));
+                Data.ReceivedItemLocations.Add((item.Player, item.LocationId));
                 StartCoroutine(ReceiveItem(new ArchipelagoItem(item, true)));
             }
-            else if (item.Location == -1 || item.Location == -2)
+            else if (item.LocationId == -1 || item.LocationId == -2)
             {
                 CheatItemsReceived++;
                 if (CheatItemsReceived > Data.CheatItemCount)
                 {
                     Data.CheatItemCount = CheatItemsReceived;
-                    StartCoroutine(ReceiveItem(new ArchipelagoItem(item, true), item.Location == -2));
+                    StartCoroutine(ReceiveItem(new ArchipelagoItem(item, true), item.LocationId == -2));
                 }
             }
         }

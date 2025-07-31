@@ -14,12 +14,12 @@ public class ArchipelagoItem
     public ItemFlags Classification;
     public Item TrapSpriteID;
 
-    public ArchipelagoItem(NetworkItem item, bool received)
+    public ArchipelagoItem(ItemInfo item, bool received)
     {
-        ID = item.Item;
+        ID = item.ItemId;
         try
         {
-            Name = Archipelago.AP.Session.Items.GetItemName(ID);
+            Name = Archipelago.AP.Session.Items.GetItemName(ID, item.ItemGame);
         }
         catch
         {

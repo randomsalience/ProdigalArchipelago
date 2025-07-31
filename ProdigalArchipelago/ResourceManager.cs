@@ -1,4 +1,6 @@
+using System;
 using System.IO;
+using System.Reflection;
 using UnityEngine;
 
 namespace ProdigalArchipelago;
@@ -27,7 +29,7 @@ public static class ResourceManager
 
     public static void Load()
     {
-        AssetBundle bundle = AssetBundle.LoadFromFile($"{Application.dataPath}/../BepInEx/plugins/Archipelago/res/font");
+        AssetBundle bundle = AssetBundle.LoadFromFile($"{GetPath()}/res/font");
         Font8 = bundle.LoadAsset<Font>("Atkinson-Hyperlegible-Regular-8.ttf");
         Font16 = bundle.LoadAsset<Font>("Atkinson-Hyperlegible-Regular-16.ttf");
         Font20 = bundle.LoadAsset<Font>("Atkinson-Hyperlegible-Regular-20.ttf");
@@ -60,7 +62,7 @@ public static class ResourceManager
     static Sprite LoadSprite(string filename)
     {
         var tex = new Texture2D(1, 1, TextureFormat.ARGB32, false);
-        tex.LoadImage(File.ReadAllBytes($"{Application.dataPath}/../BepInEx/plugins/Archipelago/res/{filename}"));
+        tex.LoadImage(File.ReadAllBytes($"{GetPath()}/res/{filename}"));
         tex.filterMode = FilterMode.Point;
         return Sprite.Create(tex, new Rect(0, 0, tex.width, tex.height), new Vector2(0.5f, 0.5f), 1);
     }
@@ -87,5 +89,10 @@ public static class ResourceManager
             4 => 40,
             _ => 8,
         };
+    }
+
+    static string GetPath() {
+        Uri uri = new(Assembly.GetExecutingAssembly().CodeBase);
+        return Path.GetDirectoryName(uri.LocalPath);
     }
 }

@@ -394,6 +394,21 @@ class Bolivar_SpawnCheck_Patch
     }
 }
 
+[HarmonyPatch(typeof(Bolivar))]
+[HarmonyPatch("QuestCompleteCheck")]
+class Bolivar_QuestCompleteCheck_Patch
+{
+    static bool Prefix(ref bool __result)
+    {
+        if (Archipelago.Enabled) {
+            __result = Item.DrownedOre.Acquired() && Item.Shaedrite.Acquired() && Item.MiasmicExtract.Acquired() && Item.BrokenSword.Acquired();
+            return false;
+        }
+
+        return true;
+    }
+}
+
 [HarmonyPatch(typeof(SkipperBoss))]
 [HarmonyPatch("DeathTimer")]
 [HarmonyPatch(MethodType.Enumerator)]

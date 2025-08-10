@@ -563,7 +563,14 @@ public class Archipelago : MonoBehaviour
         }
         else if (!skipDisplay)
         {
-            GameMaster.GM.BGM.PlayJingle(21);
+            if (item.Classification == (ItemFlags.Advancement | ItemFlags.NeverExclude))
+            {
+                GameMaster.GM.BGM.PlayJingle(20);
+            }
+            else
+            {
+                GameMaster.GM.BGM.PlayJingle(21);
+            }
             GameMaster.GM.UI.InitiateChat(item.Speech(), false);
         }
 

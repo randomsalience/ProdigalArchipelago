@@ -45,13 +45,23 @@ public class ArchipelagoItem
 
     public List<GameMaster.Speech> Speech()
     {
-        string kind = Classification switch
+        string kind = "F";
+        if ((Classification & ItemFlags.Advancement) == ItemFlags.Advancement)
         {
-            ItemFlags.Advancement => "P",
-            ItemFlags.NeverExclude => "U",
-            ItemFlags.Trap => "T",
-            _ => "F",
-        };
+            kind = "P";
+        }
+        else if ((Classification & ItemFlags.NeverExclude) == ItemFlags.NeverExclude)
+        {
+            kind = "U";
+        }
+        else if (Classification == ItemFlags.Trap)
+        {
+            kind = "T";
+        }
+        if (Classification == (ItemFlags.Advancement | ItemFlags.NeverExclude))
+        {
+            kind = "I";
+        }
 
         return [GameMaster.CreateSpeech(46, 0, $"FOUND @{kind}{UIPatch.Sanitize(Name)}@*FOR {UIPatch.Sanitize(SlotName)}!", "", 0)];
     }

@@ -229,6 +229,10 @@ class CHAT_BOX_APPLY_LETTER_Patch
         {
             switch (___KeysToPress[___Key_ID + 1])
             {
+                case 'I':
+                    ___Key_ID += 2;
+                    UIPatch.TextColorOverride = new Color32(232, 225, 23, 255);
+                    break;
                 case 'P':
                     ___Key_ID += 2;
                     UIPatch.TextColorOverride = new Color32(221, 160, 221, 255);

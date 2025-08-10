@@ -98,10 +98,14 @@ class SaveButton_Setup_Patch
                 yield return new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(File), nameof(File.Open), [typeof(string), typeof(FileMode)]));
                 yield return new CodeInstruction(OpCodes.Stloc_1);
                 yield return new CodeInstruction(OpCodes.Br, label_save_loaded);
-                yield return new CodeInstruction(OpCodes.Ldloc_1)
+                yield return new CodeInstruction(OpCodes.Ldloc, local_filename)
                 {
                     labels = [label_load_normal_save]
                 };
+                yield return new CodeInstruction(OpCodes.Ldc_I4_3);
+                yield return new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(File), nameof(File.Open), [typeof(string), typeof(FileMode)]));
+                yield return new CodeInstruction(OpCodes.Stloc_1);
+                yield return new CodeInstruction(OpCodes.Ldloc_1);
                 yield return new CodeInstruction(OpCodes.Callvirt, AccessTools.Method(typeof(BinaryFormatter), nameof(BinaryFormatter.Deserialize), [typeof(Stream)]));
                 yield return new CodeInstruction(OpCodes.Castclass, typeof(SaveSystem).Assembly.GetType("PlayerData"));
                 yield return new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(SaveSystem).Assembly.GetType("PlayerData"), "PlayerStats"));

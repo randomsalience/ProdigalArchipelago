@@ -67,7 +67,8 @@ class UIPatch
     {
         name = name.ToUpper()
             .Replace('[', '(')
-            .Replace(']', ')');
+            .Replace(']', ')')
+            .Replace('_', ' ');
         return Regex.Replace(name, @"[^A-Z0-9 ,!?.:;\-%'()/]", "?");
     }
 }

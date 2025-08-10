@@ -321,6 +321,7 @@ public class Archipelago : MonoBehaviour
         }
         if (Settings.StartWithWingedBoots)
         {
+            GameMaster.GM.Save.AddToInventory((int)Item.WingedBoots, false);
             GameMaster.GM.Save.Data.BootSlot = PlayerCharacter.Boots.Winged;
         }
 

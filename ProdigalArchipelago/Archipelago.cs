@@ -182,7 +182,6 @@ public class Archipelago : MonoBehaviour
             if (!GameMaster.GM.Save.Data.Chests.Contains(chestID))
             {
                 GameMaster.GM.Save.Data.Chests.Add(chestID);
-                Stats.ItemsCollected++;
             }
         }
 
@@ -622,7 +621,6 @@ public class Archipelago : MonoBehaviour
             if (!GameMaster.GM.Save.Data.Chests.Contains(chestID))
             {
                 GameMaster.GM.Save.Data.Chests.Add(chestID);
-                Stats.ItemsCollected++;
             }
         }
     }

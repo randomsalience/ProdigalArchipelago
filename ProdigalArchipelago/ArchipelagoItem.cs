@@ -63,7 +63,7 @@ public class ArchipelagoItem
             kind = "I";
         }
 
-        return [GameMaster.CreateSpeech(46, 0, $"FOUND @{kind}{UIPatch.Sanitize(Name)}@*FOR {UIPatch.Sanitize(SlotName)}!", "", 0)];
+        return [GameMaster.CreateSpeech(46, 0, $"FOUND @{kind}{UIPatch.Sanitize(Name)}@ FOR {UIPatch.Sanitize(SlotName)}!", "", 0)];
     }
 
     public Sprite Sprite(bool disguiseTraps)

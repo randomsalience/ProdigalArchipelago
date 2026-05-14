@@ -16,22 +16,22 @@ class ItemDatabase_BeginDatabase_Patch
     {
         GameMaster.GM.ItemData.Database.Add(new ItemDatabase.ItemData
         {
-            Name = "ARCHIPELAGO ITEM",
+            Name = "Archipelago Item",
             ItemSprite = ResourceManager.ArchipelagoSprite,
         });
         GameMaster.GM.ItemData.Database.Add(new ItemDatabase.ItemData
         {
-            Name = "PROGRESSIVE KNUCKLE",
+            Name = "Progressive Knuckle",
             ItemSprite = GameMaster.GM.ItemData.ItemSprites[5],
         });
         GameMaster.GM.ItemData.Database.Add(new ItemDatabase.ItemData
         {
-            Name = "PROGRESSIVE HAND",
+            Name = "Progressive Hand",
             ItemSprite = GameMaster.GM.ItemData.ItemSprites[6],
         });
         GameMaster.GM.ItemData.Database.Add(new ItemDatabase.ItemData
         {
-            Name = "PROGRESSIVE PICK",
+            Name = "Progressive Pick",
             ItemSprite = GameMaster.GM.ItemData.ItemSprites[9],
         });
         
@@ -39,63 +39,49 @@ class ItemDatabase_BeginDatabase_Patch
         {
             GameMaster.GM.ItemData.Database.Add(new ItemDatabase.ItemData
             {
-                Name = $"{key.Name} KEY",
-                TooltipText = $"A KEY FOR {key.AltName}.",
-                AboutText = [GameMaster.CreateSpeech(46, 0, $"A KEY FOR {key.AltName}!", "", 0)],
+                Name = $"{key.Name} Key",
+                TooltipText = $"A key for {key.AltName}.",
+                AboutText = [GameMaster.CreateSpeech(46, 0, $"A key for {key.AltName}!", "", 0)],
                 ItemSprite = Item.NormalKey.Data().ItemSprite,
             });
         }
 
-        NewTrapItem("SLOWNESS TRAP");
-        NewTrapItem("RUST TRAP");
-        NewTrapItem("CONFUSION TRAP");
-        NewTrapItem("DISARMING TRAP");
-        NewTrapItem("LIGHT TRAP");
-        NewTrapItem("GLITCH TRAP");
-        NewTrapItem("ZOMBIE TRAP");
-        NewTrapItem("SHADOW TRAP");
-        NewTrapItem("LOVE TRAP");
+        NewTrapItem("Slowness trap");
+        NewTrapItem("Rust trap");
+        NewTrapItem("Confusion trap");
+        NewTrapItem("Disarming trap");
+        NewTrapItem("Light trap");
+        NewTrapItem("Glitch trap");
+        NewTrapItem("Zombie trap");
+        NewTrapItem("Shadow trap");
+        NewTrapItem("Love trap");
 
-        ChangeItemAboutText(10, "BLESSED PICKAXE!*I BET THIS WILL DO SOME SERIOUS DAMAGE!");
-        ChangeItemAboutText(13, "CLEATED BOOTS!*I SHOULD TALK TO TESS ABOUT THESE.");
-        ChangeItemAboutText(14, "ANCHOR GREAVES!*I SHOULD SEE TESS ABOUT THESE.");
-        ChangeItemAboutText(15, "BOOTS OF GRAILE!*DAD...");
-        ChangeItemAboutText(16, "WINGED BOOTS!*I SHOULD ASK TESS ABOUT THESE.");
-        ChangeItemAboutText(23, "THAT IS A PIPIN' HOT CUP OF COFFEE.*IT SMELLS GREAT!");
-        ChangeItemAboutText(24, "A TATTERED CAPE?*...*POSSIBLY.");
-        ChangeItemAboutText(25, "IS THIS A BALL OF PLAIN YARN?*...*YEP.");
-        ChangeItemAboutText(26, "SLIME SOAP?*I PROBABLY SHOULDN'T THINK ABOUT IT...");
-        ChangeItemAboutText(27, "A SERPENT BRACELET!*THIS ACTUALLY LOOKS VALUABLE!");
-        ChangeItemAboutText(28, "the CARROT CAKE!*I AM TOLD IT DOESN'T GET BETTER THAN THIS.");
-        ChangeItemAboutText(29, "HUNTING BOW!*THE LOVE AND CARE IT RECIEVED IS APPARENT.");
-        ChangeItemAboutText(30, "DOWN PILLOW!*EXTRA LARGE SIZE.*WAIT WHERE ARE THE FEATHERS FROM?");
-        ChangeItemAboutText(31, "GIANT 'MONOCLE'!*HALF A PAIR OF SPECTACLES...*HOW USEFUL.");
-        ChangeItemAboutText(32, "FORBIDDEN COOKBOOK!*I AM BOTH CONCERNED AND CURIOUS.");
-        ChangeItemAboutText(33, "KELP ROLLS!*SLIMEY YET SATISFYING.");
-        ChangeItemAboutText(35, "THE KEY TO THE GATES OF @Ccastle vann@!*I CAN FINALLY SEE WHAT IS INSIDE!");
-        ChangeItemAboutText(36, "A RUSTY KEY!*I CAN NOW USE THE CRANE ON THE BEACH TO GET INTO THE @CTIDAL MINE@!");
-        ChangeItemAboutText(44, "SHATTERED SOUL!*WHAT A STRANGE COLOR...*I FEEL LIKE IT'S LOOKING AT ME.");
-        ChangeItemAboutText(52, "BASEMENT KEY!*WAIT...*IS THIS A BONE KEY?!");
-        ChangeItemAboutText(53, "SUNSET PAINTING!*WOW...*THE COLORS IN THIS ARE BEAUTIFUL. SHE PUT A LOT OF WORK INTO THIS.");
-        ChangeItemAboutText(63, "THE KEY TO THE CELLS!*WAIT...*HOW DID CAROLINE GET THIS?*WAIT WHERE DID SHE GO!?");
-        ChangeItemAboutText(64, "THERE IS A MAP IN HIS COAT POCKET.*THIS IS IT!*WITH THIS WE CAN FIND REVULAN'S BASE AND RESCUE HUGH.");
-        ChangeItemAboutText(65, "HARMONICA!*...*I WISH I PAID MORE ATTENTION WHEN DAD TAUGHT ME HOW TO PLAY IT.");
-        ChangeItemAboutText(68, "SCARF!*HEY...*WHERE'S THE COLOR?");
-        ChangeItemAboutText(71, "A HAIRPIN?");
-        ChangeItemAboutText(74, "FROZEN HEART!*...*WHAT EVEN IS THIS?");
-        ChangeItemAboutText(75, "SPLINTER!*...*IT ALMOST DOESN'T SEEM REAL.");
-        ChangeItemAboutText(76, "HEY IT ABSORBED*THE EYE!*ALL THAT FOR*NOTHING. . .");
-        ChangeItemAboutText(77, "FLARE KNUCKLE!*...*I CAN NOW CHARGE THE GAUNTLET WITH HEAT AND BURST FORWARD!");
-        ChangeItemAboutText(78, "WEAPON CHAIN!*MY CHARGE SWINGS NOW HAVE A GREATER RANGE!");
-        ChangeItemAboutText(79, "CLIMBING GEAR!*I CAN NOW SCALE CERTAIN WALLS.");
-        ChangeItemAboutText(84, "HEARTH RING!*IT MAKES ME FEEL SO WARM AND COZY.");
-        ChangeItemAboutText(85, "DAEMON'S RING!*THIS FEELS LIKE A TRICK.");
-        ChangeItemAboutText(87, "A DUSTY KEY!*THIS LOOKS ANCIENT.");
-        ChangeItemAboutText(89, "LIFE BLESSING!");
-        ChangeItemAboutText(90, "BLESSING OF LIGHT!*...*I GUESS THAT WASN'T A DREAM.");
-        ChangeItemAboutText(91, "STORM BLESSING!*I WONDER IF SHE WANTS THAT RING BACK...");
-        ChangeItemAboutText(92, "A BLESSING OF EARTH!*THIS FEELS PRIMORDIAL...*I WONDER WHAT IT IS FOR.");
-        ChangeItemAboutText(93, "A BLESSING OF WATER!*THIS FEELS PRIMORDIAL...*I WONDER WHAT IT IS FOR.");
+        ChangeItemAboutText(10, "Blessed Pickaxe!*I bet this will do some serious damage!");
+        ChangeItemAboutText(13, "Cleated Boots!*I should talk to Tess about these.");
+        ChangeItemAboutText(14, "Anchor Greaves!*I SHOULD SEE TESS ABOUT THESE.");
+        ChangeItemAboutText(15, "Boots of Graile!*Dad...");
+        ChangeItemAboutText(16, "Winged Boots!*I should ask Tess about these.");
+        ChangeItemAboutText(23, "That is a pipin' hot cup of coffee.*It smells great!");
+        ChangeItemAboutText(24, "A Tattered Cape?*...*Possibly.");
+        ChangeItemAboutText(25, "Is this a ball of plain yarn?*...*Yep.");
+        ChangeItemAboutText(26, "Slime Soap?*I probably shouldn't think about it...");
+        ChangeItemAboutText(27, "A Serpent Bracelet!*This actually looks valuable!");
+        ChangeItemAboutText(28, "The Carrot Cake!*I am told it doesn't get better than this.");
+        ChangeItemAboutText(29, "Hunting Bow!*The love and care it received is apparent.");
+        ChangeItemAboutText(30, "Down Pillow!*Extra large size.*Wait where are the feathers from?");
+        ChangeItemAboutText(31, "Giant 'monocle'!*Half a pair of spectacles...*how useful.");
+        ChangeItemAboutText(32, "Forbidden Cookbook!*I am both concerned and curious.");
+        ChangeItemAboutText(33, "Kelp Rolls!*Slimey yet satisfying.");
+        ChangeItemAboutText(35, "The key to the gates of @CCastle Vann@!*I can finally see what is inside!");
+        ChangeItemAboutText(36, "A Rusty Key!*I can now use the crane on the beach to get into the @CTidal Mine@!");
+        ChangeItemAboutText(52, "Basement Key!*Wait...*Is this a bone key?!");
+        ChangeItemAboutText(53, "Sunset Painting!*Wow...*The colors in this are beautiful. She put a lot of work into this.");
+        ChangeItemAboutText(63, "The key to the cells!*Wait...*How did Caroline get this?*Wait where did she go!?");
+        ChangeItemAboutText(64, "There is a map in his coat pocket.*This is it!*With this we can find Revulan's base and rescue Hugh.");
+        ChangeItemAboutText(65, "Harmonica!*...*I wish I had paid more attention when dad taught me how to play it.");
+        ChangeItemAboutText(68, "Scarf!*Hey...*Where's the color?");
+        ChangeItemAboutText(71, "A hairpin?");
+        ChangeItemAboutText(87, "A Dusty Key!*This looks ancient.");
     }
 
     private static void ChangeItemAboutText(int id, string text)
@@ -125,7 +111,7 @@ class Chest_PLUNDER_Patch
             // Replace normal key in Bjerg Castle with specific key
             if (__instance.ID == 54 && Archipelago.AP.Settings.SpecificKeys && !Archipelago.AP.Settings.ShuffleBjergCastle)
             {
-                ___L.ID = 118;
+                ___L.ID = 137;
             }
 
             __instance.Puzz?.PuzzleCompletion();
@@ -197,13 +183,13 @@ class Chest_Open_Patch
             ___Chatter.Clear();
             if (GameMaster.GM.Save.Data.Chests.Contains(109))
             {
-                ___Chatter.Add(GameMaster.CreateSpeech(46, 0, "THOSE SPIKES*REALLY HURT.*MANAGED TO PUNCH A*HOLE IN MY*GAUNTLET.*NOW IF I HOLD A*FIST TOO LONG IT*CUTS MY PALM.", "", 0));
+                ___Chatter.Add(GameMaster.CreateSpeech(46, 0, "Those spikes*really hurt.*Managed to punch a*hole in my*gauntlet.*Now if i hold a*fist too long it*cuts my palm.", "", 0));
                 GameMaster.GM.UI.InitiateChat(___Chatter, false);
             }
             else
             {
                 GameMaster.GM.UI.SLOT_INT(__instance.GetComponent<Interactable>());
-                ___Chatter.Add(GameMaster.CreateSpeech(46, 0, "THIS CHEST LOOKS*TRAPPED. . .*OPEN IT ANYWAY?", "", 0));
+                ___Chatter.Add(GameMaster.CreateSpeech(46, 0, "This chest looks*trapped. . .*Open it anyway?", "", 0));
                 GameMaster.GM.UI.InitiateChat(___Chatter, QuestionEnd: true);
             }
             return false;
@@ -585,7 +571,7 @@ class SpecialInteract_InteractWith_Patch
         if (Archipelago.Enabled && __instance.INTERACTABLE == SpecialInteract.INT.SKIP_BOOK)
         {
             ___Chatter.Clear();
-            ___Chatter.Add(GameMaster.CreateSpeech(46, 0, "NICE TRY.", "", 0));
+            ___Chatter.Add(GameMaster.CreateSpeech(46, 0, "Nice try.", "", 0));
             GameMaster.GM.UI.InitiateChat(___Chatter, false);
             return false;
         }
@@ -597,7 +583,7 @@ class SpecialInteract_InteractWith_Patch
             {
                 if (Item.HerosSoul.Acquired())
                 {
-                    ___Chatter.Add(GameMaster.CreateSpeech(46, 0, "THE HERO'S SOUL SLEPT HERE...*I WAS TOLD TO RETURN IT TO WHAT WAS HIS?*WHATEVER THAT MEANS.", "", 0));
+                    ___Chatter.Add(GameMaster.CreateSpeech(46, 0, "The hero's soul slept here...*I was told to return it to what was his?*Whatever that means.", "", 0));
 					    GameMaster.GM.UI.InitiateChat(___Chatter, false);
                 }
                 else
@@ -607,8 +593,8 @@ class SpecialInteract_InteractWith_Patch
             }
             else
             {
-                string godString = Archipelago.AP.Settings.BlessingsRequired == 1 ? "GOD" : "GODS";
-                ___Chatter.Add(GameMaster.CreateSpeech(46, 0, $"A STRANGE LIGHT SLUMBERS IN THE CRYSTAL.*IT FEELS KIND SOMEHOW.*WITH THE BLESSINGS OF {Archipelago.AP.Settings.BlessingsRequired} {godString},*I COULD AWAKEN IT.*I ONLY HAVE {Archipelago.AP.BlessingCount()}.", "", 0));
+                string godString = Archipelago.AP.Settings.BlessingsRequired == 1 ? "god" : "gods";
+                ___Chatter.Add(GameMaster.CreateSpeech(46, 0, $"A strange light slumbers in the crystal.*It feels kind somehow.*With the blessings of {Archipelago.AP.Settings.BlessingsRequired} {godString},*I could awaken it.*I only have {Archipelago.AP.BlessingCount()}.", "", 0));
 				    GameMaster.GM.UI.InitiateChat(___Chatter, false);
             }
             return false;
@@ -619,7 +605,7 @@ class SpecialInteract_InteractWith_Patch
             ___Chatter.Clear();
             if (GameMaster.GM.PC.transform.position.y < __instance.transform.position.y)
             {
-                ___Chatter.Add(GameMaster.CreateSpeech(46, 0, "IT'S EMPTY.*MAYBE HUGH BROKE OUT.*...*OR HE'S LOCKED UP SOMEWHERE ELSE.", "", 0));
+                ___Chatter.Add(GameMaster.CreateSpeech(46, 0, "It's empty.*Maybe Hugh broke out.*...*Or he's locked up somewhere else.", "", 0));
                 GameMaster.GM.UI.InitiateChat(___Chatter, false);
             }
             else if (!GameMaster.GM.Save.Data.Chests.Contains(225))
@@ -635,7 +621,7 @@ class SpecialInteract_InteractWith_Patch
             }
             else
             {
-                ___Chatter.Add(GameMaster.CreateSpeech(46, 0, "IT'S LOCKED.*WHY DIDN'T CAROLINE GIVE ME THE KEY?", "", 0));
+                ___Chatter.Add(GameMaster.CreateSpeech(46, 0, "It's locked.*Why didn't Caroline give me the key?", "", 0));
                 GameMaster.GM.UI.InitiateChat(___Chatter, false);
             }
             return false;
@@ -706,7 +692,7 @@ class SpecialInteract_InteractWith_Patch
             {
                 yield return new CodeInstruction(OpCodes.Ldc_I4, currentCase)
                 {
-                    labels = new(queue.Dequeue().labels)
+                    labels = [.. queue.Dequeue().labels]
                 };
                 yield return new CodeInstruction(OpCodes.Ldc_I4, currentItem);
                 yield return new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(SpecialInteract_InteractWith_Patch), nameof(AcquiredCheck)));
@@ -718,7 +704,7 @@ class SpecialInteract_InteractWith_Patch
                 yield return queue.Dequeue();
                 yield return new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(SpecialInteract_InteractWith_Patch), nameof(KnuckleCheck)))
                 {
-                    labels = new(queue.Dequeue().labels)
+                    labels = [.. queue.Dequeue().labels]
                 };
                 yield return new CodeInstruction(OpCodes.Brfalse, code.operand);
                 queue.Clear();
@@ -886,7 +872,7 @@ class CombatChallenge_ArenaWin_Enumerator_Patch
             {
                 yield return new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(Archipelago), nameof(Archipelago.Enabled)))
                 {
-                    labels = new(code.labels)
+                    labels = [.. code.labels]
                 };
                 yield return new CodeInstruction(OpCodes.Brfalse, label_not_ap);
                 yield return new CodeInstruction(OpCodes.Ldsfld, AccessTools.Field(typeof(Archipelago), nameof(Archipelago.AP)));

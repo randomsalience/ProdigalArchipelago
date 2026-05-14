@@ -16,7 +16,7 @@ public enum Button
     Trigger,
 }
 
-[BepInPlugin("com.randomsalience.prodigal.archipelago", "Archipelago", "0.2.3")]
+[BepInPlugin("com.randomsalience.prodigal.archipelago", "Archipelago", "0.2.4")]
 [BepInProcess("Prodigal.exe")]
 public class Plugin : BaseUnityPlugin
 {
@@ -45,6 +45,12 @@ public class Plugin : BaseUnityPlugin
             Archipelago.AP.Disconnect();
         }
         return true;
+    }
+
+    public static GameObject NewGameObject(String name) {
+        return new GameObject(name) {
+            layer = 5,
+        };
     }
 }
 

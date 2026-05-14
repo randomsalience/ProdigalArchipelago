@@ -2,12 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 namespace ProdigalArchipelago;
 
-class TrackerDot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
+class TrackerDot : MonoBehaviour
 {
     string Name;
     public List<TrackerLocation> Locations;
@@ -17,28 +16,28 @@ class TrackerDot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
 
     public static TrackerDot NewDot(string name, int x, int y, bool large, Func<bool> logic, List<TrackerLocation> locations)
     {
-        GameObject obj = new($"Dot{name}");
+        GameObject obj = Plugin.NewGameObject($"Dot{name}");
         obj.transform.SetParent(MapTracker.Instance.transform);
         obj.transform.localPosition = new Vector3(x, y, 0);
         var sprite = obj.AddComponent<SpriteRenderer>();
         sprite.sprite = large ? ResourceManager.TrackerDotLargeSprite : ResourceManager.TrackerDotSprite;
         sprite.sortingLayerName = "UI";
         sprite.sortingOrder = 10;
-        var collider = obj.AddComponent<BoxCollider2D>();
+        var collider = obj.AddComponent<BoxCollider>();
         collider.size = new Vector2(4, 4);
         var dot = obj.AddComponent<TrackerDot>();
         dot.Name = name;
         dot.Locations = locations;
         dot.Logic = logic;
 
-        dot.TextBox = new GameObject($"DotTextBox{name}");
+        dot.TextBox = Plugin.NewGameObject($"DotTextBox{name}");
         dot.TextBox.SetActive(false);
         dot.TextBox.transform.SetParent(MapTracker.Canvas.transform);
-        var bg = new GameObject($"DotTextBoxBg{name}");
+        var bg = Plugin.NewGameObject($"DotTextBoxBg{name}");
         bg.transform.SetParent(dot.TextBox.transform, false);
         var image = bg.AddComponent<Image>();
         image.color = new Color(0.31f, 0.50f, 0.64f);
-        var textObj = new GameObject($"DotTextBoxText{name}");
+        var textObj = Plugin.NewGameObject($"DotTextBoxText{name}");
         textObj.transform.SetParent(dot.TextBox.transform, false);
         var text = textObj.AddComponent<Text>();
         text.color = new Color(0.92f, 0.87f, 0.76f);
@@ -109,7 +108,7 @@ class TrackerDot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         TextBox.SetActive(false);
     }
 
-    public void OnPointerEnter(PointerEventData _)
+    public void OnHoverStart()
     {
         var lines = from location in Locations where location.IsUnchecked() select location.GetText(Logic());
         if (lines.Any())
@@ -118,13 +117,15 @@ class TrackerDot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
             text.text = $"<color=#E39D7F>{Name}</color>\n{string.Join('\n', lines)}";
             text.fontSize = ResourceManager.GetFontSize();
             text.font = ResourceManager.GetFont();
-            TextBox.transform.GetChild(0).GetComponent<Image>().rectTransform.sizeDelta = new Vector2(text.preferredWidth + 4 * GetScale(), text.preferredHeight + 4 * GetScale());
+            float scale = MapTracker.GetScale();
+            Vector2 size = new(text.preferredWidth + 4 * scale, text.preferredHeight + 4 * scale);
+            TextBox.transform.GetChild(0).GetComponent<Image>().rectTransform.sizeDelta = size;
             PositionTextBox();
             TextBox.SetActive(true);
         }
     }
 
-    public void OnPointerExit(PointerEventData _)
+    public void OnHoverEnd()
     {
         TextBox.SetActive(false);
     }
@@ -133,7 +134,7 @@ class TrackerDot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
     {
         Text text = TextBox.transform.GetChild(1).GetComponent<Text>();
 
-        float scale = GetScale();
+        float scale = MapTracker.GetScale();
         float x = transform.localPosition.x;
         float y = transform.localPosition.y;
         float textX = scale * x;
@@ -158,17 +159,5 @@ class TrackerDot : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler
         }
 
         TextBox.transform.localPosition = new Vector3((int)textX, (int)textY, 0);
-    }
-
-    private float GetScale()
-    {
-        return GameMaster.GM.Save.PlayerOptions.Resolution switch
-        {
-            1 => 4.0f,
-            2 => 5.0f,
-            3 => 7.5f,
-            4 => 10.0f,
-            _ => 2.0f,
-        };
     }
 }

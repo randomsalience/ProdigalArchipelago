@@ -34,7 +34,7 @@ public class ArchipelagoItem
     {
         if (SlotID == Archipelago.AP.SlotID)
         {
-            Item item = (Item)(ID - Archipelago.ID_BASE);
+            Item item = ItemExtension.FromArchipelagoID(ID);
             return item.NonProgressive();
         }
         else
@@ -63,7 +63,7 @@ public class ArchipelagoItem
             kind = "I";
         }
 
-        return [GameMaster.CreateSpeech(46, 0, $"FOUND @{kind}{UIPatch.Sanitize(Name)}@ FOR {UIPatch.Sanitize(SlotName)}!", "", 0)];
+        return [GameMaster.CreateSpeech(46, 0, $"Found @{kind}{UIPatch.Sanitize(Name)}@ for {UIPatch.Sanitize(SlotName)}!", "", 0)];
     }
 
     public Sprite Sprite(bool disguiseTraps)

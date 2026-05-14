@@ -234,11 +234,11 @@ public class TrapControl : MonoBehaviour
         }
         yield return new WaitForSeconds(3);
         Chatter.Clear();
-        Chatter.Add(GameMaster.CreateSpeech(2, 1, "I HAVE NEVER FELT LOVE, IN ALL MY LIFE.", "OAKLEY", 5));
-        Chatter.Add(GameMaster.CreateSpeech(2, 0, "IT IS A POWERFUL, PASSIONATE FORCE.", "OAKLEY", 5));
-        Chatter.Add(GameMaster.CreateSpeech(2, 3, "MY LOVE FOR YOU IS UNMATCHED,", "OAKLEY", 5));
-        Chatter.Add(GameMaster.CreateSpeech(2, 0, "AND I WILL NEVER ALLOW ANYONE TO COME BETWEEN US AGAIN.", "OAKLEY", 5));
-        Chatter.Add(GameMaster.CreateSpeech(2, 3, "FINALLY WE WILL BE TOGETHER FOREVER...", "OAKLEY", 5));
+        Chatter.Add(GameMaster.CreateSpeech(2, 1, "I have never felt love, in all my life.", "Oakley", 5));
+        Chatter.Add(GameMaster.CreateSpeech(2, 0, "It is a powerful, passionate force.", "Oakley", 5));
+        Chatter.Add(GameMaster.CreateSpeech(2, 3, "My love for you is unmatched,", "Oakley", 5));
+        Chatter.Add(GameMaster.CreateSpeech(2, 0, "And I will never allow anyone to come between us again.", "Oakley", 5));
+        Chatter.Add(GameMaster.CreateSpeech(2, 3, "Finally we will be together forever...", "Oakley", 5));
         GameMaster.GM.UI.InitiateChat(Chatter, false);
         while (GameMaster.GM.UI.SPEAKING())
         {

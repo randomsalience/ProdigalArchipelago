@@ -34,7 +34,7 @@ class UIPatch
 
     private static void CreateErrorIndicator()
     {
-        ErrorIndicator = new("ErrorIndicator");
+        ErrorIndicator = Plugin.NewGameObject("ErrorIndicator");
         ErrorIndicator.transform.parent = GameMaster.GM.UI.transform.GetChild(3);
         ErrorIndicator.transform.localPosition = new Vector3(98, -20, 0);
         ErrorIndicator.SetActive(false);
@@ -65,11 +65,11 @@ class UIPatch
 
     public static string Sanitize(string name)
     {
-        name = name.ToUpper()
+        name = name
             .Replace('[', '(')
             .Replace(']', ')')
             .Replace('_', ' ');
-        return Regex.Replace(name, @"[^A-Z0-9 ,!?.:;\-%'()/]", "?");
+        return Regex.Replace(name, @"[^A-Za-z0-9 ,!?.:;\-%'()/]", "?");
     }
 }
 
@@ -101,14 +101,14 @@ class KeyPage : MonoBehaviour
 
     public static void Create()
     {
-        Page1 = new GameObject("KeyPage1");
+        Page1 = Plugin.NewGameObject("KeyPage1");
         Page1.SetActive(false);
         var keyPage1 = Page1.AddComponent<KeyPage>();
         Page1.transform.parent = GameMaster.GM.UI.transform.GetChild(2).GetChild(0).GetChild(1);
         Page1.transform.localPosition = new Vector3(0, 0, 0);
         keyPage1.Setup(0, 7);
 
-        Page2 = new GameObject("KeyPage2");
+        Page2 = Plugin.NewGameObject("KeyPage2");
         Page2.SetActive(false);
         var keyPage2 = Page2.AddComponent<KeyPage>();
         Page2.transform.parent = GameMaster.GM.UI.transform.GetChild(2).GetChild(0).GetChild(1);
@@ -124,7 +124,7 @@ class KeyPage : MonoBehaviour
             KeyText.Add(Menu.CreateTextObjects($"KeyText{start + i}", Key.Keys[start + i].Name.Length + 6, transform, -74, 44 - 12 * i, new Color32(130, 109, 95, 255)));
         }
 
-        GameObject bg = new("KeyPageBG");
+        GameObject bg = Plugin.NewGameObject("KeyPageBG");
         var renderer = bg.AddComponent<SpriteRenderer>();
         renderer.sprite = ResourceManager.KeyScreenBGSprite;
         renderer.sortingLayerName = "UI";
@@ -139,7 +139,7 @@ class KeyPage : MonoBehaviour
         {
             int keyCount = 0;
             int keyTotal = 0;
-            if (105 + StartIndex + i < GameMaster.GM.Save.Data.Inventory.Count) // for backwards compatibility
+            if (124 + StartIndex + i < GameMaster.GM.Save.Data.Inventory.Count) // for backwards compatibility
             {
                 keyCount = Key.Keys[StartIndex + i].Count;
                 keyTotal = Archipelago.AP.Data.KeyTotals[StartIndex + i];

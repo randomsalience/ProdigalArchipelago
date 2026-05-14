@@ -27,7 +27,7 @@ public class StatsScreen : MonoBehaviour
 
     public static void Create()
     {
-        GameObject obj = new("StatsScreen");
+        GameObject obj = Plugin.NewGameObject("StatsScreen");
         obj.SetActive(false);
         obj.transform.SetParent(GameMaster.GM.UI.transform);
         Instance = obj.AddComponent<StatsScreen>();

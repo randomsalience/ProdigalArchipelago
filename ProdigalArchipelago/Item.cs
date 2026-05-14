@@ -93,37 +93,45 @@ public enum Item
     WeddingRing = 97,
     SilverMirror = 98,
     Painting = 99,
-    ArchipelagoItem = 101,
-    ProgressiveKnuckle = 102,
-    ProgressiveHand = 103,
-    ProgressivePick = 104,
-    BoneyardKey = 105,
-    TidalMinesKey = 106,
-    CrocasinoKey = 107,
-    HowlingBjergKey = 108,
-    CastleVannKey = 109,
-    MagmaHeartKey = 110,
-    TimeOutKey = 111,
-    LighthouseKey = 112,
-    CrystalCavesKey = 113,
-    HauntedHallKey = 114,
-    SiskasWorkshopKey = 115,
-    BackroomsKey = 116,
-    PiratesPierKey = 117,
-    BjergCastleKey = 118,
-    SlownessTrap = 119,
-    RustTrap = 120,
-    ConfusionTrap = 121,
-    DisarmingTrap = 122,
-    LightTrap = 123,
-    GlitchTrap = 124,
-    ZombieTrap = 125,
-    ShadowTrap = 126,
-    LoveTrap = 127,
+    ArchipelagoItem = 120,
+    ProgressiveKnuckle = 121,
+    ProgressiveHand = 122,
+    ProgressivePick = 123,
+    BoneyardKey = 124,
+    TidalMinesKey = 125,
+    CrocasinoKey = 126,
+    HowlingBjergKey = 127,
+    CastleVannKey = 128,
+    MagmaHeartKey = 129,
+    TimeOutKey = 130,
+    LighthouseKey = 131,
+    CrystalCavesKey = 132,
+    HauntedHallKey = 133,
+    SiskasWorkshopKey = 134,
+    BackroomsKey = 135,
+    PiratesPierKey = 136,
+    BjergCastleKey = 137,
+    SlownessTrap = 138,
+    RustTrap = 139,
+    ConfusionTrap = 140,
+    DisarmingTrap = 141,
+    LightTrap = 142,
+    GlitchTrap = 143,
+    ZombieTrap = 144,
+    ShadowTrap = 145,
+    LoveTrap = 146,
 }
 
 public static class ItemExtension
 {
+    public static Item FromArchipelagoID(long id) {
+        id -= Archipelago.ID_BASE;
+        if (id <= 100) {
+            return (Item)id;
+        }
+        return (Item)(id + 19);
+    }
+
     public static bool Acquired(this Item item)
     {
         return GameMaster.GM.Save.Data.Inventory[(int)item].Acquired;
@@ -141,22 +149,22 @@ public static class ItemExtension
 
     public static bool IsKey(this Item item)
     {
-        return (int)item >= 105 && (int)item <= 118;
+        return (int)item >= 124 && (int)item <= 137;
     }
 
     public static int ToKeyID(this Item item)
     {
-        return (int)item - 105;
+        return (int)item - 124;
     }
 
     public static bool IsTrap(this Item item)
     {
-        return (int)item >= 119 && (int)item <= 127;
+        return (int)item >= 138 && (int)item <= 146;
     }
 
     public static TrapControl.TrapType ToTrapType(this Item item)
     {
-        return (TrapControl.TrapType)(item - 119);
+        return (TrapControl.TrapType)(item - 138);
     }
 
     public static Item NonProgressive(this Item item)

@@ -747,7 +747,7 @@ class Caroline_Chat_Patch
         if (Archipelago.Enabled && currentScene == 6)
         {
             ___Chatter.Clear();
-            ___Chatter.Add(GameMaster.CreateSpeech(5, 0, "THIS DOOR'S REAL SWEET ON ME.*CONVINCED HIM TO LET US INTO THE VAULT.", "CAROLINE", 6));
+            ___Chatter.Add(GameMaster.CreateSpeech(5, 0, "This door's real sweet on me.*Convinced him to let us into the vault.", "Caroline", 6));
             GameMaster.GM.UI.InitiateChat(___Chatter, false);
             return false;
         }

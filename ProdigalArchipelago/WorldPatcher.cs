@@ -35,7 +35,7 @@ class Interactable_Interact_Patch
             else
             {
                 ___Chatter.Clear();
-                ___Chatter.Add(GameMaster.CreateSpeech(46, 0, "I NEED A KEY FOR THIS.", "", 0));
+                ___Chatter.Add(GameMaster.CreateSpeech(46, 0, "I need a key for this.", "", 0));
                 GameMaster.GM.UI.InitiateChat(___Chatter, false);
             }
 
@@ -85,7 +85,7 @@ class SpecialDoor_OpeningCheck_Patch
             else
             {
                 ___Chatter.Clear();
-                ___Chatter.Add(GameMaster.CreateSpeech(46, 0, $"SOMETHING IS OFF. . .*I CAN'T TOUCH*THE DOOR.*I ONLY HAVE {Archipelago.AP.ColorCount()} OF {Archipelago.AP.Settings.ColorsRequired} COLORS.", "", 0));
+                ___Chatter.Add(GameMaster.CreateSpeech(46, 0, $"Something is off. . .*I can't touch*the door.*I only have {Archipelago.AP.ColorCount()} of {Archipelago.AP.Settings.ColorsRequired} colors.", "", 0));
                 GameMaster.GM.UI.InitiateChat(___Chatter, false);
             }
             return false;
@@ -244,8 +244,8 @@ class ShopItem_AskAbout_Patch
                 case ShopItem.ID.Two:
                     if (Archipelago.AP.Settings.SpecificKeys)
                     {
-                        ___FullChat.Add(GameMaster.CreateSpeech(23, 0, "KEY ALWAYS USEFUL. . . EXCEPT THIS ONE. NOT WORK ON ANY DOOR.", "ZAEGUL", 10));
-                        ___FullChat.Add(GameMaster.CreateSpeech(23, 0, "AS ZAEGUL IS HONEST MERCHANT, CANNOT SELL YOU THIS.", "ZAEGUL", 10));
+                        ___FullChat.Add(GameMaster.CreateSpeech(23, 0, "Key always useful. . . except this one. Not work on any door.", "Zaegul", 10));
+                        ___FullChat.Add(GameMaster.CreateSpeech(23, 0, "As Zaegul is honest merchant, cannot sell you this.", "Zaegul", 10));
                         GameMaster.GM.UI.InitiateChat(___FullChat, false);
                         return false;
                     }
@@ -259,15 +259,15 @@ class ShopItem_AskAbout_Patch
     {
         int price = Archipelago.AP.SecretShopPrices[num];
         ArchipelagoItem item = Archipelago.AP.GetLocationItem(Archipelago.LOCS_SECRET_SHOP[num]);
-        chat.Add(GameMaster.CreateSpeech(23, 0, $"{UIPatch.Sanitize(item.Name)} FOR {UIPatch.Sanitize(item.SlotName)}.", "ZAEGUL", 10));
+        chat.Add(GameMaster.CreateSpeech(23, 0, $"{UIPatch.Sanitize(item.Name)} for {UIPatch.Sanitize(item.SlotName)}.", "Zaegul", 10));
         string description = item.Classification switch
         {
-            ItemFlags.Advancement => $"IS VERY GOOD ITEM SO MUST SELL FOR {price}G. WILL YOU BUY?",
-            ItemFlags.NeverExclude => $"IS NICE TO HAVE. PRICE IS {price}G WILL YOU BUY?",
-            ItemFlags.Trap => $"IS ONLY {price}G BUT DO YOU REALLY WANT TO BUY?",
-            _ => $"ONLY {price}G, WILL YOU BUY?",
+            ItemFlags.Advancement => $"Is very good item so must sell for {price}G. Will you buy?",
+            ItemFlags.NeverExclude => $"Is nice to have. Price is {price}G will you buy?",
+            ItemFlags.Trap => $"Is only {price}G but do you really want to buy?",
+            _ => $"Only {price}G, will you buy?",
         };
-        chat.Add(GameMaster.CreateSpeech(23, 0, description, "ZAEGUL", 10));
+        chat.Add(GameMaster.CreateSpeech(23, 0, description, "Zaegul", 10));
         GameMaster.GM.UI.SLOT_INT(interactable);
         GameMaster.GM.UI.InitiateChat(chat, true);
     }
@@ -313,7 +313,7 @@ class ShopItem_Purchase_Patch
             if (item.Classification == ItemFlags.Trap)
             {
                 ___FullChat.Clear();
-                ___FullChat.Add(GameMaster.CreateSpeech(23, 0, "YOU MAKE GOOD DECISION.", "ZAEGUL", 10));
+                ___FullChat.Add(GameMaster.CreateSpeech(23, 0, "You make good decision.", "Zaegul", 10));
                 GameMaster.GM.UI.InitiateChat(___FullChat, false);
                 return false;
             }
@@ -329,7 +329,7 @@ class ShopItem_Purchase_Patch
         item.Sprite.SetActive(false);
         item.GetComponent<Collider2D>().enabled = false;
         Archipelago.AP.CollectItem(Archipelago.LOCS_SECRET_SHOP[num]);
-        chat.Add(GameMaster.CreateSpeech(23, 0, "YES YES THANK YOU. WAS GREAT DEAL.", "ZAEGUL", 10));
+        chat.Add(GameMaster.CreateSpeech(23, 0, "Yes yes thank you. Was great deal.", "Zaegul", 10));
         Archipelago.AP.AddToChat(chat, false);
     }
 }
@@ -450,7 +450,7 @@ class QuestDoor_Awake_Patch
     {
         foreach (var code in instructions)
         {
-            if (code.opcode == OpCodes.Ldstr && (string)code.operand == " OF 13.")
+            if (code.opcode == OpCodes.Ldstr && (string)code.operand == " of 13.")
             {
                 yield return new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(QuestDoor_Awake_Patch), nameof(RequirementString)));
             }
@@ -463,7 +463,7 @@ class QuestDoor_Awake_Patch
 
     static string RequirementString()
     {
-        return Archipelago.Enabled ? $" OF {Archipelago.AP.Settings.CoinsOfCrowlRequired}." : " OF 13.";
+        return Archipelago.Enabled ? $" of {Archipelago.AP.Settings.CoinsOfCrowlRequired}." : " of 13.";
     }
 }
 
@@ -476,7 +476,7 @@ class QuestDoor_Chat_Patch
     {
         foreach (var code in instructions)
         {
-            if (code.opcode == OpCodes.Ldstr && (string)code.operand == "*OF 5.")
+            if (code.opcode == OpCodes.Ldstr && (string)code.operand == "*of 5.")
             {
                 yield return new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(QuestDoor_Chat_Patch), nameof(RequirementString)));    
             }
@@ -489,7 +489,7 @@ class QuestDoor_Chat_Patch
 
     static string RequirementString()
     {
-        return Archipelago.Enabled ? $"*OF {Archipelago.AP.Settings.CrestFragmentsRequired}." : "*OF 5.";
+        return Archipelago.Enabled ? $"*of {Archipelago.AP.Settings.CrestFragmentsRequired}." : "*of 5.";
     }
 }
 
@@ -517,15 +517,15 @@ class Nora_FireQuest_Patch
 
             string winCondition = Archipelago.AP.Settings.Goal switch
             {
-                ArchipelagoSettings.GoalOption.Var => "YOU MUST DEFEAT THE LIFELESS NIGHT.",
-                ArchipelagoSettings.GoalOption.Rest => "YOU MUST REVIVE THE HERO.",
-                ArchipelagoSettings.GoalOption.Shadow => "YOU MUST OVERCOME YOURSELF.",
-                ArchipelagoSettings.GoalOption.Torran => "YOU MUST ACHIEVE ENLIGHTENMENT.",
-                ArchipelagoSettings.GoalOption.Any => "THERE ARE MANY PATHS TO VICTORY.",
-                _ => "I DON'T KNOW WHAT YOU NEED TO DO.",
+                ArchipelagoSettings.GoalOption.Var => "You must defeat the lifeless night.",
+                ArchipelagoSettings.GoalOption.Rest => "You must revive the hero.",
+                ArchipelagoSettings.GoalOption.Shadow => "You must overcome yourself.",
+                ArchipelagoSettings.GoalOption.Torran => "You must achieve enightenment.",
+                ArchipelagoSettings.GoalOption.Any => "There are many paths to victory.",
+                _ => "I don't know what you need to do.",
             };
 
-            ___Chatter.Add(GameMaster.CreateSpeech(34, 0, winCondition, "NORA", 6));
+            ___Chatter.Add(GameMaster.CreateSpeech(34, 0, winCondition, "Nora", 6));
             GameMaster.GM.UI.InitiateChat(___Chatter, false);
 
             return false;
@@ -545,11 +545,11 @@ class Bolivar_QuestStart_Patch
     {
         foreach (var code in instructions)
         {
-            if (code.opcode == OpCodes.Ldstr && (string)code.operand == "I'M SURE YOU CAN FIND WHAT IS NEEDED IN THE OLD MINE.")
+            if (code.opcode == OpCodes.Ldstr && (string)code.operand == "I'm sure you can find what is needed in the old mine.")
             {
                 yield return new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(Bolivar_QuestStart_Patch), nameof(PickHint1)));
             }
-            else if (code.opcode == OpCodes.Ldstr && (string)code.operand == "I AM TERRIBLE WITH @Cdirections@.*THE LIBRARIAN NEXT DOOR CAN TELL YOU WHERE IT IS.*@Cyou can always see her for help when you feel lost@.")
+            else if (code.opcode == OpCodes.Ldstr && (string)code.operand == "I am terrible with @Cdirections@.*The librarian next door can tell you where it is.*@CYou can always see her for help when you feel lost@.")
             {
                 yield return new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(Bolivar_QuestStart_Patch), nameof(PickHint2)));
             }
@@ -562,12 +562,12 @@ class Bolivar_QuestStart_Patch
 
     static string PickHint1()
     {
-        return Archipelago.Enabled ? $"I'M SURE YOU CAN FIND WHAT IS NEEDED {Archipelago.AP.PickHint()}." : "I'M SURE YOU CAN FIND WHAT IS NEEDED IN THE OLD MINE.";
+        return Archipelago.Enabled ? $"I'm sure you can find what is needed {Archipelago.AP.PickHint()}." : "I'm sure you can find what is needed in the old mine.";
     }
 
     static string PickHint2()
     {
-        return Archipelago.Enabled ? "" : "I AM TERRIBLE WITH @Cdirections@.*THE LIBRARIAN NEXT DOOR CAN TELL YOU WHERE IT IS.*@Cyou can always see her for help when you feel lost@.";
+        return Archipelago.Enabled ? "" : "I am terrible with @Cdirections@.*The librarian next door can tell you where it is.*@CYou can always see her for help when you feel lost@.";
     }
 }
 
@@ -579,8 +579,8 @@ class Bolivar_PickReminder_Patch
     {
         if (Archipelago.Enabled)
         {
-            ___Chatter.Add(GameMaster.CreateSpeech(11, 1, "DID YOU FIND A PICK YET?", "BOLIVAR", 3));
-            ___Chatter.Add(GameMaster.CreateSpeech(11, 0, $"THERE IS ONE, I AM SURE, {Archipelago.AP.PickHint()}.", "BOLIVAR", 3));
+            ___Chatter.Add(GameMaster.CreateSpeech(11, 1, "Did you find a pick yet?", "Bolivar", 3));
+            ___Chatter.Add(GameMaster.CreateSpeech(11, 0, $"There is one, I am sure, {Archipelago.AP.PickHint()}.", "Bolivar", 3));
             GameMaster.GM.UI.InitiateChat(___Chatter, QuestionEnd: false);
             return false;
         }

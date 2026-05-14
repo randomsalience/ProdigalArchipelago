@@ -67,7 +67,7 @@ public class Menu
         var ret = new List<GameObject>();
         for (int i = 0; i < length; i++)
         {
-            var letter = new GameObject($"{name}Letter{i}");
+            var letter = Plugin.NewGameObject($"{name}Letter{i}");
             var letterSprite = letter.AddComponent<SpriteRenderer>();
             letterSprite.sortingOrder = 9;
             letterSprite.sortingLayerName = "UI";

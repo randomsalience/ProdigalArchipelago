@@ -33,7 +33,7 @@ public class ConnectionMenu : MonoBehaviour
 
     public static void Create()
     {
-        Instance = new GameObject("ConnectionMenu");
+        Instance = Plugin.NewGameObject("ConnectionMenu");
         Instance.SetActive(false);
         var connectionMenu = Instance.AddComponent<ConnectionMenu>();
         Instance.transform.parent = GameMaster.GM.UI.transform.GetChild(1);
@@ -43,7 +43,7 @@ public class ConnectionMenu : MonoBehaviour
 
     private void Setup()
     {
-        UI = new GameObject("ConnectionSetupUI");
+        UI = Plugin.NewGameObject("ConnectionSetupUI");
         UI.AddComponent<EventSystem>();
         UI.AddComponent<InputSystemUIInputModule>();
         var canvas = UI.AddComponent<Canvas>();
@@ -56,7 +56,7 @@ public class ConnectionMenu : MonoBehaviour
         UI.transform.SetParent(transform, false);
         UI.transform.localPosition = new Vector3(0, 0, 0);
 
-        BG = new GameObject("ConnectionSetupBG");
+        BG = Plugin.NewGameObject("ConnectionSetupBG");
         var bgSprite = BG.AddComponent<SpriteRenderer>();
         bgSprite.sprite = ResourceManager.ConnectionSetupBGSprite;
         bgSprite.sortingOrder = 1;
@@ -78,7 +78,7 @@ public class ConnectionMenu : MonoBehaviour
         PortEntry.GetComponent<InputField>().contentType = InputField.ContentType.IntegerNumber;
         PasswordEntry.GetComponent<InputField>().contentType = InputField.ContentType.Password;
 
-        ErrorText = new GameObject("ErrorText");
+        ErrorText = Plugin.NewGameObject("ErrorText");
         var text = ErrorText.AddComponent<Text>();
         text.alignment = TextAnchor.UpperCenter;
         text.fontSize = ResourceManager.GetFontSize();
@@ -149,7 +149,7 @@ public class ConnectionMenu : MonoBehaviour
 
     private GameObject CreateInputField(string name, int y, int characterLimit)
     {
-        var entry = new GameObject(name);
+        var entry = Plugin.NewGameObject(name);
         entry.transform.SetParent(UI.transform, false);
         entry.transform.localPosition = new Vector3(0, y, 0);
         entry.AddComponent<CanvasRenderer>();

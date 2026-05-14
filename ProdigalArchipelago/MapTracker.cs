@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.UI;
 
 namespace ProdigalArchipelago;
@@ -11,17 +12,18 @@ class MapTracker : MonoBehaviour
     public static GameObject Instance;
     public static GameObject Canvas;
     public List<TrackerDot> Dots;
+    private TrackerDot HoveredDot;
 
     public static void Create()
     {
         GameObject.Find("Main Camera90").AddComponent<Physics2DRaycaster>();
 
-        Instance = new("MapTracker");
+        Instance = Plugin.NewGameObject("MapTracker");
         Instance.transform.SetParent(GameMaster.GM.UI.transform.GetChild(2).GetChild(1));
         Instance.AddComponent<EventSystem>();
         Instance.AddComponent<InputSystemUIInputModule>();
 
-        Canvas = new("MapTrackerCanvas");
+        Canvas = Plugin.NewGameObject("MapTrackerCanvas");
         Canvas.transform.SetParent(Instance.transform);
         var canvas = Canvas.AddComponent<Canvas>();
         canvas.renderMode = RenderMode.ScreenSpaceOverlay;
@@ -60,6 +62,44 @@ class MapTracker : MonoBehaviour
             if (Archipelago.Enabled)
                 dot.SetColor();
         }
+
+        HoveredDot = null;
+    }
+
+    private void Update()
+    {
+        TrackerDot dot = null;
+        Camera camera = GameObject.Find("Main Camera90").GetComponent<Camera>();
+        Ray origin = camera.ScreenPointToRay(Mouse.current.position.ReadValue() / GetScale());
+        if (Physics.Raycast(origin, out RaycastHit hit))
+        {
+            dot = hit.transform.gameObject.GetComponent<TrackerDot>();
+        }
+
+        if (dot != HoveredDot)
+        {
+            if (HoveredDot)
+            {
+                HoveredDot.OnHoverEnd();
+            }
+            HoveredDot = dot;
+            if (HoveredDot)
+            {
+                HoveredDot.OnHoverStart();
+            }
+        }
+    }
+
+    public static float GetScale()
+    {
+        return GameMaster.GM.Save.PlayerOptions.Resolution switch
+        {
+            1 => 4.0f,
+            2 => 5.0f,
+            3 => 7.5f,
+            4 => 10.0f,
+            _ => 2.0f,
+        };
     }
 
     private void SetupDots()

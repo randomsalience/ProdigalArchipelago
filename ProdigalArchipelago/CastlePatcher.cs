@@ -36,7 +36,7 @@ class CastleSailor : MonoBehaviour
 
     public void Chat()
     {
-        List<GameMaster.Speech> chatter = [GameMaster.CreateSpeech(31, 0, "WANT TO GO TO BJERG CASTLE?", "SAILOR", 0)];
+        List<GameMaster.Speech> chatter = [GameMaster.CreateSpeech(31, 0, "Want to go to Bjerg Castle?", "Sailor", 0)];
         GameMaster.GM.UI.InitiateChat(chatter, true);
     }
 
@@ -48,7 +48,7 @@ class CastleSailor : MonoBehaviour
         }
         else
         {
-            List<GameMaster.Speech> chatter = [GameMaster.CreateSpeech(31, 0, "YEAH, I WOULDN'T WANT TO EITHER.", "SAILOR", 0)];
+            List<GameMaster.Speech> chatter = [GameMaster.CreateSpeech(31, 0, "Yeah, I wouldn't want to either.", "Sailor", 0)];
             GameMaster.GM.UI.InitiateChat(chatter, false);
         }
     }

@@ -29,7 +29,7 @@ public class ArchipelagoConsole : MonoBehaviour
 
     public static void Create()
     {
-        Instance = new("Console");
+        Instance = Plugin.NewGameObject("Console");
         Instance.SetActive(false);
         Instance.transform.SetParent(GameMaster.GM.UI.transform);
         Instance.AddComponent<ArchipelagoConsole>().Setup();
@@ -66,14 +66,14 @@ public class ArchipelagoConsole : MonoBehaviour
 
     private void Setup()
     {
-        BG = new("ConsoleBG");
+        BG = Plugin.NewGameObject("ConsoleBG");
         BG.transform.SetParent(transform);
         var bgSprite = BG.AddComponent<SpriteRenderer>();
         bgSprite.sprite = ResourceManager.ConsoleBGSprite;
         bgSprite.sortingLayerName = "UI";
         bgSprite.sortingOrder = 20;
 
-        Canvas = new("ConsoleCanvas");
+        Canvas = Plugin.NewGameObject("ConsoleCanvas");
         Canvas.transform.SetParent(transform);
         var canvas = Canvas.AddComponent<Canvas>();
         Canvas.AddComponent<EventSystem>();
@@ -85,7 +85,7 @@ public class ArchipelagoConsole : MonoBehaviour
         canvasScaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
         canvasScaler.referenceResolution = new Vector2(1280, 720);
 
-        TextBox = new("ConsoleText");
+        TextBox = Plugin.NewGameObject("ConsoleText");
         TextBox.transform.SetParent(Canvas.transform);
         TextBox.transform.localPosition = new Vector3(0, 30, 0);
         var text = TextBox.AddComponent<Text>();
@@ -97,7 +97,7 @@ public class ArchipelagoConsole : MonoBehaviour
         textRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, 1200);
         textRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Vertical, 540);
 
-        InputBox = new("ConsoleInput");
+        InputBox = Plugin.NewGameObject("ConsoleInput");
         InputBox.transform.SetParent(Canvas.transform);
         InputBox.transform.localPosition = new Vector3(0, -340, 0);
         InputBox.AddComponent<CanvasRenderer>();

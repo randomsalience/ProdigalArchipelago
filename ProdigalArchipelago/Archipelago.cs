@@ -18,7 +18,7 @@ namespace ProdigalArchipelago;
 public class Archipelago : MonoBehaviour
 {
     public const string GAME_NAME = "Prodigal";
-    public const string VERSION = "0.6.2";
+    public const string VERSION = "0.6.7";
     public const long ID_BASE = 77634425000;
 
     public const int CAROLINE_ID = 5;
@@ -149,7 +149,7 @@ public class Archipelago : MonoBehaviour
 
             // Scout unchecked locations
             var uncheckedLocationIDs = from locationID in LocationTable.Keys where !LocationChecked(locationID) select ID_BASE + locationID;
-            var locationInfoTask = Task.Run(async () => await Session.Locations.ScoutLocationsAsync(false, uncheckedLocationIDs.ToArray()));
+            var locationInfoTask = Task.Run(async () => await Session.Locations.ScoutLocationsAsync(false, [.. uncheckedLocationIDs]));
             yield return new WaitUntil(() => locationInfoTask.IsCompleted);
             if (locationInfoTask.IsFaulted)
             {
@@ -167,7 +167,7 @@ public class Archipelago : MonoBehaviour
 
         // Sync checked locations
         var checkedLocationIDs = from locationID in LocationTable.Keys where LocationChecked(locationID) select ID_BASE + locationID;
-        var locationCheckTask = Task.Run(async () => await Session.Locations.CompleteLocationChecksAsync(checkedLocationIDs.ToArray()));
+        var locationCheckTask = Task.Run(async () => await Session.Locations.CompleteLocationChecksAsync([.. checkedLocationIDs]));
         yield return new WaitUntil(() => locationCheckTask.IsCompleted);
         if (locationCheckTask.IsFaulted)
         {
@@ -292,7 +292,7 @@ public class Archipelago : MonoBehaviour
 
     public void InitialPatches()
     {
-        for (int i = 0; i < 28; i++)
+        for (int i = 0; i < 48; i++)
         {
             GameMaster.GM.Save.Data.Inventory.Add(new SaveSystem.Item());
         }
@@ -488,7 +488,7 @@ public class Archipelago : MonoBehaviour
                 int jingle = 21;
                 if (GameMaster.GM.Save.Data.Quests[39] == SaveSystem.Quest.QUESTCOMPLETE)
                 {
-                    speech.Add(GameMaster.CreateSpeech(46, 0, "A FRAGMENT OF HEART ORE CRUMBLES AND DISAPPEARS.", "", 0));
+                    speech.Add(GameMaster.CreateSpeech(46, 0, "A fragment of heart ore crumbles and disappears.", "", 0));
                 }
                 else
                 {
@@ -496,19 +496,19 @@ public class Archipelago : MonoBehaviour
                     switch (GameMaster.GM.Save.Data.Ores)
                     {
                         case 4:
-                            speech.Add(GameMaster.CreateSpeech(46, 0, "A FRAGMENT OF HEART ORE! NOW MY VITALITY WILL BE INCREASED!", "", 0));
+                            speech.Add(GameMaster.CreateSpeech(46, 0, "A fragment of heart ore! Now my vitality will be increased!", "", 0));
                             GameMaster.GM.Save.Data.Ores = 0;
                             jingle = 20;
                             GameMaster.GM.PC.IncreaseMaxpHP();
                             break;
                         case 3:
-                            speech.Add(GameMaster.CreateSpeech(46, 0, "A FRAGMENT OF HEART ORE! ONLY ONE MORE FRAGMENT TO GO!", "", 0));
+                            speech.Add(GameMaster.CreateSpeech(46, 0, "A fragment of heart ore! Only one more fragment to go!", "", 0));
                             break;
                         case 2:
-                            speech.Add(GameMaster.CreateSpeech(46, 0, "A FRAGMENT OF HEART ORE! ONLY TWO MORE FRAGMENTS TO GO!", "", 0));
+                            speech.Add(GameMaster.CreateSpeech(46, 0, "A fragment of heart ore! Only two more fragments to go!", "", 0));
                             break;
                         case 1:
-                            speech.Add(GameMaster.CreateSpeech(46, 0, "A FRAGMENT OF HEART ORE! ONLY THREE MORE FRAGMENTS TO GO!", "", 0));
+                            speech.Add(GameMaster.CreateSpeech(46, 0, "A fragment of heart ore! Only three more fragments to go!", "", 0));
                             break;
                     }
                 }
@@ -538,7 +538,7 @@ public class Archipelago : MonoBehaviour
                     else
                     {
                         GameMaster.GM.UI.InitiateChat([
-                            GameMaster.CreateSpeech(46, 0, "IT'S TOO DAMAGED TO USE. . .", "", 0),
+                            GameMaster.CreateSpeech(46, 0, "It's too damaged to use. . .", "", 0),
                         ], false);
                     }
                 }
@@ -627,7 +627,7 @@ public class Archipelago : MonoBehaviour
 
     private void BuildLocationTable()
     {
-        List<int> locations = new(LOCS_BASE);
+        List<int> locations = [.. LOCS_BASE];
         if (Settings.TradingQuest == ArchipelagoSettings.TradingQuestOption.Shuffle)
             locations.AddRange(LOCS_TRADE);
         else if (Settings.TradingQuest == ArchipelagoSettings.TradingQuestOption.Vanilla)
@@ -686,19 +686,19 @@ public class Archipelago : MonoBehaviour
     {
         if (Item.IronPick.Acquired())
         {
-            return "@CIN YOUR POCKET@";
+            return "@Cin your pocket@";
         }
         try
         {
             var player = (string)SlotData["pick_hint_player"];
             var location = (string)SlotData["pick_hint_location"];
             if (player == SlotName)
-                return $"AT @C{UIPatch.Sanitize(location)}@";
-            return $"AT @C{UIPatch.Sanitize(location)} IN {UIPatch.Sanitize(player)}'s WORLD@";
+                return $"at @C{UIPatch.Sanitize(location)}@";
+            return $"at @C{UIPatch.Sanitize(location)} in {UIPatch.Sanitize(player)}'s world@";
         }
         catch (Exception)
         {
-            return "SOMEWHERE";
+            return "somewhere";
         }
     }
 

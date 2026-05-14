@@ -4,7 +4,7 @@
     <TargetFramework>netstandard2.1</TargetFramework>
     <AssemblyName>ProdigalArchipelago</AssemblyName>
     <Description>Archipelago mod for Prodigal</Description>
-    <Version>0.2.1</Version>
+    <Version>0.2.4</Version>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>preview</LangVersion>
     <ProdigalRoot>PATH_TO_PRODIGAL_DIRECTORY</ProdigalRoot>
@@ -21,6 +21,7 @@
     <MakeDir Directories="$(BepinPlugins)/Archipelago/" />
     <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(BepinPlugins)/Archipelago/" />
     <Copy SourceFiles="lib/Archipelago.MultiClient.Net.dll" DestinationFolder="$(BepinPlugins)/Archipelago/" />
+    <Copy SourceFiles="lib/Newtonsoft.Json.dll" DestinationFolder="$(BepinPlugins)/Archipelago/" />
     <MakeDir Directories="$(BepinPlugins)/Archipelago/res/" />
     <Copy SourceFiles="@(ResDir)" DestinationFolder="$(BepinPlugins)/Archipelago/res/" />
   </Target>
@@ -47,7 +48,7 @@
       <HintPath>$(ProdigalRefs)/Unity.InputSystem.dll</HintPath>
     </Reference>
     <Reference Include="NewtonSoft.Json">
-      <HintPath>$(ProdigalRefs)/Newtonsoft.Json.dll</HintPath>
+      <HintPath>lib/Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="Archipelago.MultiClient.Net">
       <HintPath>lib/Archipelago.MultiClient.Net.dll</HintPath>

@@ -51,9 +51,6 @@ public static class ResourceManager
         WarpNormalSprite = LoadSprite("WarpNormal.png");
         WarpHitSprite = LoadSprite("WarpHit.png");
 
-        GameMaster.GM.UI.THIN_FONT[8] = LoadSprite("ParenLThin.png");
-        GameMaster.GM.UI.THIN_FONT[9] = LoadSprite("ParenRThin.png");
-        GameMaster.GM.UI.THIN_FONT[15] = LoadSprite("SlashThin.png");
         GameMaster.GM.UI.THICK_FONT[8] = LoadSprite("ParenLThick.png");
         GameMaster.GM.UI.THICK_FONT[9] = LoadSprite("ParenRThick.png");
         GameMaster.GM.UI.THICK_FONT[15] = LoadSprite("SlashThick.png");

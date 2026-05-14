@@ -21,7 +21,7 @@ public class NewGameMenu : MonoBehaviour
 
     public static void Create()
     {
-        Instance = new GameObject("NewGameMenu");
+        Instance = Plugin.NewGameObject("NewGameMenu");
         Instance.SetActive(false);
         var newGameMenu = Instance.AddComponent<NewGameMenu>();
         Instance.transform.parent = GameMaster.GM.UI.transform.GetChild(1);
@@ -31,7 +31,7 @@ public class NewGameMenu : MonoBehaviour
 
     private void Setup()
     {
-        Bg = new GameObject("NewGameBG");
+        Bg = Plugin.NewGameObject("NewGameBG");
         var bgSprite = Bg.AddComponent<SpriteRenderer>();
         bgSprite.sprite = ResourceManager.GameChoiceBGSprite;
         bgSprite.sortingOrder = 1;
@@ -42,7 +42,7 @@ public class NewGameMenu : MonoBehaviour
         NormalText = Menu.CreateTextObjects("Normal", 6, transform, -36, 6, new Color32(235, 223, 193, 255));
         ArchipelagoText = Menu.CreateTextObjects("Archipelago", 11, transform, -36, -6, new Color32(235, 223, 193, 255));
 
-        Selector = new GameObject("GameTypeSelector");
+        Selector = Plugin.NewGameObject("GameTypeSelector");
         var selectorSprite = Selector.AddComponent<SpriteRenderer>();
         selectorSprite.sprite = ResourceManager.ArrowSprite;
         selectorSprite.sortingOrder = 2;
